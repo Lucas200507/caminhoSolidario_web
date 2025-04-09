@@ -1,0 +1,81 @@
+:root {
+    --altura_tela: 100vh;
+
+}
+
+.container-splash{
+    height: var(--altura_tela);    
+}
+
+.pontos{
+    width: 18px;
+    height: 18px;
+    border-radius: 100%;
+    background-color: black;
+    display: inline-block;
+    -webkit-animation: sk-boundelay 1.4s infinite ease-in-out both;
+    animation: sk-boundelay 1.4s infinite ease-in-out both;
+}
+
+.carregando{
+    width: 70px;
+    text-align: center;
+}
+
+/*Usa-se -webkit- para versões antigas do safari e do chrome*/
+.carregando #ponto1{
+    /*Definindo um atraso de animação*/
+    -webkit-animation-delay: -0.32s; /*versão prefixada para navegadores antigos baseados no Webkit (como versões mais antigas do Safari).*/
+    animation-delay: -0.32s;
+}
+
+.carregando #ponto2{
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+}
+
+@-webkit-keyframes sk-boundelay {
+    /*Nas  porcentagens de tamanho, os pontos são reduzidos de tamanho*/
+    /*Desaparecem*/
+    0%, 80%, 100% {
+        -webkit-transform: scale(0);
+    }
+    /*Aparecem do tamanho normal*/
+    40% {
+        -webkit-transform: scale(1.0);
+    }
+}
+
+@keyframes sk-boundelay{
+    0%, 80%, 100%{
+        -webkit-transform: scale(0);
+        transform: scale(0);
+    } 40% {
+        -webkit-transform: scale(1.0);
+        transform: scale(1.0);
+    }
+}
+
+/***************************************/
+.container_login{
+    height: var(--altura_tela);    
+}
+
+
+@media (min-width: 100px){
+    .form_login{
+        display: flex;
+        width: 90%;
+        
+    }
+
+}
+
+@media (min-width: 680px){
+    .form_login{
+        display: flex;
+        width: 40%;
+        
+    }
+
+}
