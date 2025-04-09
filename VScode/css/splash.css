@@ -34,6 +34,8 @@
     animation-delay: -0.16s;
 }
 
+/*///////////////*/
+
 @-webkit-keyframes sk-boundelay {
     /*Nas  porcentagens de tamanho, os pontos são reduzidos de tamanho*/
     /*Desaparecem*/
@@ -58,7 +60,7 @@
 
 /***************************************/
 .container_login{
-    height: var(--altura_tela);    
+    height: var(--altura_tela);
 }
 
 
@@ -66,12 +68,11 @@
     .form_login{
         display: flex;
         width: 90%;
-        
     }
 
 }
 
-@media (min-width: 680px){
+@media (min-width: 720px){
     .form_login{
         display: flex;
         width: 40%;
@@ -79,3 +80,4 @@
     }
 
 }
+
