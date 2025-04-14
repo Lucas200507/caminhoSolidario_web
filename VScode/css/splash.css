@@ -5,7 +5,7 @@
 
 #btVoltar{
     font-size: 35px;
-    color: black;    
+    color: black;
 }
 
 #btVoltar:hover{
@@ -18,13 +18,13 @@
     display: block;
     position: fixed;
     bottom: 0;
-    background: url(/VScode/img/rodape.png);
-    background-position-y: -10em;
+    background: url(/VScode/img/rodape2.png);
+    z-index: -1;
     background-repeat: no-repeat;
     background-size: cover;
     width: 100%;
     bottom: 0;
-    height: 500px;
+    height: 200px;
     margin-top: 5em;
 }
 
@@ -98,20 +98,12 @@
         width: 90%;        
     }
 
-    #rodape{
-        display: flex;                
-        background-position-y: 0;          
-        height: 400px;        
-    }
+   
 
 }
 
 @media (min-width: 700px){
-    #rodape{
-        display: flex;                
-        background-position-y: -2em;          
-        height: 300px;        
-    }
+    
 }
 
 @media (min-width: 880px){
@@ -121,19 +113,10 @@
         
     }
 
-    #rodape{
-        display: flex;                
-        background-position-y: -7em;          
-        height: 400px;        
-    }
-
+   
 }
 
 @media (min-width: 1480px){
-    #rodape{
-        display: flex;                
-        background-position-y: -13em;          
-        height: 500px;        
-    }
+   
 }
 
