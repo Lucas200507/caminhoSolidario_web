@@ -112,17 +112,35 @@
     align-items: center;
 }
 
+#titulo_home{
+    border-bottom: solid 2px gray;
+    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.438);
+    align-items: center;
+    padding: 2em 2em;
+}
 
+#titulo_home span h6{
+    font-weight: bold;
+}
 
+#icon_user_home{
+    font-size: 100px;
+}
+
+#usuario_home div{
+    font-size: 20px;    
+   }
+
+#titulo_home span{
+    font-size: 40px;    
+}   
+/****************************************************************/
 
 @media (min-width: 100px){
     .form_login{
         display: flex;
         width: 90%;        
     }
-
-   
-
 }
 
 @media (min-width: 700px){
@@ -139,7 +157,27 @@
    
 }
 
-@media (min-width: 1480px){
+@media (max-width: 700px){
+   #usuario_home div{
+        font-size: 15px;
+   }
+
+   h1{
+        font-size: 5px;
+   }
+
+   #icon_user_home{
+        font-size: 65px;
+   }
+
+   #titulo_home{
+        padding: 2em 1em;
+   }
+
    
+
+   #titulo_home span{
+        font-size: 30px;            
+    }   
 }
 

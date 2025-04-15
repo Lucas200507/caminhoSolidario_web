@@ -18,58 +18,103 @@
             
     </script>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-info">
-        <!-- logo -->
-         <a href="#" class="navbar-brand">
-            <img src="/VScode/img/logodolado - Copia.png" alt="">
-        </a>
-
-        <!-- Menu Hamburguer -->
-         <button class="navbar-toggler" data-toggle="collapse" data-target="#navegacaoHome">
-            <span class="navbar-toggler-icon"></span><!-- Aparece quado você diminui o tamanho da tela para o tamanho definido em "nav>navbar-expand-(md)" -->
-         </button>
-
-         <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ml-auto" id="navegadores_links">
-                <li class="nav-item itens_navegadores">
-                    <ion-icon name="person-add-outline" class="icones_nav"></ion-icon>
-                    <a href="" class="nav-link" id="linksNavegacao">Cadastro</a>
-                </li>
-                <li class="nav-item itens_navegadores">
-                    <ion-icon name="create-outline" class="icones_nav"></ion-icon>
-                    <a href="" class="nav-link" id="linksNavegacao">Alteração</a>
-                </li>
-                <li class="nav-item itens_navegadores">
-                    <ion-icon name="document-text-outline" class="icones_nav"></ion-icon>
-                    <a href="" class="nav-link" id="linksNavegacao">Documentos</a>
-                </li>
-                <li class="nav-item itens_navegadores">
-                    <ion-icon name="checkbox-outline" class="icones_nav"></ion-icon>
-                    <a href="" class="nav-link" id="linksNavegacao">Frequência</a>
-                </li>
-                <li class="nav-item itens_navegadores">
-                    <ion-icon name="list-outline" class="icones_nav"></ion-icon>
-                    <a href="" class="nav-link" id="linksNavegacao">Serviços</a>
-                </li>
-            </ul>
-
-                <!-- PESQUISA -->
-                 <form action="" class="form-inline">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Pesquisar:">
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-light">
-                                <ion-icon name="search-outline" id="lupaPesquisar"></ion-icon>
-                            </button>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-info container-fluid justify-content-between">
+            <!-- logo -->
+             <a href="#" class="navbar-brand">
+                <img src="/VScode/img/logodolado - Copia.png" alt="" class="col-sm-2 col-md-8">
+            </a>
+    
+            <!-- Menu Hamburguer -->
+             <button class="navbar-toggler" data-toggle="collapse" data-target="#navegacaoHome">
+                <span class="navbar-toggler-icon"></span><!-- Aparece quado você diminui o tamanho da tela para o tamanho definido em "nav>navbar-expand-(md)" -->
+             </button>
+    
+             <!-- navegação -->         
+             <div class="collapse navbar-collapse col-sm-10 col-md-4 justify-content-end" id="navegacaoHome">
+                <ul class="navbar-nav ml-auto" id="navegadores_links">
+                    <li class="nav-item itens_navegadores">
+                        <ion-icon name="person-add-outline" class="icones_nav"></ion-icon>
+                        <a href="" class="nav-link" id="linksNavegacao">Cadastro</a>
+                    </li>
+                    <li class="nav-item itens_navegadores">
+                        <ion-icon name="create-outline" class="icones_nav"></ion-icon>
+                        <a href="" class="nav-link" id="linksNavegacao">Alteração</a>
+                    </li>
+                    <li class="nav-item itens_navegadores">
+                        <ion-icon name="document-text-outline" class="icones_nav"></ion-icon>
+                        <a href="" class="nav-link" id="linksNavegacao">Documentos</a>
+                    </li>
+                    <li class="nav-item itens_navegadores">
+                        <ion-icon name="checkbox-outline" class="icones_nav"></ion-icon>
+                        <a href="" class="nav-link" id="linksNavegacao">Frequência</a>
+                    </li>
+                    <li class="nav-item itens_navegadores">
+                        <ion-icon name="list-outline" class="icones_nav"></ion-icon>
+                        <a href="" class="nav-link" id="linksNavegacao">Serviços</a>
+                    </li>
+                </ul>
+    
+                    <!-- PESQUISA -->
+                     <!-- <form action="" class="form-inline">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Pesquisar:">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-light">
+                                    <ion-icon name="search-outline" id="lupaPesquisar"></ion-icon>
+                                </button>
+                            </div>
                         </div>
+                     </form> -->
+             </div>
+        </nav>
+
+        <div class="d-flex justify-content-between w-100" id="titulo_home">
+            <span class="text-start w-25">
+                <h3>Serviços</h3>
+            </span>
+            <div class="d-flex flex-row align-items-center justify-content-end w-75">
+                <span class="mr-3 d-none d-md-block" id="usuario_home">
+                    <div id="nome-titulo_home" class="d-flex flex-row">
+                        <p class="mr-2">Nome:</p>
+                        <p>Lucas Ataide Martins de Souza</p>
                     </div>
-                    
-                 </form>
-         </div>
+                    <div id="funcao-titulo_home" class="d-flex flex-row">
+                        <p class="mr-2">Função:</p>
+                        <p>Voluntário</p>
+                    </div>                    
+                </span>
+                <span>
+                    <ion-icon name="person-circle-outline" id="icon_user_home"></ion-icon>
+                </span>
+            </div>
+        </div>
 
 
-    </nav>
 
+   
+    <main class="container-fluid">
+        <div>
+            
+        </div>
+    </main>
+
+
+
+
+
+
+
+
+    <footer class="d-flex fixed-bottom w-100 bg-info h-5 p-3 justify-content-around" style="color: white;">
+        <div class="w-50 text-center">
+            <h6>@CaminhoSolidario</h6>
+        </div>
+        <div class="d-flex justify-content-around w-50">
+            <h6>Bárbara</h6>
+            <h6>Daiana</h6>
+            <h6>Lucas</h6>
+        </div>
+    </footer>
 
 
 
