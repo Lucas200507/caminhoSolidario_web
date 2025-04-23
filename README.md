@@ -4,5 +4,5 @@ Caminho Solidário é um projeto social que visa ajuda famílias carentes em sis
 
   . Esse repositório, está hospedado o projeto web, contendo arquivos html, css e img.
   . Contém linguagens JavaScript e PHP nos arquivos html.
-  . Há apenas um arquivo css, onde deverá ser linkado com todas as páginas html.\n
+  . Há apenas um arquivo css, onde deverá ser linkado com todas as páginas html. <br>
   . Os códigos JS devem ser interno.
