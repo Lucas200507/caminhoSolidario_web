@@ -1,6 +1,7 @@
-:root {
-    --altura_tela: 100vh;
+/* UNIVERSAL */
 
+:root{
+    --altura_tela: 100vh;
 }
 
 #btVoltar{
@@ -18,8 +19,8 @@
     display: block;
     position: fixed;
     bottom: 0;
-    background: url(/VScode/img/rodape2.png);
-    z-index: -1;
+    background: url(/img/rodape2.png);
+    z-index: -1; /*camada*/
     background-repeat: no-repeat;
     background-size: cover;
     width: 100%;
@@ -30,17 +31,18 @@
 
 /*///////////////////////////////////////////////////////////////*/
 
+        /* SPLASH */
+
 .container-splash{
     height: var(--altura_tela);    
 }
 
-
 .pontos{
-    width: 18px;
+    display: inline-block;
     height: 18px;
+    width: 18px;
     border-radius: 100%;
     background-color: black;
-    display: inline-block;
     -webkit-animation: sk-boundelay 1.4s infinite ease-in-out both;
     animation: sk-boundelay 1.4s infinite ease-in-out both;
 }
@@ -61,8 +63,6 @@
     -webkit-animation-delay: -0.16s;
     animation-delay: -0.16s;
 }
-
-/*///////////////*/
 
 @-webkit-keyframes sk-boundelay {
     /*Nas  porcentagens de tamanho, os pontos são reduzidos de tamanho*/
@@ -87,12 +87,21 @@
 }
 
 /***************************************/
+
+    /* LOGIN */
+
 .container_login{
     height: var(--altura_tela);
 }
 
 /************************************************/
-                        /* HOME */
+
+    /* HOME */
+
+#linksNavegacaoSelecionado{
+    color: black;
+}
+
 #linksNavegacao{
     color: white;    
 }
@@ -112,14 +121,23 @@
     align-items: center;
 }
 
-#titulo_home{
-    border-bottom: solid 2px gray;
-    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.438);
-    align-items: center;
-    padding: 2em 2em;
+#logo_navegacaoHome{
+    width: 100%;
 }
 
-#titulo_home span h6{
+#navegadores_links{
+    width: 90%;
+}
+
+#titulo_home{
+    padding: 1em;
+    align-items: center;
+    border-bottom: solid 2px gray;
+    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.438);
+}
+
+#titulo_home span h3{
+    font-size: 1em;
     font-weight: bold;
 }
 
@@ -134,17 +152,62 @@
 #titulo_home span{
     font-size: 40px;    
 }   
+
+.icones_mainHome{    
+    font-size: 3em;
+    margin-right: 0.1em;
+}
+
+.container_MainHome:hover{
+    color: #535353d8;
+    
+}
+
+#rodape_home{
+    bottom: 0;
+    margin: 0;
+    position: absolute; /*DUVIDA*/    
+}
+
 /****************************************************************/
+
+    /* RESPONSIVIDADE  */
 
 @media (min-width: 100px){
     .form_login{
         display: flex;
         width: 90%;        
     }
+
+    #logo_navegacaoHome{
+        width: 100%;
+    }
+
+    #container_logoHome{
+        height: 100%;
+        width:65%;
+        padding: 5%;
+        
+    }
+
+    #container_principalHome{
+        width: 50%;        
+    }
+
+    #container_MainHome p{
+        font-size: 5em;
+    }
 }
 
-@media (min-width: 700px){
-    
+@media (min-width: 375px){
+    #container_logoHome{
+        width: 70%;
+        height: 100%;        
+    }
+
+    #logo_navegacaoHome{
+        width: 60%;
+    }
 }
 
 @media (min-width: 880px){
@@ -154,6 +217,18 @@
         
     }
 
+    #logo_navegacaoHome{
+        width: 100%;
+    }
+
+    #container_logoHome{
+        width: 20%;
+    }
+
+    #container_principalHome{
+        width: 50%;
+        
+    }
    
 }
 
@@ -172,12 +247,20 @@
 
    #titulo_home{
         padding: 2em 1em;
-   }
-
-   
+   }   
 
    #titulo_home span{
         font-size: 30px;            
-    }   
+    }
+
+    #container_principalHome{
+        width: 100%;        
+    }
+       
 }
 
+@media (min-width: 1024px){
+    #container_principalHome{
+        width: 25%;        
+    }
+}
