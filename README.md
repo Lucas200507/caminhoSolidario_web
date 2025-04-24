@@ -1,4 +1,4 @@
-# Caminho Solidário - Bárbara, Daiana e Lucas 
+# Caminho Solidário 
 
 Caminho Solidário é um projeto social que visa ajuda famílias carentes em sistuações de vulnerabilidade, com distribuição de cestas básicas e outros itens mensalmente. <br>
 Este repostirório terá como objetivo orientar o usuário o desevolvimento web do projeto.<br>
@@ -24,3 +24,11 @@ No GitHub, abra o arquivo que copiou;<br>
 cole o seu código funcional;<br>
 Faça o push e espere administrador verificar o seu código;<br>
 E repita até fazer todos os pushs de seus códigos;<br>
+
+---
+
+
+## 🫂❤️ Integrantes do Grupo
+1. Bárbara Letícia Soares Cavalcanti
+2. Daiana Ribeiro
+3. Lucas Ataide Martins
