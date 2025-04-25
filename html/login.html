@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/index.css">
+
+    <!-- BOOTSTRAP CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body>
+    <script>        
+        function verificar() {
+            let cpf = document.getElementById("etCpf");
+            let senha = document.getElementById("etSenha");
+
+                if (cpf.value.trim() === "" || senha.value.trim() === ""){ // trim() remove espaços no começo e no fim, então mesmo que o usuário digite só espaços, será considerado vazio
+                    alert("Os campos senha e cpf devem ser preenchidos");
+                } else if (cpf.value === "12345678910" && senha.value === "123"){
+                    window.location.href = "home.html";
+                } else {
+                    alert("Senha ou cpf inválidos");
+                }
+        }
+    </script>
+
+    <div class="container_login d-flex align-items-center justify-content-center flex-column">
+        <img src="/img/logodolado.png" alt="">
+        <form class="d-block p-3 form_login">
+            <div class="form-group d-flex flex-column mt-3">
+                <label for=""><input type="text" placeholder="CPF:" class="form-control border-primary text-dark w-100" name="etCpf" id="etCpf"></label>
+                <label for=""><input type="text" placeholder="Senha:" class="form-control border-primary text-dark w-100" name="etSenha" id="etSenha" ></label>
+            </div>            
+            <div class="form-group justify-content-between d-flex justify-content-between links_login" style="font-size: 90%;">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="cbLembrar_senha">
+                    <label for="" class="form-check-label">Lembrar Senha</label>
+                </div>
+                <a href="/html/esqueceu_senha.html" class="text-primary">Esqueceu sua senha?</a>
+            </div>
+            <a href="#" class="btn btn-block btn-light btn-outline-primary btn-lg" id="btEntrar" onclick="verificar()">Entrar</a>
+            
+                <div class="text-center mt-3 mb-2 border-bottom border-dark pb-3">
+                    <a href="/html/tela_esperaVoluntario.html" class="h6 text-decoration-none">Cadastrar como voluntário</a> 
+                </div>
+        </form>
+    </div>
+
+    <div id="rodapeI">
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
