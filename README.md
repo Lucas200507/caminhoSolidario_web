@@ -1,34 +1,43 @@
-# Caminho Solidário 
 
-Caminho Solidário é um projeto social que visa ajuda famílias carentes em sistuações de vulnerabilidade, com distribuição de cestas básicas e outros itens mensalmente. <br>
-Este repostirório terá como objetivo orientar o usuário o desevolvimento web do projeto.<br>
+# Revisão de Código e Protótipo - WEB ✍️
 
-## 🚀 Começando
 
-Acesse o Code do repositório;<br>
-Copie o link do repositório git;<br>
-Abra o VScode e clone o repositório;<br>
-Selecione uma pasta e pronto;<br>
+  O objetivo desse conteúdo é revisar todos os códigos desenvolvidos no projeto web. 
+  A meta final é atingir as boas práticas de programação, garantindo que os códigos estejam organizados, legíveis, padronizados — e que estejam iguais ao protótipo desenvolvido.
 
-## Sobre
+⚠️  Aplicar boas práticas de código em projetos web, como HTML, CSS e JavaScript, resulta em código mais legível, fácil de manter, colaborativo e eficiente. Isso envolve seguir padrões de codificação, utilizar ferramentas de formatação, adotar princípios de design como DRY e KISS, e realizar testes abrangentes. 
 
-  . Esse repositório, está hospedado o projeto web, contendo arquivos html, css e img. <br>
-  . Contém linguagens JavaScript e PHP nos arquivos html. <br>
-  . Há apenas um arquivo css, onde deverá ser linkado com todas as páginas html. <br>
-  . Os códigos JS devem ser interno. <br>
+### ╰┈➤ 📲 Link do Protótipo 
 
-### 🔧 Commit
+https://j438n7.axshare.com/#id=5rte33&p=paginaservicos
 
-Para fazer o commit, copie seu código;<br>
-No GitHub, abra o arquivo que copiou;<br>
-cole o seu código funcional;<br>
-Faça o push e espere administrador verificar o seu código;<br>
-E repita até fazer todos os pushs de seus códigos;<br>
+---
+
+ ## 📝 O que foi melhorado:
+
+ ✔️ Organização e Indentação: Organizamos o código de forma clara, com indentação adequada, para facilitar a leitura e a compreensão.
+
+✔️ Utilizamos comentários para explicar a lógica e o propósito dos estilos, facilitando a manutenção e a compreensão do código.
+
+✔️ Utilizamos nomes de identificadores e funções que refletem na sua função, facilitando a compreensão. 
+
+✔️ Melhoramos a ambientação do código.
+
+---
+
+## 📌Considerações Finais
+
+Aplicando as boas práticas, compreendemos que um código limpo é primordial dentro de **qualquer** projeto. É essencial que todos consigam fazer alterações sempre que necessário, e comentários bem explicados é de grande auxilio.
 
 ---
 
 
 ## 🫂❤️ Integrantes do Grupo
-1. Bárbara Letícia Soares Cavalcanti
-2. Daiana Ribeiro
-3. Lucas Ataide Martins
+- Bárbara Letícia Soares Cavalcanti
+- Daiana Arruda Rodrigues Santos Ribeiro
+- Lucas Ataide Martins
+
+
+
+
+
