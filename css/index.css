@@ -4,6 +4,17 @@
     --altura_tela: 100vh;
 }
 
+html{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    
+}
+
 #btVoltar{
     font-size: 35px;
     color: black;
@@ -111,8 +122,8 @@
 }
 
 .icones_nav{
-    font-size: 23px;
     color: white;
+    font-size: 23px;
 }
 
 .itens_navegadores{
@@ -166,9 +177,30 @@
 #rodape_home{
     bottom: 0;
     margin: 0;
-    position: absolute; /*DUVIDA*/    
+    position: fixed;
+    
+    
 }
 
+
+/* //////////////////////////////////////////////////////////////////////////////////////// */
+                /* CADASTRO */
+#main_cadastro{
+    display: flex;
+    padding: 2em;
+    margin: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;    
+}
+
+.icones_cadastro{
+    font-size: 10em;
+}
+
+.container_icones_cadastro:hover{
+    color: rgb(56, 144, 160);
+}
 /****************************************************************/
 
     /* RESPONSIVIDADE  */
@@ -196,6 +228,17 @@
 
     #container_MainHome p{
         font-size: 5em;
+    }
+
+    #main_cadastro{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .container_icones_cadastro{
+        display: flex;
+        margin: 0.5em;        
     }
 }
 
@@ -228,6 +271,20 @@
     #container_principalHome{
         width: 50%;
         
+    }
+
+    #main_cadastro{
+        display: flex;
+        padding: 2em;
+        margin: 0;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;    
+    }
+
+    .container_icones_cadastro{
+        display: flex;
+        margin: 0;        
     }
    
 }
