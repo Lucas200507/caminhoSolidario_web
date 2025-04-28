@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro</title>
+    <title>Alteracao</title>
     <!-- icone no titulo da pagina -->
     <link rel="icon" href="/img/logo_semnome.png" >
 
@@ -30,12 +30,12 @@
             <div class="collapse navbar-collapse justify-content-end" id="navegacaoHome">
             <ul class="navbar-nav ml-1 justify-content-around" id="navegadores_links">
                 <li class="nav-item itens_navegadores">
-                    <ion-icon name="person-add-outline" class="icones_nav" id="linksNavegacaoSelecionado"></ion-icon>
-                    <a href="#" class="nav-link" id="linksNavegacaoSelecionado">Cadastro</a>
+                    <ion-icon name="person-add-outline" class="icones_nav"></ion-icon>
+                    <a href="/html/cadastro.html" class="nav-link" id="linksNavegacao">Cadastro</a>
                 </li>
                 <li class="nav-item itens_navegadores">
-                    <ion-icon name="create-outline" class="icones_nav"></ion-icon>
-                <a href="/html/alteracao.html" class="nav-link" id="linksNavegacao">Alteração</a>
+                    <ion-icon name="create-outline" class="icones_nav" id="linksNavegacaoSelecionado"></ion-icon>
+                <a href="#" class="nav-link" id="linksNavegacaoSelecionado">Alteração</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                 <ion-icon name="document-text-outline" class="icones_nav"></ion-icon>
@@ -55,11 +55,12 @@
 
     <div class="d-flex justify-content-between w-100" id="titulo_home">
         <span class="text-start w-25">
-            <h3>Cadastro</h3>
+            <h3>Alteração</h3>
         </span>
         <div class="d-flex flex-row align-items-center justify-content-end w-75">
             <span class="mr-3 d-none d-md-block" id="usuario_home">
                 <div id="nome-titulo_home" class="d-flex flex-row">
+                    <!-- Temos que linkar um Banco de dados para receber os dados do usuário -->
                     <p class="mr-2">Nome:</p>
                     <p>Lucas Ataide Martins de Souza</p>
                 </div>
@@ -74,17 +75,23 @@
         </div>
     </div>
     <main style="height: 700px;" id="main_cadastro">
-            <div class="container_icones_cadastro d-flex align-items-center flex-column" id="cadastrar_beneficiario" onclick="alterar_cadastrarBeneficiario()">
-                <ion-icon name="person-add-outline" class="icones_cadastro"></ion-icon>
-                <p style="font-size: 25px; font-weight: bold;">Cadastrar Beneficiário</p>
+            <div class="container_icones_cadastro d-flex align-items-center flex-column">
+                <span class="person_alterar" style="position: relative;">
+                    <ion-icon name="person-outline" class="icones_cadastro"></ion-icon>
+                    <ion-icon name="pencil-outline" class="icones_pen"></ion-icon>
+                </span>
+                <p style="font-size: 25px; font-weight: bold;">Alterar Beneficiário</p>
             </div>
             <div class="container_icones_cadastro d-flex align-items-center flex-column">
-                <ion-icon name="person-outline" class="icones_cadastro"></ion-icon>
-                <p style="font-size: 25px; font-weight: bold;">Cadastrar Voluntário</p>            
+                <span class="person_alterar" style="position: relative;">                    
+                    <ion-icon name="person-outline" class="icones_cadastro"></ion-icon>
+                    <ion-icon name="pencil-outline" class="icones_pen"></ion-icon>
+                </span>
+                <p style="font-size: 25px; font-weight: bold;">Alterar Voluntário</p>            
             </div>              
             <div class="container_icones_cadastro d-flex align-items-center flex-column">
                 <ion-icon name="people-outline" class="icones_cadastro"></ion-icon>
-                <p style="font-size: 25px; font-weight: bold;">Cadastrar Dependente(s)</p>
+                <p style="font-size: 25px; font-weight: bold;">Alterar Dependente(s)</p>
             </div>
     </main>
 
@@ -96,6 +103,5 @@
     <!-- IONICONS -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script src="/js/index.js"></script>
 </body>
 </html>
