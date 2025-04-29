@@ -257,6 +257,11 @@ body{
         display: flex;
         margin: 0.5em;        
     }
+
+    .formularios_Beneficiario{
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 @media (min-width: 375px){
@@ -267,6 +272,14 @@ body{
 
     #logo_navegacaoHome{
         width: 60%;
+    }
+
+}
+
+@media(min-width: 600px){
+    .formularios_Beneficiario{
+        display: flex;
+        flex-direction: row;
     }
 }
 
@@ -303,6 +316,11 @@ body{
         display: flex;
         margin: 0;        
     }
+
+    .formularios_Beneficiario{
+        display: flex;
+        flex-direction: row;
+    }
    
 }
 
@@ -329,8 +347,7 @@ body{
 
     #container_principalHome{
         width: 100%;        
-    }
-       
+    }   
 }
 
 @media (min-width: 1024px){
