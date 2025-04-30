@@ -14,7 +14,7 @@
 <body style="padding: 0;">
     <nav class="navbar navbar-expand-lg navbar-dark bg-info justify-content-between">
         <!-- logo -->
-            <a href="#" class="navbar-brand p-0 d-block" id="container_logoHome">
+            <a href="splash.html" class="navbar-brand p-0 d-block" id="container_logoHome">
             <img src="/img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
         
         </a>
@@ -73,16 +73,16 @@
     </div>
 
 <main class="d-flex w-100 flex-row p-5 align-items-center justify-content-center">
-    <div class="d-flex flex-column" id="container_principalHome">
-        <span class="d-flex flex-row align-items-center m-3 container_MainHome">
+    <div class="d-flex flex-column w-auto" id="container_principalHome">
+        <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_cadastrarBeneficiario()">
             <ion-icon name="person-add-outline" class="icones_mainHome"></ion-icon>
             <p>Cadastrar Beneficiário</p>
         </span>            
-        <span class="d-flex flex-row align-items-center m-3 container_MainHome">               
+        <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_cadastrarVoluntario()">               
             <ion-icon name="person-outline" class="icones_mainHome"></ion-icon>
             <p>Cadastrar Voluntário</p>            
         </span>            
-        <span class="d-flex flex-row align-items-center m-3 container_MainHome">
+        <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_cadastrarDependente()">
             <ion-icon name="people-outline" class="icones_mainHome"></ion-icon>
             <p>Cadastrar Dependente(s)</p>
         </span>
@@ -105,7 +105,7 @@
     </div>
 </main>
 
-<div class="d-flex  w-100 bg-info h-5 p-3 justify-content-around" id="rodape_home">
+<!-- <div class="d-flex  w-100 bg-info h-5 p-3 justify-content-around" id="rodape_home">
     <div class="w-50 text-center">
         <h6>@CaminhoSolidario</h6>
     </div>
@@ -114,7 +114,7 @@
         <h6>Daiana</h6>
         <h6>Lucas</h6>
     </div>
-</div>
+</div> -->
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -122,5 +122,7 @@
     <!-- IONICONS -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Conexao com JS -->
+    <script src="/js/index.js"></script>
 </body>
 </html>

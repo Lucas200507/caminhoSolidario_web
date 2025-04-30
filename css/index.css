@@ -165,7 +165,7 @@ body{
 }   
 
 .icones_mainHome{    
-    font-size: 3em;
+    font-size: 4em;
     margin-right: 0.1em;
 }
 
@@ -202,7 +202,7 @@ body{
     color: rgb(56, 144, 160);
 }
 /****************************************************************/
-            /*Alteração*/
+            /*Cadastro*/
 /*  relative - elemento pai
     absolute - elemento filho */
 .icones_pen{
@@ -214,9 +214,30 @@ body{
     z-index: 1;
 }            
 
+/****************************************************************/
+        /*Cadastro Beneficiario*/
+#btSalvar{
+    font-size: 45px;
+    color: black;    
+}
 
+#btSalvar:hover{
+    font-weight: bold;
+    color: green;
+    
+}
 
+#btCancelar{
+    font-size: 35px;
+    color: black;
+}
 
+#btCancelar:hover{
+    border-radius: 100%;
+    background-color: red;
+    color: white;
+
+}
 
 
 /* /////////////////////////////////////////////////////////////// */
@@ -243,8 +264,8 @@ body{
         width: 50%;        
     }
 
-    #container_MainHome p{
-        font-size: 5em;
+    .container_MainHome p{
+        font-size: 2em;
     }
 
     #main_cadastro{
