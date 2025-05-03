@@ -75,21 +75,21 @@
         </div>
     </div>
     <main style="height: 700px;" id="main_cadastro">
-            <div class="container_icones_cadastro d-flex align-items-center flex-column">
+            <div class="container_icones_cadastro d-flex align-items-center flex-column" onclick="navegar_alterarBeneficiario()">
                 <span class="person_alterar" style="position: relative;">
                     <ion-icon name="person-outline" class="icones_cadastro"></ion-icon>
                     <ion-icon name="pencil-outline" class="icones_pen"></ion-icon>
                 </span>
                 <p style="font-size: 25px; font-weight: bold;">Alterar Beneficiário</p>
             </div>
-            <div class="container_icones_cadastro d-flex align-items-center flex-column">
+            <div class="container_icones_cadastro d-flex align-items-center flex-column" onclick="navegar_alterarVoluntario()">
                 <span class="person_alterar" style="position: relative;">                    
                     <ion-icon name="person-outline" class="icones_cadastro"></ion-icon>
                     <ion-icon name="pencil-outline" class="icones_pen"></ion-icon>
                 </span>
                 <p style="font-size: 25px; font-weight: bold;">Alterar Voluntário</p>            
             </div>              
-            <div class="container_icones_cadastro d-flex align-items-center flex-column">
+            <div class="container_icones_cadastro d-flex align-items-center flex-column" onclick="navegar_alterarDependente()">
                 <ion-icon name="people-outline" class="icones_cadastro"></ion-icon>
                 <p style="font-size: 25px; font-weight: bold;">Alterar Dependente(s)</p>
             </div>
@@ -103,5 +103,7 @@
     <!-- IONICONS -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Conexao com JS -->
+    <script src="/js/index.js"></script>
 </body>
 </html>

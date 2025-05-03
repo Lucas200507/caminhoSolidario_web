@@ -14,6 +14,21 @@ function navegar_cadastrarDependente(){
     
 }
 
+function navegar_alterarBeneficiario(){
+    window.location.href = "/html/alteracao/alteracaoBeneficiario.html";
+}
+
+function navegar_alterarVoluntario(){
+    window.location.href = "/html/alteracao/alteracaoVoluntario.html";
+}
+
+function navegar_alterarDependente(){
+    window.location.href = "/html/alteracao/alteracaoDependente.html";
+}
+
+
+//////////////////////////////////////////
+
 
 function cancelarCadastro(){
     window.alert("Cancelou meu nobre");
