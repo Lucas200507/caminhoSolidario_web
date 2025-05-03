@@ -43,3 +43,8 @@ function Cadastrar_Voluntario(){
         window.alert('As senhas são deferentes');
     }
 }
+
+// ANIMAÇÃO SURGIR A TELA
+function surgirTela(){
+    
+}
