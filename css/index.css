@@ -273,9 +273,25 @@ label{
             /* FREQUENCIA BENEFICIARIO */
 .mes_freqBenef{
     margin: 10px 0;
-}            
+}          
 
+/****************************************************************/
 
+#botao_pesquisarVF{
+    display: flex;
+    flex-direction: row;
+    align-items: center;        
+    padding: 10px;
+    width: 8em;
+    background-color: #17a2b9;    
+    border-radius: 0.75em;
+    border: none;    
+    align-items: center;
+}
+
+#botao_pesquisarVF:hover{
+    background-color: #0e6979;    
+}
 
 /* /////////////////////////////////////////////////////////////// */
     /* RESPONSIVIDADE  */

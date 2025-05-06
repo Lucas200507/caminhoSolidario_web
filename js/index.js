@@ -26,6 +26,13 @@ function navegar_alterarDependente(){
     window.location.href = "/html/alteracao/alteracaoDependente.html";
 }
 
+function navegar_lancarFrequencia(){
+    window.location.href = "/html/frequencia/lancarFrequencia.html";
+}
+
+function navegar_verificarFrequencia(){
+    window.location.href = "/html/frequencia/verificarFrequencia.html";
+}
 
 //////////////////////////////////////////
 
@@ -44,7 +51,3 @@ function Cadastrar_Voluntario(){
     }
 }
 
-// ANIMAÇÃO SURGIR A TELA
-function surgirTela(){
-    
-}

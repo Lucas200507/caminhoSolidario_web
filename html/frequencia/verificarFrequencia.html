@@ -41,7 +41,7 @@
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="checkbox-outline" class="icones_nav" id="linksNavegacaoSelecionado"></ion-icon>
-                    <a href="#" class="nav-link" id="linksNavegacaoSelecionado">Frequência</a>
+                    <a href="/html/frequenciaBeneficiario.html" class="nav-link" id="linksNavegacaoSelecionado">Frequência</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="list-outline" class="icones_nav"></ion-icon>
@@ -53,7 +53,7 @@
     <!-- TITULO -->
     <div class="d-flex justify-content-between w-100" id="titulo_home">
         <span class="text-start w-50">
-            <h3>Frequência dos Beneficiários</h3>
+            <h3>Verificar Frequência</h3>
         </span>
         <div class="d-flex flex-row align-items-center justify-content-end">
             <span class="mr-3 d-none d-lg-block" id="usuario_home">
@@ -71,17 +71,46 @@
             </span>
         </div>
     </div>
-    <main style="height: 700px;" id="main_cadastro">
-        <div class="container_icones_cadastro d-flex align-items-center flex-column" onclick="navegar_verificarFrequencia()">
-            <ion-icon name="calendar-outline" class="icones_cadastro"></ion-icon>
-            <p style="font-size: 25px; font-weight: bold;">Verificar Frequência</p>
-        </div>
-        <div class="container_icones_cadastro d-flex align-items-center flex-column" onclick="navegar_lancarFrequencia()">                
-            <ion-icon name="checkbox-outline" class="icones_cadastro"></ion-icon>
-            <p style="font-size: 25px; font-weight: bold;">Lançar Frequência</p>
-        </div>
-    </main>
 
+    <main class="mt-5 container d-flex flex-column align-items-center">
+        <h2 style="text-align: center;" class="mb-4">
+            Aqui você consegue ver as frequências dos beneficiários
+       </h2>
+       <h2 style="text-align: center; color: #17a2b9;" class="mb-4">
+             Ano
+       </h2>
+       <select name="" id="" class="form-select form-select-md w-50">
+            <option value="" selected></option>
+            <option value="">2023</option>
+            <option value="">2024</option>
+            <option value="">2025</option>
+       </select>
+       <h2 style="text-align: center; color: #17a2b9;" class="mb-4 mt-2">
+        Mês
+       </h2>
+       <select name="" id="" class="form-select form-select-md w-50">
+            <option value="" selected></option>
+            <option value="">Janeiro</option>
+            <option value="">Fevereiro</option>
+            <option value="">Março</option>
+            <option value="">Abril</option>
+            <option value="">Maio</option>
+            <option value="">Junho</option>
+            <option value="">Julho</option>
+            <option value="">Agosto</option>
+            <option value="">Setembro</option>
+            <option value="">Outubro</option>
+            <option value="">Novembro</option>
+            <option value="">Dezembro</option>
+        </select>
+        <button class="text-light mt-4" id="botao_pesquisarVF">
+            <div class="d-flex p-0 align-items-center w-100 justify-content-between">
+                <span style="font-size: 18px;">Pesquisar</span>
+                <ion-icon name="search" style="font-size: 25px;"></ion-icon>
+            </div>           
+        </button>
+    </main>
+  
     <!-- Conexão com Bootstrap  -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
