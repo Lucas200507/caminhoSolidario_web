@@ -11,8 +11,7 @@ html{
 
 body{
     margin: 0;
-    padding: 0;
-    
+    padding: 0;    
 }
 
 #btVoltar{
@@ -276,6 +275,7 @@ label{
 }          
 
 /****************************************************************/
+            /* VERIFICAR FREQUENCIA */
 
 #botao_pesquisarVF{
     display: flex;
@@ -292,6 +292,40 @@ label{
 #botao_pesquisarVF:hover{
     background-color: #0e6979;    
 }
+
+.tabelaVF{
+    height: 300px;
+    overflow-y: auto;    
+}
+
+.my-table{
+    width: 100%;
+    table-layout: fixed;
+}
+
+.my-table tbody tr{
+    text-align: center;
+    padding: 20px;
+    border-bottom: solid 2px rgba(41, 41, 41, 0.267);
+}
+
+.titulo_colunasVF{
+    background-color: gray;
+    color: white;
+    text-align: center;
+    padding: 0 40px;   
+
+}
+
+.atributos_linhasVF{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px #0000006e solid;
+    height: 40px;
+}
+
+
 
 /* /////////////////////////////////////////////////////////////// */
     /* RESPONSIVIDADE  */
