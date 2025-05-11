@@ -11,8 +11,7 @@ html{
 
 body{
     margin: 0;
-    padding: 0;
-    
+    padding: 0;    
 }
 
 #btVoltar{
@@ -219,7 +218,7 @@ label{
     display: flex;
     padding: 2em;
     margin: 0;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: space-around;    
 }
@@ -231,18 +230,6 @@ label{
 .container_icones_cadastro:hover{
     color: rgb(56, 144, 160);
 }
-/****************************************************************/
-            /*Cadastro*/
-/*  relative - elemento pai
-    absolute - elemento filho */
-.icones_pen{
-    position: absolute;
-    font-size: 3em;
-    margin: 0;
-    bottom: 5px;
-    right: -30px;
-    z-index: 1;
-}            
 
 /****************************************************************/
         /*Cadastro Beneficiario*/
@@ -270,12 +257,70 @@ label{
 }
 
 /****************************************************************/
+            /*ALTERAÇÃO*/
+/*  relative - elemento pai
+    absolute - elemento filho */
+    .icones_pen{
+        position: absolute;
+        font-size: 3em;
+        margin: 0;
+        bottom: 5px;
+        right: -30px;
+        z-index: 1;
+    }
+    
+/****************************************************************/
+            /*DOCUMENTOS*/
+    .iconesPP_documentos{
+        position: absolute;
+        font-size: 4em;
+        margin: 0;
+        bottom: 5px;
+        right: -40px;
+        z-index: 1;
+    }        
+
+    .checkbox_documentos{
+        cursor: pointer;
+        appearance: none; /*Some com o estilo padrão*/
+        border: solid 2px #17a2b9;
+        width: 20px;
+        height: 20px;        
+        margin-right: 2em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;
+        position: relative;
+        
+    }
+
+    .checkbox_documentos:before{
+        content: '';
+        position: absolute;
+        border-radius: 0;
+        width: 7px;
+        height: 12px;
+        border-right: 3px solid #000000bb;
+        border-bottom: 3px solid #000000bb;
+        transform: rotate(45deg);
+        top: 1px;
+        opacity: 0;
+        transition: all 600ms ease-in-out;        
+    }
+
+    .checkbox_documentos:checked:before{
+        opacity: 1;
+    }
+
+/****************************************************************/
             /* FREQUENCIA BENEFICIARIO */
 .mes_freqBenef{
     margin: 10px 0;
 }          
 
 /****************************************************************/
+            /* VERIFICAR FREQUENCIA */
 
 #botao_pesquisarVF{
     display: flex;
@@ -292,6 +337,40 @@ label{
 #botao_pesquisarVF:hover{
     background-color: #0e6979;    
 }
+
+.tabelaVF{
+    height: 300px;
+    overflow-y: auto;    
+}
+
+.my-table{
+    width: 100%;
+    table-layout: fixed;
+}
+
+.my-table tbody tr{
+    text-align: center;
+    padding: 20px;
+    border-bottom: solid 2px rgba(41, 41, 41, 0.267);
+}
+
+.titulo_colunasVF{
+    background-color: gray;
+    color: white;
+    text-align: center;
+    padding: 0 40px;   
+
+}
+
+.atributos_linhasVF{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px #0000006e solid;
+    height: 40px;
+}
+
+
 
 /* /////////////////////////////////////////////////////////////// */
     /* RESPONSIVIDADE  */
@@ -321,11 +400,7 @@ label{
         font-size: 2em;
     }
 
-    #main_cadastro{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-    }
+   
 
     .container_icones_cadastro{
         display: flex;
