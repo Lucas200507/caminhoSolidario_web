@@ -465,6 +465,26 @@ label{
     border-bottom: 1px #0000006e solid;
     height: 40px;
 }
+/*****************************************************************************/
+        /* USUARIO */
+.container_usuario{
+    display: flex;
+    flex-direction: column;    
+    align-items: center;
+}
+
+#foto_voluntarioU{
+    border-radius: 8em;
+}
+
+#foto{
+    height: 20em;
+    width: 20em;
+    background-image: url("https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg");
+    border-radius: 2em;
+}
+
+
 
 /* /////////////////////////////////////////////////////////////// */
     /* RESPONSIVIDADE  */

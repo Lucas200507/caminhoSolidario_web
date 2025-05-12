@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuario - Caminho Solidario</title>
     <!-- icone no titulo da pagina -->
-    <link rel="icon" href="/img/logo_semnome.png" >
+    <link rel="icon" href="/img/logo_semnome.png">
 
     <link rel="stylesheet" href="/css/index.css">
     <!-- BOOTSTRAP CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 </head>
+
 <body id="telaBody">
-    <nav class="navbar navbar-expand-lg navbar-dark justify-content-between" style="background-color: #17a2b9; padding: 0.8em;">
-            <!-- logo -->
-            <a href="/html/splash.html" class="navbar-brand p-0 d-block" id="container_logoHome">
-                <img src="/img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
-            </a>
+    <nav class="navbar navbar-expand-lg navbar-dark justify-content-between"
+        style="background-color: #17a2b9; padding: 0.8em;">
+        <!-- logo -->
+        <a href="/html/splash.html" class="navbar-brand p-0 d-block" id="container_logoHome">
+            <img src="/img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
+        </a>
 
-            <!-- Menu Hamburguer -->
-            <button class="navbar-toggler" data-toggle="collapse" data-target="#navegacaoHome" id="botaoHamburguer" type="button" >
-            <span class="navbar-toggler-icon"></span><!-- Aparece quado você diminui o tamanho da tela para o tamanho definido em "nav>navbar-expand-(md)" -->
-            </button>
+        <!-- Menu Hamburguer -->
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navegacaoHome" id="botaoHamburguer"
+            type="button">
+            <span
+                class="navbar-toggler-icon"></span><!-- Aparece quado você diminui o tamanho da tela para o tamanho definido em "nav>navbar-expand-(md)" -->
+        </button>
 
-            <!-- navegação -->         
-            <div class="collapse navbar-collapse justify-content-end" id="navegacaoHome">
+        <!-- navegação -->
+        <div class="collapse navbar-collapse justify-content-end" id="navegacaoHome">
             <ul class="navbar-nav ml-1 justify-content-around" id="navegadores_links">
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="person-add-outline" class="icones_nav"></ion-icon>
@@ -33,36 +39,56 @@
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="create-outline" class="icones_nav"></ion-icon>
-                <a href="/html/alteracao.html" class="nav-link" id="linksNavegacao">Alteração</a>
+                    <a href="/html/alteracao.html" class="nav-link" id="linksNavegacao">Alteração</a>
                 </li>
                 <li class="nav-item itens_navegadores">
-                <ion-icon name="document-text-outline" class="icones_nav"></ion-icon>
+                    <ion-icon name="document-text-outline" class="icones_nav"></ion-icon>
                     <a href="/html/documentos.html" class="nav-link" id="linksNavegacao">Documentos</a>
                 </li>
                 <li class="nav-item itens_navegadores">
-                    <ion-icon name="checkbox-outline" class="icones_nav" id="linksNavegacaoSelecionado"></ion-icon>
-                    <a href="/html/frequenciaBeneficiario.html" class="nav-link" id="linksNavegacaoSelecionado">Frequência</a>
+                    <ion-icon name="checkbox-outline" class="icones_nav"></ion-icon>
+                    <a href="/html/frequenciaBeneficiario.html" class="nav-link" id="linksNavegacao">Frequência</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="list-outline" class="icones_nav"></ion-icon>
                     <a href="/html/Servicos.html" class="nav-link" id="linksNavegacao">Serviços</a>
                 </li>
-            </ul>                 
-            </div>
+            </ul>
+        </div>
     </nav>
-   
-  
+    <main class="container_usuario">
+        <span>
+            <img src="https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg" alt="" id="foto_voluntarioU">
+        </span>
+        <span id="foto">            
+        </span>
+    </main>
+
+
     <!-- Conexão com Bootstrap  -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>    
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js" integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+        integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js"
+        integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+"
+        crossorigin="anonymous"></script>
     <!-- IONICONS -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <!-- LINKANDO JS EXTERNO -->
     <script src="/js/index.js"></script>
 </body>
+
 </html>
