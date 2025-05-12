@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frequencia Beneficiarios</title>
+    <title>Documentos Beneficiarios</title>
     <!-- icone no titulo da pagina -->
     <link rel="icon" href="/img/logo_semnome.png" >
 
@@ -36,12 +36,12 @@
                 <a href="/html/alteracao.html" class="nav-link" id="linksNavegacao">Alteração</a>
                 </li>
                 <li class="nav-item itens_navegadores">
-                <ion-icon name="document-text-outline" class="icones_nav"></ion-icon>
-                    <a href="/html/documentos.html" class="nav-link" id="linksNavegacao">Documentos</a>
+                <ion-icon name="document-text-outline" class="icones_nav" id="linksNavegacaoSelecionado"></ion-icon>
+                    <a href="/html/documentos.html" class="nav-link" id="linksNavegacaoSelecionado">Documentos</a>
                 </li>
                 <li class="nav-item itens_navegadores">
-                    <ion-icon name="checkbox-outline" class="icones_nav" id="linksNavegacaoSelecionado"></ion-icon>
-                    <a href="#" class="nav-link" id="linksNavegacaoSelecionado">Frequência</a>
+                    <ion-icon name="checkbox-outline" class="icones_nav" ></ion-icon>
+                    <a href="/html/frequenciaBeneficiario.html" class="nav-link" id="linksNavegacao">Frequência</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="list-outline" class="icones_nav"></ion-icon>
@@ -53,13 +53,13 @@
     <!-- TITULO -->
     <div class="d-flex justify-content-between w-100" id="titulo_home">
         <span class="text-start w-50">
-            <h3>Frequência dos Beneficiários</h3>
+            <h3>Documentos dos Beneficiários</h3>
         </span>
         <div class="d-flex flex-row align-items-center justify-content-end">
             <span class="mr-3 d-none d-lg-block" id="usuario_home">
                 <div id="nome-titulo_home" class="d-flex flex-row">
                     <p class="mr-2">Nome:</p>
-                    <p>Lucas Ataide Martins de Souza</p>
+                    <p id="nome_nav">Lucas Ataide Martins de Souza</p>
                 </div>
                 <div id="funcao-titulo_home" class="d-flex flex-row">
                     <p class="mr-2">Função:</p>
@@ -71,15 +71,83 @@
             </span>
         </div>
     </div>
-    <main style="height: 700px;" id="main_cadastro">
-        <div class="container_icones_cadastro d-flex align-items-center flex-column" onclick="navegar_verificarFrequencia()">
-            <ion-icon name="calendar-outline" class="icones_cadastro"></ion-icon>
-            <p style="font-size: 25px; font-weight: bold;">Verificar Frequência</p>
-        </div>
-        <div class="container_icones_cadastro d-flex align-items-center flex-column" onclick="navegar_lancarFrequencia()">                
-            <ion-icon name="checkbox-outline" class="icones_cadastro"></ion-icon>
-            <p style="font-size: 25px; font-weight: bold;">Lançar Frequência</p>
-        </div>
+    
+    <main class="mt-5 d-flex flex-column container">
+        <h2 style="text-align: center;" class="mb-4">
+            Verifique aqui os Documentos dos Beneficiários
+       </h2>
+       <div class="d-flex justify-content-around w-100 input-group">            
+           <select class="form-select form-select-md w-50">
+            <option value="">CPF do(a) Beneficiário(a)</option>        
+           </select>
+           <button id="buttonPesquisarCPF">
+                Pesquisar
+           </button>
+       </div>
+       <div class="container_documentos">
+            <div class="subcontainers_DB">
+                <div class="form-check d-flex align-items-center containers_DB">
+                    <input type="checkbox" class="caixaMarcacao" disabled>
+                    <label>CPF FRENTE</label>
+                </div>                             
+                <a href="#" id="visualizarDB">
+                        <ion-icon name="search-outline" id="icon_pesquisaDB"></ion-icon>
+                        <span style="font-size: 1.1em;">Visualizar</span>
+                </a>                                        
+            </div>
+            <div class="subcontainers_DB">
+                <div class="form-check d-flex align-items-center containers_DB">
+                    <input type="checkbox" class="caixaMarcacao" disabled>
+                    <label>CPF VERSO</label>
+                </div>                             
+                <a href="#" id="visualizarDB">
+                        <ion-icon name="search-outline" id="icon_pesquisaDB"></ion-icon>
+                        <span style="font-size: 1.1em;">Visualizar</span>
+                </a>                                        
+            </div>
+            <div class="subcontainers_DB">
+                <div class="form-check d-flex align-items-center containers_DB">
+                    <input type="checkbox" class="caixaMarcacao" disabled>
+                    <label>CERTIDÃO NASCIMENTO</label>
+                </div>                             
+                <a href="#" id="visualizarDB">
+                        <ion-icon name="search-outline" id="icon_pesquisaDB"></ion-icon>
+                        <span style="font-size: 1.1em;">Visualizar</span>
+                </a>                                        
+            </div>
+            <div class="subcontainers_DB">
+                <div class="form-check d-flex align-items-center containers_DB">
+                    <input type="checkbox" class="caixaMarcacao" disabled>
+                    <label>CERTIDÃO CASAMENTO</label>
+                </div>                             
+                <a href="#" id="visualizarDB">
+                        <ion-icon name="search-outline" id="icon_pesquisaDB"></ion-icon>
+                        <span style="font-size: 1.1em;">Visualizar</span>
+                </a>                                        
+            </div>
+            <div class="subcontainers_DB">
+                <div class="form-check d-flex align-items-center containers_DB">
+                    <input type="checkbox" class="caixaMarcacao" disabled>
+                    <label>COMPROVANTE DE RESIDÊNCIA</label>
+                </div>                             
+                <a href="#" id="visualizarDB">
+                        <ion-icon name="search-outline" id="icon_pesquisaDB"></ion-icon>
+                        <span style="font-size: 1.1em;">Visualizar</span>
+                </a>                                        
+            </div>
+            <div class="subcontainers_DB">
+                <div class="form-check d-flex align-items-center containers_DB">
+                    <input type="checkbox" class="caixaMarcacao" disabled>
+                    <label>LAUDO MÉDICO</label>
+                </div>                             
+                <a href="#" id="visualizarDB">
+                        <ion-icon name="search-outline" id="icon_pesquisaDB"></ion-icon>
+                        <span style="font-size: 1.1em;">Visualizar</span>
+                </a>                                        
+            </div>
+
+       </div>
+
     </main>
 
     <!-- Conexão com Bootstrap  -->

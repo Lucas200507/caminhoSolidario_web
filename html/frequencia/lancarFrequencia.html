@@ -37,7 +37,7 @@
                 </li>
                 <li class="nav-item itens_navegadores">
                 <ion-icon name="document-text-outline" class="icones_nav"></ion-icon>
-                    <a href="" class="nav-link" id="linksNavegacao">Documentos</a>
+                    <a href="/html/documentos.html" class="nav-link" id="linksNavegacao">Documentos</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="checkbox-outline" class="icones_nav" id="linksNavegacaoSelecionado"></ion-icon>
@@ -76,9 +76,14 @@
             <h2 style="text-align: center;" class="mb-4">
                 Aqui você consegue saber informações sobre seu beneficiário
            </h2>
-           <select class="form-select form-select-md">
-            <option value="">CPF do(a) Beneficiário(a)</option>        
-           </select>
+           <div class="d-flex justify-content-around w-100 input-group">            
+            <select class="form-select form-select-md w-50">
+             <option value="">CPF do(a) Beneficiário(a)</option>        
+            </select>
+            <button id="buttonPesquisarCPF">
+                 Pesquisar
+            </button>
+        </div>
         </div>
             <!-- CAROUSEL -->
         <h2 style="text-align: center; color: #17a2b9;" class="mb-4">
@@ -92,55 +97,55 @@
                     </h4>
                     <div class="d-flex flex-row w-100 justify-content-around">
                         <span class="d-flex flex-column">
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                            <span class="mes_freqBenef">
+                                <input type="checkbox"class="caixaMarcacao">
                                 <label for="">Janeiro</label>
                             </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                            <span class="mes_freqBenef">
+                                <input type="checkbox" class="caixaMarcacao" >
                                 <label for="">Fevereiro</label>
                             </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                            <span class="mes_freqBenef">
+                                <input type="checkbox"class="caixaMarcacao">
                                 <label for="">Março</label>
                             </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                            <span class="mes_freqBenef">
+                                <input type="checkbox"class="caixaMarcacao">
                                 <label for="">Abril</label>
                             </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                            <span class="mes_freqBenef">
+                                <input type="checkbox"class="caixaMarcacao">
                                 <label for="">Maio</label>
                             </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                            <span class="mes_freqBenef">
+                                <input type="checkbox"class="caixaMarcacao">
                                 <label for="">Junho</label>
                             </span>                             
                         </span>
                         <span>
                             <span class="d-flex flex-column">
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox"class="caixaMarcacao">
                                     <label for="">Julho</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox"class="caixaMarcacao">
                                     <label for="">Agosto</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox"class="caixaMarcacao">
                                     <label for="">Setembro</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox"class="caixaMarcacao">
                                     <label for="">Outubro</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox"class="caixaMarcacao">
                                     <label for="">Novembro</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox"class="caixaMarcacao">
                                     <label for="">Dezembro</label>
                                 </span>                             
                             </span>
@@ -154,54 +159,54 @@
                     <div class="d-flex flex-row w-100 justify-content-around">
                         <span class="d-flex flex-column">
                             <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                                <input type="checkbox"class="caixaMarcacao">
                                 <label for="">Janeiro</label>
                             </span>
                             <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                                <input type="checkbox"class="caixaMarcacao">
                                 <label for="">Fevereiro</label>
                             </span>
                             <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                                <input type="checkbox"class="caixaMarcacao">
                                 <label for="">Março</label>
                             </span>
                             <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                                <input type="checkbox"class="caixaMarcacao">
                                 <label for="">Abril</label>
                             </span>
                             <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                                <input type="checkbox"class="caixaMarcacao">
                                 <label for="">Maio</label>
                             </span>
                             <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                                <input type="checkbox"class="caixaMarcacao">
                                 <label for="">Junho</label>
                             </span>                             
                         </span>
                         <span>
                             <span class="d-flex flex-column">
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox"class="caixaMarcacao">
                                     <label for="">Julho</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox"class="caixaMarcacao">
                                     <label for="">Agosto</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox"class="caixaMarcacao">
                                     <label for="">Setembro</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox"class="caixaMarcacao">
                                     <label for="">Outubro</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox"class="caixaMarcacao">
                                     <label for="">Novembro</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox"class="caixaMarcacao">
                                     <label for="">Dezembro</label>
                                 </span>                             
                             </span>
@@ -215,54 +220,54 @@
                     <div class="d-flex flex-row w-100 justify-content-around">
                         <span class="d-flex flex-column">
                             <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                                <input type="checkbox" class="caixaMarcacao">
                                 <label for="">Janeiro</label>
                             </span>
                             <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                                <input type="checkbox" class="caixaMarcacao">
                                 <label for="">Fevereiro</label>
                             </span>
                             <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                                <input type="checkbox" class="caixaMarcacao">
                                 <label for="">Março</label>
                             </span>
                             <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                                <input type="checkbox" class="caixaMarcacao">
                                 <label for="">Abril</label>
                             </span>
                             <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                                <input type="checkbox" class="caixaMarcacao">
                                 <label for="">Maio</label>
                             </span>
                             <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="me-1">
+                                <input type="checkbox" class="caixaMarcacao">
                                 <label for="">Junho</label>
                             </span>                             
                         </span>
                         <span>
                             <span class="d-flex flex-column">
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox" class="caixaMarcacao">
                                     <label for="">Julho</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox" class="caixaMarcacao">
                                     <label for="">Agosto</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox" class="caixaMarcacao">
                                     <label for="">Setembro</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox" class="caixaMarcacao">
                                     <label for="">Outubro</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox" class="caixaMarcacao">
                                     <label for="">Novembro</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="me-1">
+                                    <input type="checkbox" class="caixaMarcacao">
                                     <label for="">Dezembro</label>
                                 </span>                             
                             </span>

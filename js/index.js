@@ -34,6 +34,17 @@ function navegar_verificarFrequencia(){
     window.location.href = "/html/frequencia/verificarFrequencia.html";
 }
 
+function navegar_documentos(){
+    window.location.href = "/html/documentos.html";
+}
+
+function navegar_documentosDependente(){
+    window.location.href = "/html/documentos/documentosDependente.html";
+}
+
+function navegar_documentosBeneficiario(){
+    window.location.href = "/html/documentos/documentosBeneficiario.html";
+}
 //////////////////////////////////////////
 
 
