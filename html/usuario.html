@@ -56,12 +56,30 @@
             </ul>
         </div>
     </nav>
-    <main class="container_usuario">
-        <span>
-            <img src="https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg" alt="" id="foto_voluntarioU">
-        </span>
-        <span id="foto">            
-        </span>
+    <main class="main_usuario w-100">
+        <div class="containerIcon mb-5">
+            <span id="IconUsuarioU" class="mb-4"></span>
+            <h2 id="nomeUsuarioU"></h2>
+        </div>
+        <!-- DADOS DO USUÁRIO -->
+        <div class="dadosUsuario mb-5 w-100">
+            <div>
+                <h4 class="text-center">Dados Pessoais</h4>
+                <div class="d-flex flex-column container">
+                    <label class="form-label">Nome Completo:</label>
+                    <input type="text" class="form-control border">            
+                </div>
+                <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
+                    <span class="col-12">
+                        <label for="">CPF</label>
+                        <input type="text" class="form-control">
+                    </span>                                     
+            </div>
+        </div>
+        <a href="/html/Servicos.html">
+            <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
+        </a>
+        <button>logout</button>
     </main>
 
 

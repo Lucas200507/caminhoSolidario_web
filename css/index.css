@@ -2,7 +2,9 @@
 
 :root{
     --altura_tela: 100vh;
+    --icon: url("https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg");
 }
+
 
 html{
     margin: 0;
@@ -103,8 +105,56 @@ label{
     font-size: 19px;
 }
 
-/*///////////////////////////////////////////////////////////////*/
+.container_userPaginas{
+    display: flex;
+    flex-direction: row;
+    align-items: center;    
+}
 
+
+
+/*//////////////////////////////////////////////////////////*/
+/* DROP DOWN ICON */
+#IconUsuarioPaginas{
+    display: block;   
+    height: 3em;
+    width: 3em;
+    border-radius: 50%;
+    background-image: var(--icon);   
+    background-position: center;
+    background-size: cover;
+}
+
+.container_iconPaginas{
+    position: relative;
+    display: inline-block;    
+}
+
+.container_dropDownUser{
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;    
+    min-width: 140px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.container_dropDownUser a{
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.container_dropDownUser a:hover{
+    background-color: #c7c7c7b0;
+}
+
+.container_iconPaginas:hover .container_dropDownUser{
+    display: block;
+}
+
+/*///////////////////////////////////////////////////////////////*/
         /* SPLASH */
 
 .container-splash{
@@ -221,7 +271,7 @@ label{
 
 #usuario_home div{
     font-size: 20px;    
-   }
+}
 
 #titulo_home span{
     font-size: 40px;    
@@ -467,21 +517,29 @@ label{
 }
 /*****************************************************************************/
         /* USUARIO */
-.container_usuario{
+.main_usuario{
     display: flex;
     flex-direction: column;    
     align-items: center;
+    justify-content: center;
+    padding: 5em;
+
 }
 
-#foto_voluntarioU{
-    border-radius: 8em;
+.containerIcon{
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    align-items: center;    
 }
 
-#foto{
-    height: 20em;
-    width: 20em;
+#IconUsuarioU{
+    height: 23em;
+    width: 23em;
     background-image: url("https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg");
-    border-radius: 2em;
+    background-position: center;
+    border-radius: 50%;
+    box-shadow: 1px 1px 10px 10px #00000067;
 }
 
 
@@ -502,8 +560,7 @@ label{
     #container_logoHome{
         height: 100%;
         width:65%;
-        padding: 5%;
-        
+        padding: 5%;        
     }
 
     #container_principalHome{
@@ -512,6 +569,11 @@ label{
 
     .container_MainHome p{
         font-size: 2em;
+    }
+
+    .container_userPaginas{
+        justify-content: end;
+        margin-right: 1em;
     }
 
     .container_icones_cadastro{
@@ -575,6 +637,7 @@ label{
         width: 70%;
         justify-content: space-around;
     }    
+
 }
 
 @media (min-width: 880px){
@@ -604,6 +667,12 @@ label{
         flex-direction: row;
         align-items: center;
         justify-content: space-around;    
+    }
+
+    .container_userPaginas{
+        justify-content: space-between;
+        margin-right: 0;
+        width: 50%;
     }
 
     .container_icones_cadastro{
@@ -646,10 +715,24 @@ label{
     #container_principalHome{
         width: 100%;        
     }   
+
+    .container_userPaginas{
+        width: 40%;
+    }
 }
 
 @media (min-width: 1024px){
     #container_principalHome{
         width: 25%;        
+    }
+
+    .container_userPaginas{
+        width: 40%;
+    }
+}
+
+@media (min-width: 1400px){
+    .container_userPaginas{
+        width: 25%;
     }
 }

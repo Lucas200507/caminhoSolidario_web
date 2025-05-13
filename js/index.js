@@ -1,3 +1,6 @@
+
+/////////////////////////////////////////////////////////////////////
+
 // NAVEGAÇÃO DE PÁGINAS
 function navegar_cadastrarBeneficiario(){
     window.location.href = "/html/cadastro/cadastroBeneficiario.html";
@@ -46,8 +49,27 @@ function navegar_documentosBeneficiario(){
     window.location.href = "/html/documentos/documentosBeneficiario.html";
 }
 //////////////////////////////////////////
+/*
+function MudarImagem(){
+    let imagem = document.getElementById('foto_voluntarioU');
+        if (imagem.src == "https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg"){
+            imagem.src = "https://i.pinimg.com/736x/a6/25/b3/a625b305349cf814110c6b521feb6ab5.jpg";
+        } else {
+            imagem.src = "https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg";
+        }
+}
 
-
+function MudarImg(){
+    let fotoOriginal = true;
+    let foto = document.getElementById('foto');
+    if(foto.style.backgroundImage.includes('https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg')){        
+        foto.style.backgroundImage = "url('https://i.pinimg.com/736x/a6/25/b3/a625b305349cf814110c6b521feb6ab5.jpg')";        
+    } else { 
+        foto.style.backgroundImage = "url('https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg')";
+        
+    }
+}
+*/
 function cancelarCadastro(){
     window.alert("Cancelou meu nobre");
 }
