@@ -1,8 +1,20 @@
+// Miranha: https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg
 const usuario = "Lucas";
-/////////////////////////////////////////////////////////////////////
+let icon = "https://pbs.twimg.com/media/FRyggE2WUAAJux1.png";
+
+const iconUsuario = document.getElementById('IconUsuarioU');
+// verifica se o id não está nulo
+if (iconUsuario) {
+  iconUsuario.style.backgroundImage = `url(${icon})`;
+}
+const iconUsuarioPaginas = document.getElementById('IconUsuarioPaginas');
+if (iconUsuarioPaginas) {
+  iconUsuarioPaginas.style.backgroundImage = `url(${icon})`;
+}
+
+
 const nomeUsuario = document.getElementById('nomeUsuario');
 nomeUsuario.textContent = usuario;
-
 
 // NAVEGAÇÃO DE PÁGINAS
 function navegar_cadastrarBeneficiario(){
