@@ -13,30 +13,31 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 </head>
 <body id="telaBody">
-    <nav class="navbar navbar-expand-lg navbar-dark justify-content-between" style="background-color: #17a2b9; padding: 0.8em;">
-            <!-- logo -->
-            <a href="/html/splash.html" class="navbar-brand p-0 d-block" id="container_logoHome">
-                <img src="/img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
-            </a>
+    <nav class="navbar navbar-expand-lg navbar-dark barraNav" style="padding: 0.8em;">
+        <!-- logo -->
+        <a href="splash.html" class="navbar-brand p-0 d-block" id="container_logoHome">
+            <img src="/img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
+        </a>
 
-            <!-- Menu Hamburguer -->
-            <button class="navbar-toggler" data-toggle="collapse" data-target="#navegacaoHome" id="botaoHamburguer" type="button" >
-            <span class="navbar-toggler-icon"></span><!-- Aparece quado você diminui o tamanho da tela para o tamanho definido em "nav>navbar-expand-(md)" -->
-            </button>
+        <!-- Menu Hamburguer -->
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navegacaoHome" id="botaoHamburguer">
+            <span
+                class="navbar-toggler-icon"></span><!-- Aparece quado você diminui o tamanho da tela para o tamanho definido em "nav>navbar-expand-(md)" -->
+        </button>
 
-            <!-- navegação -->         
-            <div class="collapse navbar-collapse justify-content-end" id="navegacaoHome">
+        <!-- navegação -->
+        <div class="collapse navbar-collapse justify-content-end" id="navegacaoHome">
             <ul class="navbar-nav ml-1 justify-content-around" id="navegadores_links">
                 <li class="nav-item itens_navegadores">
-                    <ion-icon name="person-add-outline" class="icones_nav" id="linksNavegacaoSelecionado"></ion-icon>
-                    <a href="/html/cadastro.html" class="nav-link" id="linksNavegacaoSelecionado">Cadastro</a>
+                    <ion-icon name="person-add-outline" class="icones_nav"></ion-icon>
+                    <a href="/html/cadastro.html" class="nav-link" id="linksNavegacao">Cadastro</a>
                 </li>
                 <li class="nav-item itens_navegadores">
-                    <ion-icon name="create-outline" class="icones_nav"></ion-icon>
-                <a href="/html/alteracao.html" class="nav-link" id="linksNavegacao">Alteração</a>
+                    <ion-icon name="create-outline" class="icones_nav" id="linksNavegacaoSelecionado"></ion-icon>
+                    <a href="/html/alteracao.html" class="nav-link" id="linksNavegacaoSelecionado">Alteração</a>
                 </li>
                 <li class="nav-item itens_navegadores">
-                <ion-icon name="document-text-outline" class="icones_nav"></ion-icon>
+                    <ion-icon name="document-text-outline" class="icones_nav"></ion-icon>
                     <a href="/html/documentos.html" class="nav-link" id="linksNavegacao">Documentos</a>
                 </li>
                 <li class="nav-item itens_navegadores">
@@ -47,31 +48,44 @@
                     <ion-icon name="list-outline" class="icones_nav"></ion-icon>
                     <a href="/html/Servicos.html" class="nav-link" id="linksNavegacao">Serviços</a>
                 </li>
-            </ul>                 
-            </div>
+            </ul>
+        </div>
     </nav>
-    <!-- TITULO -->
+
     <div class="d-flex justify-content-between w-100" id="titulo_home">
-        <span class="text-start w-50">
-            <h3>Cadastro de Dependente</h3>
+        <span class="text-start w-25">
+            <h3>Alteração Dependente</h3>
         </span>
-        <div class="d-flex flex-row align-items-center justify-content-end">
-            <span class="mr-3 d-none d-lg-block" id="usuario_home">
+        <div class="container_userPaginas">
+            <span class="mr-3 d-none d-md-block" id="usuario_home">
                 <div id="nome-titulo_home" class="d-flex flex-row">
-                    <p class="mr-2">Nome:</p>
-                    <p>Lucas Ataide Martins de Souza</p>
+                    <p class="mr-2">Nome: </p>
+                    <p>Lucas Ataide Martins</p>
                 </div>
                 <div id="funcao-titulo_home" class="d-flex flex-row">
-                    <p class="mr-2">Função:</p>
+                    <p class="mr-2">Função: </p>
                     <p>Voluntário</p>
-                </div>                    
+                </div>
             </span>
-            <span>
-                <ion-icon name="person-circle-outline" id="icon_user_home"></ion-icon>
-            </span>
+            <div class="container_iconPaginas">
+                <span id="IconUsuarioPaginas"></span>
+                <!-- Criando um DropDown com o icon -->
+                <div id="dropdownUser" class="container_dropDownUser">
+                    <a href="/html/usuario.html">Sua conta</a>
+                    <a href="/html/login.html" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
+                </div>
+            </div>
         </div>
     </div>
     <main class="mt-5 d-flex flex-column container">
+        <div class="d-flex justify-content-around w-100 input-group mb-4">
+            <select class="form-select form-select-md w-50">
+                <option value="">CPF do(a) Dependente</option>
+            </select>
+            <button id="buttonPesquisarCPF">
+                Pesquisar
+            </button>
+        </div>
         <!-- DADOS PESSOAIS -->
         <h3 style="text-align: center;" class="mb-3">
             Dados Pessoais

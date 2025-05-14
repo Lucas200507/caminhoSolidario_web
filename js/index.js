@@ -1,5 +1,8 @@
-
+const usuario = "Lucas";
 /////////////////////////////////////////////////////////////////////
+const nomeUsuario = document.getElementById('nomeUsuario');
+nomeUsuario.textContent = usuario;
+
 
 // NAVEGAÇÃO DE PÁGINAS
 function navegar_cadastrarBeneficiario(){
@@ -48,6 +51,12 @@ function navegar_documentosDependente(){
 function navegar_documentosBeneficiario(){
     window.location.href = "/html/documentos/documentosBeneficiario.html";
 }
+
+function navegar_usuario(){
+    window.location.href = "/html/usuario.html";
+    window.location.href = "#resetarSenha";
+}
+
 //////////////////////////////////////////
 /*
 function MudarImagem(){
@@ -84,3 +93,17 @@ function Cadastrar_Voluntario(){
     }
 }
 
+function resetarSenhaU(){
+    let container = document.getElementById('formResetarSenha');
+    if (container.style.display == 'none'){
+        container.style.display =  'block';
+    } else {
+        container.style.display = 'none';
+        }
+}
+
+
+
+function logout(){
+    window.alert('hello');
+}
