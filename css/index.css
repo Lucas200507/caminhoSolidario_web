@@ -130,7 +130,7 @@ label{
     height: 3em;
     width: 3em;
     border-radius: 50%;
-    background-image: var(--icon);   
+    /*background-image: var(--icon); */
     background-position: center;
     background-size: cover;
 }
@@ -536,7 +536,7 @@ label{
 
 }
 
-.containerIcon{
+.containerIcon{    
     display: flex;
     flex-direction: column;
     width: 75%;
@@ -546,11 +546,29 @@ label{
 #IconUsuarioU{
     height: 23em;
     width: 23em;
-    background-image: url("https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
     background-position: center;
     border-radius: 50%;
     box-shadow: 1px 1px 10px 10px #00000067;
+    z-index: 2;
 }
+
+#IconUsuarioU:hover{
+    opacity: 0.2; 
+    z-index: 0;     
+}
+
+.iconImg ion-icon{
+    display: flex;
+    position: relative;    
+    font-size: 3em;
+    top: 4.5em;
+    z-index: 1;
+    text-decoration: none;
+    color: black;
+}
+
 
 #resetarSenha{    
     background-color: red;
