@@ -52,9 +52,8 @@ function navegar_documentosBeneficiario(){
     window.location.href = "/html/documentos/documentosBeneficiario.html";
 }
 
-function navegar_usuario(){
-    window.location.href = "/html/usuario.html";
-    window.location.href = "#resetarSenha";
+function navegar_usuario(){        
+    window.location.href = "/html/usuario.html#resetarSenha";
 }
 
 //////////////////////////////////////////
