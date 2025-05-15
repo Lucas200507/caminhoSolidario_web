@@ -1,21 +1,60 @@
 // Miranha: https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg
-const usuario = "Lucas";
-let icon = "https://pbs.twimg.com/media/FRyggE2WUAAJux1.png";
+// LULA: https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg/250px-Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg
+// Inosuke: https://i.pinimg.com/474x/33/b3/83/33b383395a23f5ce67024a4107e49b88.jpg
+const inosuke = "https://i.pinimg.com/474x/33/b3/83/33b383395a23f5ce67024a4107e49b88.jpg";
+const lula = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg/250px-Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg";
+const miranha = "https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg";
+const pinguim = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8U8LZgGKkmxBC--2NCEZjCASVY5CmgnKRSA&s";
+// salva a variável para todas as páginas
+let icon = localStorage.getItem('userIcon') || pinguim; // Carrega do localStorage ou usa o padrão
+let iconAlterado = false;
+
+if(nomeUsuario){
+    let usuario = "";
+    if (icon == lula){
+        usuario = "Ladrão";
+    } else if (icon == miranha){
+        usuario = "Peter Parker";
+    } else if (icon == inosuke){
+        usuario = "Inosuke";
+    } else if (icon == pinguim){
+        usuario = "Lucas";
+    }
+
+    nomeUsuario.textContent = usuario;
+}
 
 const iconUsuario = document.getElementById('IconUsuarioU');
-// verifica se o id não está nulo
-if (iconUsuario) {
-  iconUsuario.style.backgroundImage = `url(${icon})`;
-}
 const iconUsuarioPaginas = document.getElementById('IconUsuarioPaginas');
-if (iconUsuarioPaginas) {
-  iconUsuarioPaginas.style.backgroundImage = `url(${icon})`;
+
+function aplicarIcone(elemento, url) {
+    if (elemento) {
+        elemento.style.backgroundImage = `url(${url})`;
+    }
 }
 
+function alterarIcon(){
+    if (iconUsuario) {
+        if (icon == lula){
+            icon = miranha;
+        } else if (icon == miranha){
+            icon = inosuke;
+        } else if (icon == inosuke){
+            icon = pinguim;
+        } else if (icon == pinguim){
+            icon = lula;
+        }
 
-const nomeUsuario = document.getElementById('nomeUsuario');
-nomeUsuario.textContent = usuario;
+        localStorage.setItem('userIcon', icon); // Salva o ícone no localStorage
+        aplicarIcone(iconUsuario, icon);
+        aplicarIcone(iconUsuarioPaginas, icon);
+        iconAlterado = true;
+    }
+}
 
+// Aplica o ícone carregado do localStorage (ou o padrão) ao carregar a página
+aplicarIcone(iconUsuario, icon);
+aplicarIcone(iconUsuarioPaginas, icon);
 // NAVEGAÇÃO DE PÁGINAS
 function navegar_cadastrarBeneficiario(){
     window.location.href = "/html/cadastro/cadastroBeneficiario.html";
@@ -68,28 +107,6 @@ function navegar_usuario(){
     window.location.href = "/html/usuario.html#resetarSenha";
 }
 
-//////////////////////////////////////////
-/*
-function MudarImagem(){
-    let imagem = document.getElementById('foto_voluntarioU');
-        if (imagem.src == "https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg"){
-            imagem.src = "https://i.pinimg.com/736x/a6/25/b3/a625b305349cf814110c6b521feb6ab5.jpg";
-        } else {
-            imagem.src = "https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg";
-        }
-}
-
-function MudarImg(){
-    let fotoOriginal = true;
-    let foto = document.getElementById('foto');
-    if(foto.style.backgroundImage.includes('https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg')){        
-        foto.style.backgroundImage = "url('https://i.pinimg.com/736x/a6/25/b3/a625b305349cf814110c6b521feb6ab5.jpg')";        
-    } else { 
-        foto.style.backgroundImage = "url('https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg')";
-        
-    }
-}
-*/
 function cancelarCadastro(){
     window.alert("Cancelou meu nobre");
 }
@@ -104,6 +121,25 @@ function Cadastrar_Voluntario(){
     }
 }
 
+ /************************************************ */
+// Usuário
+let FotoU = document.getElementById('imgFotoU');
+let iconU = document.getElementById('IconUsuarioU');
+function iconHoverIn(){
+    if(iconU){
+        iconU.style.opacity = 0.2;
+        iconU.style.zIndex = 0;                
+    }
+}
+
+function iconHoverOut(){
+    if(iconU){
+        iconU.style.opacity = 1;
+        iconU.style.zIndex = 2;
+    }
+}
+
+
 function resetarSenhaU(){
     let container = document.getElementById('formResetarSenha');
     if (container.style.display == 'none'){
@@ -112,8 +148,6 @@ function resetarSenhaU(){
         container.style.display = 'none';
         }
 }
-
-
 
 function logout(){
     window.alert('hello');
