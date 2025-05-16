@@ -569,6 +569,17 @@ label{
     z-index: 1;
 }
 
+#mensagemEditIcon{
+    padding: 1em;
+    border-radius: 2em;
+    color: white;       
+    background-color: #383737b2;     
+    position: relative;
+    display: none;  
+    right: -10em;  
+    bottom: 3em;
+    z-index: 4;
+}
 
 #resetarSenha{    
     background-color: red;

@@ -9,6 +9,11 @@ const pinguim = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8U8LZgGK
 let icon = localStorage.getItem('userIcon') || pinguim; // Carrega do localStorage ou usa o padrão
 let iconAlterado = false;
 
+function mostrarMensagemEditIcon(){
+    let mensagem = document.getElementById('mensagemEditIcon');
+    mensagem.style.display = 'block';
+}
+
 if(nomeUsuario){
     let usuario = "";
     if (icon == lula){
@@ -128,7 +133,13 @@ let iconU = document.getElementById('IconUsuarioU');
 function iconHoverIn(){
     if(iconU){
         iconU.style.opacity = 0.2;
-        iconU.style.zIndex = 0;                
+        iconU.style.zIndex = 0; 
+
+        // colocando um delay de 1s para aparecer a mensagem
+        setTimeout(function(){
+            let mensagem = document.getElementById('mensagemEditIcon');
+            mensagem.style.display = 'flex';
+        }, 750);        
     }
 }
 
@@ -136,6 +147,12 @@ function iconHoverOut(){
     if(iconU){
         iconU.style.opacity = 1;
         iconU.style.zIndex = 2;
+
+        // colocando um delay de 1s para desaparecer a mensagem
+        setTimeout(function(){
+            let mensagem = document.getElementById('mensagemEditIcon');
+            mensagem.style.display = 'none';
+        }, 750);  
     }
 }
 
