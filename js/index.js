@@ -82,7 +82,7 @@ if (primeiraLetraUsuario == 'A' || primeiraLetraUsuario == 'a' || primeiraLetraU
     icon = 'https://cdn-icons-png.freepik.com/256/3097/3097132.png?semt=ais_hybrid'
 } else if (primeiraLetraUsuario == 'Z' || primeiraLetraUsuario == 'z'){
     icon = 'https://cdn-icons-png.flaticon.com/512/6646/6646557.png'
-} if (usuario == 'Yan Fellippe'){
+} else if (usuario == 'Yan Fellippe'){
     icon = 'https://carrefourbr.vtexassets.com/arquivos/ids/180332976/kit-diy-therian-mask-seenelling-mascara-de-gato-em-branco-com-tecido-de-feltro.jpg?v=638680164515130000'
 } else if (usuario == 'Raphael'){
     icon = 'https://pm1.aminoapps.com/7566/3a426d105f3dbd3b646f0cc1354bd4c23abfddcer1-258-195v2_uhq.jpg'

@@ -15,8 +15,7 @@
     background-repeat: no-repeat;
     background-size: cover;
     width: 100%;
-    bottom: 0;
-    height: 200px;
+    bottom: 0;    
     margin-top: 5em;
 }
 
@@ -570,6 +569,17 @@ label{
     z-index: 1;
 }
 
+#mensagemEditIcon{
+    padding: 1em;
+    border-radius: 2em;
+    color: white;       
+    background-color: #383737b2;     
+    position: relative;
+    display: none;  
+    right: -10em;  
+    bottom: 3em;
+    z-index: 4;
+}
 
 #resetarSenha{    
     background-color: red;
@@ -608,6 +618,10 @@ label{
     /* RESPONSIVIDADE  */
 
 @media (min-width: 100px){
+    #rodapeI{
+        height: 100px;
+    }
+    
     .form_login{
         display: flex;
         width: 90%;        
@@ -679,7 +693,6 @@ label{
     #logo_navegacaoHome{
         width: 60%;
     }
-
 }
 
 @media(min-width: 768px){
@@ -697,10 +710,13 @@ label{
         width: 70%;
         justify-content: space-around;
     }    
-
 }
 
 @media (min-width: 880px){
+    #rodapeI{
+        height: 145px;
+    }
+    
     .form_login{
         display: flex;
         width: 40%;
@@ -732,7 +748,7 @@ label{
     .container_userPaginas{
         justify-content: space-between;
         margin-right: 0;
-        width: 50%;
+        width: 30%;
     }
 
     .container_icones_cadastro{
@@ -777,7 +793,7 @@ label{
     }   
 
     .container_userPaginas{
-        width: 40%;
+        width: 30%;
     }
 }
 
@@ -787,7 +803,7 @@ label{
     }
 
     .container_userPaginas{
-        width: 40%;
+        width: 30%;
     }
 }
 
