@@ -1,10 +1,10 @@
 // Miranha: https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg
 // LULA: https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg/250px-Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg
 // Inosuke: https://i.pinimg.com/474x/33/b3/83/33b383395a23f5ce67024a4107e49b88.jpg
-const inosuke = "https://i.pinimg.com/474x/33/b3/83/33b383395a23f5ce67024a4107e49b88.jpg";
-const lula = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg/250px-Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg";
-const miranha = "https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg";
-const pinguim = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8U8LZgGKkmxBC--2NCEZjCASVY5CmgnKRSA&s";
+//const inosuke = "https://i.pinimg.com/474x/33/b3/83/33b383395a23f5ce67024a4107e49b88.jpg";
+//const lula = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg/250px-Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg";
+//const miranha = "https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg";
+//const pinguim = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8U8LZgGKkmxBC--2NCEZjCASVY5CmgnKRSA&s";
 // salva a variável para todas as páginas
 let icon = localStorage.getItem('userIcon'); // Carrega do localStorage ou usa o padrão
 let iconAlterado = false;
@@ -24,7 +24,7 @@ let iconAlterado = false;
 //     nomeUsuario.textContent = usuario;
 // }
 
-let usuario = 'Daiana'
+let usuario = 'Usuário'
 nomeUsuario.textContent = usuario;
 
 let primeiraLetraUsuario = usuario.charAt(0)
