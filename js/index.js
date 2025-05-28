@@ -1,34 +1,28 @@
-// Miranha: https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg
-// LULA: https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg/250px-Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg
-// Inosuke: https://i.pinimg.com/474x/33/b3/83/33b383395a23f5ce67024a4107e49b88.jpg
-//const inosuke = "https://i.pinimg.com/474x/33/b3/83/33b383395a23f5ce67024a4107e49b88.jpg";
-//const lula = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg/250px-Foto_oficial_de_Luiz_In%C3%A1cio_Lula_da_Silva_%28rosto%29.jpg";
-//const miranha = "https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg";
-//const pinguim = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8U8LZgGKkmxBC--2NCEZjCASVY5CmgnKRSA&s";
+
+/********************************************************************************************************* */
+/*                    -------------------  Usuário  -------------------                       */
 // salva a variável para todas as páginas
-let icon = localStorage.getItem('userIcon'); // Carrega do localStorage ou usa o padrão
+let icon = localStorage.getItem('userIcon'); // Carrega do localStorage ou usa o padrão]
+let usuario = localStorage.getItem('usuario') || 'Usuário';
+let usuarioCompleto = localStorage.getItem('usuarioCompl');
 let iconAlterado = false;
 
-// if(nomeUsuario){
-//     let usuario = "";
-//     if (icon == lula){
-//         usuario = "Ladrão";
-//     } else if (icon == miranha){
-//         usuario = "Peter Parker";
-//     } else if (icon == inosuke){
-//         usuario = "Inosuke";
-//     } else if (icon == pinguim){
-//         usuario = "Lucas";
-//     }
 
-//     nomeUsuario.textContent = usuario;
-// }
 
-let usuario = 'Usuário'
-nomeUsuario.textContent = usuario;
+function Salvar_user(){
+    let nomeCompleto_usuario = document.getElementById('nomeCompleto_user').value;
+    localStorage.setItem('usuarioCompl', nomeCompleto_usuario);
+
+    let formataNome = nomeCompleto_usuario.split(' ');    
+    let primeiroNome = formataNome[0];
+    localStorage.setItem('usuario', primeiroNome);
+    nomeUsuario.textContent = usuario;    
+}
 
 let primeiraLetraUsuario = usuario.charAt(0)
 document.write(primeiraLetraUsuario)
+
+// ARRAY COM LINKS DAS IMAGENS
 
 if (primeiraLetraUsuario == 'A' || primeiraLetraUsuario == 'a' || primeiraLetraUsuario == 'Á'|| primeiraLetraUsuario == 'á'){
     icon = 'https://cdn-icons-png.flaticon.com/512/3665/3665909.png'
@@ -82,20 +76,7 @@ if (primeiraLetraUsuario == 'A' || primeiraLetraUsuario == 'a' || primeiraLetraU
     icon = 'https://cdn-icons-png.freepik.com/256/3097/3097132.png?semt=ais_hybrid'
 } else if (primeiraLetraUsuario == 'Z' || primeiraLetraUsuario == 'z'){
     icon = 'https://cdn-icons-png.flaticon.com/512/6646/6646557.png'
-} else if (usuario == 'Yan Fellippe'){
-    icon = 'https://carrefourbr.vtexassets.com/arquivos/ids/180332976/kit-diy-therian-mask-seenelling-mascara-de-gato-em-branco-com-tecido-de-feltro.jpg?v=638680164515130000'
-} else if (usuario == 'Raphael'){
-    icon = 'https://pm1.aminoapps.com/7566/3a426d105f3dbd3b646f0cc1354bd4c23abfddcer1-258-195v2_uhq.jpg'
-} else if (usuario == 'Lucas'){
-    icon = 'https://i.pinimg.com/236x/d3/c0/60/d3c0604694d341d039c4d356b7af945f.jpg'
-} else if (usuario == 'Rafael'){
-    icon = 'https://pagina3.com.br/wp-content/uploads/2025/05/legendaris.png'
-} else if (usuario == 'João'){
-    icon = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZrqG8e4cEegsO1_clIqBRxKRiJ6g-RLDcig&s'
-} else if (usuario == 'Daiana'){
-    icon = 'https://newr7-r7-prod.web.arc-cdn.net/resizer/v2/NTSOW5XUXVIRHB3BNT56G57M7Q.jpg?auth=9ae6515b5cd90e6b94e485d55e6940f5dd3426d6d5a94406058b197c54c2cd96&width=638&height=518'
-}
-
+} 
 
 
 
@@ -118,27 +99,7 @@ function aplicarIcone(elemento, url) {
 aplicarIcone(iconUsuario, icon);
 aplicarIcone(iconUsuarioPaginas, icon);
 
-// function alterarIcon(){
-//     if (iconUsuario) {
-//         if (icon == lula){
-//             icon = miranha;
-//         } else if (icon == miranha){
-//             icon = inosuke;
-//         } else if (icon == inosuke){
-//             icon = pinguim;
-//         } else if (icon == pinguim){
-//             icon = lula;
-//         }
-
-        
-//         localStorage.setItem('userIcon', icon); // Salva o ícone no localStorage
-//         aplicarIcone(iconUsuario, icon);
-//         aplicarIcone(iconUsuarioPaginas, icon);        
-//         iconAlterado = true;
-//     }
-// }
-
-
+/*************************************************************************************************************************************************** */
 
 // NAVEGAÇÃO DE PÁGINAS
 function navegar_cadastrarBeneficiario(){
