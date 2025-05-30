@@ -2,15 +2,43 @@
 /********************************************************************************************************* */
 /*                    -------------------  Usuário  -------------------                       */
 
-function Mudar_tema(){
-    let corpo_pagina = document.body;    
-    if (corpo_pagina.classList.contains('dark')){
+// Função para aplicar o tema salvo ao carregar a página
+function AplicarTemaSalvo() {
+    const tema = localStorage.getItem('tema');
+    const corpo_pagina = document.body;
+    const logo = document.getElementById('logo_navegacaoHome');
+
+    if (tema === 'escuro') {
+        corpo_pagina.classList.add('dark');
+        corpo_pagina.style.background = '#161616e8';
+        if (logo) logo.src = '/img/Caminho Solidário-branco.png';
+    } else {
         corpo_pagina.classList.remove('dark');
+        corpo_pagina.style.background = 'white';
+        if (logo) logo.src = '/img/logodolado - Copia.png';
+    }
+}
+
+// Função chamada no onclick para alternar o tema
+function Mudar_tema() {
+    const corpo_pagina = document.body;
+    const logo = document.getElementById('logo_navegacaoHome');
+
+    if (corpo_pagina.classList.contains('dark')) {
+        corpo_pagina.classList.remove('dark');
+        corpo_pagina.style.background = 'white';
+        if (logo) logo.src = '/img/logodolado - Copia.png';
+        localStorage.setItem('tema', 'claro');
     } else {
         corpo_pagina.classList.add('dark');
+        corpo_pagina.style.background = '#161616e8';
+        if (logo) logo.src = '/img/Caminho Solidário-branco.png';
+        localStorage.setItem('tema', 'escuro');
     }
-
 }
+
+// Aplica o tema salvo automaticamente ao carregar a página
+document.addEventListener('DOMContentLoaded', AplicarTemaSalvo);
 
 // salva a variável para todas as páginas
 let icon = localStorage.getItem('userIcon'); // Carrega do localStorage ou usa o padrão]
@@ -18,8 +46,9 @@ let icon = localStorage.getItem('userIcon'); // Carrega do localStorage ou usa o
 let usuarioCompleto = localStorage.getItem('usuarioCompl');
 let iconAlterado = false;
 
-let usuario = 'Lucas';
-nomeUsuario.textContent = usuario;
+let usuario = 'José aldo da silva costa';
+let usuarioFormatado = usuario.split(' ')
+nomeUsuario.textContent = usuarioFormatado[0];
 
 // function Salvar_user(){
 //     let nomeCompleto_usuario = document.getElementById('nomeCompleto_user').value;
