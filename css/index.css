@@ -3,6 +3,13 @@
 :root{
     --altura_tela: 100vh;
     --icon: url("https://i.pinimg.com/474x/e5/75/59/e57559d20114d87fc9d4f2129f5ef414.jpg");
+    --transparencia_sol: flex;
+    --transparencia_lua: none;
+}
+
+.dark{
+    --transparencia_sol: none;
+    --transparencia_lua: flex;
 }
 
 /* Tela Login */
@@ -526,6 +533,59 @@ label{
 }
 /*****************************************************************************/
         /* USUARIO */
+.container_mudarTema{
+    display: flex;
+    margin: 1em;
+    flex-direction: inline;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid black;
+    width: auto;
+    background-color: transparent;
+    border-radius: 1em;
+    height: 2em;    
+    width: 5em;
+    position: absolute;
+    z-index: 1;
+}
+
+.icon_mudarTema{
+    display: flex;
+    padding: 0.6em;    
+    border-radius: 2em;
+    font-size: 20px;
+    align-items: center;
+    justify-content: center; 
+    position: relative;
+    z-index: 2; 
+}
+
+#icon_mudarTema_moon{      
+    display: var(--transparencia_lua);        
+    background-color: rgb(146, 146, 146);
+    color: white;      
+    left: -2px; 
+}
+
+#icon_mudarTema_moon:hover{    
+    background-color: rgb(209, 209, 209);
+    color: black;   
+}
+
+
+#icon_mudarTema_sun{ 
+    display: var(--transparencia_sol);
+    background-color: #17a2b9;
+    color: black;  
+    right: -40px;      
+}
+
+#icon_mudarTema_sun:hover{
+    background-color: #047185;
+    color: white;  
+}
+
+
 .main_usuario{
     display: flex;
     flex-direction: column;    
