@@ -1,23 +1,35 @@
 
 /********************************************************************************************************* */
 /*                    -------------------  Usuário  -------------------                       */
+
+function Mudar_tema(){
+    let corpo_pagina = document.body;    
+    if (corpo_pagina.classList.contains('dark')){
+        corpo_pagina.classList.remove('dark');
+    } else {
+        corpo_pagina.classList.add('dark');
+    }
+
+}
+
 // salva a variável para todas as páginas
 let icon = localStorage.getItem('userIcon'); // Carrega do localStorage ou usa o padrão]
-let usuario = localStorage.getItem('usuario') || 'Usuário';
+// let usuario = localStorage.getItem('usuario') || 'Usuário';
 let usuarioCompleto = localStorage.getItem('usuarioCompl');
 let iconAlterado = false;
 
+let usuario = 'Lucas';
+nomeUsuario.textContent = usuario;
 
+// function Salvar_user(){
+//     let nomeCompleto_usuario = document.getElementById('nomeCompleto_user').value;
+//     localStorage.setItem('usuarioCompl', nomeCompleto_usuario);
 
-function Salvar_user(){
-    let nomeCompleto_usuario = document.getElementById('nomeCompleto_user').value;
-    localStorage.setItem('usuarioCompl', nomeCompleto_usuario);
-
-    let formataNome = nomeCompleto_usuario.split(' ');    
-    let primeiroNome = formataNome[0];
-    localStorage.setItem('usuario', primeiroNome);
-    nomeUsuario.textContent = usuario;    
-}
+//     let formataNome = nomeCompleto_usuario.split(' ');    
+//     let primeiroNome = formataNome[0];
+//     localStorage.setItem('usuario', primeiroNome);
+//     nomeUsuario.textContent = usuario;    
+// }
 
 let primeiraLetraUsuario = usuario.charAt(0)
 document.write(primeiraLetraUsuario)
@@ -100,8 +112,7 @@ aplicarIcone(iconUsuario, icon);
 aplicarIcone(iconUsuarioPaginas, icon);
 
 /*************************************************************************************************************************************************** */
-
-// NAVEGAÇÃO DE PÁGINAS
+/*                    -------------------  Navegação de páginas  -------------------                       */
 function navegar_cadastrarBeneficiario(){
     window.location.href = "/html/cadastro/cadastroBeneficiario.html";
     
