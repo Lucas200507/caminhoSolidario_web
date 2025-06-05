@@ -8,6 +8,7 @@
     --body_background: white;
     --cor_botaoVoltar: black;
     --cor_letras: black;
+    --cor_iconsServicos: black;
 
     --cor_ConfSenhaU: green;
     --borda_container_mudarTema: 2px solid black;
@@ -20,6 +21,7 @@
     --body_background: black;
     --cor_botaoVoltar: white;
     --cor_letras: white;
+    --cor_iconsServicos: white;
 
     --cor_ConfSenhaU: white;
     --borda_container_mudarTema: 2px solid white;
@@ -177,14 +179,11 @@ label{
     align-items: center;    
 }
 
-
-
-/*//////////////////////////////////////////////////////////*/
 /* DROP DOWN ICON */
 #IconUsuarioPaginas{
     display: block;   
-    height: 3em;
-    width: 3em;
+    height: 2.5em;
+    width: 2.5em;
     border-radius: 50%;
     /*background-image: var(--icon); */
     background-position: center;
@@ -353,9 +352,13 @@ label{
     margin-right: 0.1em;
 }
 
+.container_MainHome{
+    color: var(--cor_iconsServicos);
+}
+
 .container_MainHome:hover{
     color: #535353d8;
-    
+
 }
 
 #rodape_home{
@@ -905,6 +908,6 @@ label{
 
 @media (min-width: 1400px){
     .container_userPaginas{
-        width: 25%;
+        width: 15%;
     }
 }
