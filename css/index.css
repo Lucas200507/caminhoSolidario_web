@@ -9,6 +9,11 @@
     --cor_botaoVoltar: black;
     --cor_letras: black;
     --cor_iconsServicos: black;
+    --container_MainHome_background: transparent;
+    --container_MainHome_border:solid 2px transparent;
+    --container_MainHome_boxShadow: 5px 5px 5px rgba(0, 0, 0, 0.486);
+    --container_MainHome_background_hover: rgba(197, 197, 197, 0.411);
+
 
     --cor_ConfSenhaU: green;
     --borda_container_mudarTema: 2px solid black;
@@ -22,6 +27,10 @@
     --cor_botaoVoltar: white;
     --cor_letras: white;
     --cor_iconsServicos: white;
+    --container_MainHome_background: rgba(26, 26, 26, 0.555);
+    --container_MainHome_border:solid 2px transparent;
+    --container_MainHome_boxShadow: 5px 5px 5px rgba(255, 255, 255, 0.486);
+    --container_MainHome_background_hover: rgba(71, 71, 71, 0.329);
 
     --cor_ConfSenhaU: white;
     --borda_container_mudarTema: 2px solid white;
@@ -353,11 +362,16 @@ label{
 }
 
 .container_MainHome{
+    background-color: var(--container_MainHome_background);
+    border: var(--container_MainHome_border);
+    box-shadow: var(--container_MainHome_boxShadow);
+    padding: 1em 2em;
+    border-radius: 2em;
     color: var(--cor_iconsServicos);
 }
 
-.container_MainHome:hover{
-    color: #535353d8;
+.container_MainHome:hover{    
+    background-color: var(--container_MainHome_background_hover);
 
 }
 
@@ -368,7 +382,6 @@ label{
     
     
 }
-
 
 /* //////////////////////////////////////////////////////////////////////////////////////// */
                 /* CADASTRO */
