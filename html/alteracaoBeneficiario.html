@@ -4,19 +4,22 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro Dependente</title>
+    <title>Cadastro Beneficiário</title>
     <!-- icone no titulo da pagina -->
-    <link rel="icon" href="/img/logo_semnome.png" >
+    <link rel="icon" href="../img/logo_semnome.png" >
 
-    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="../css/index.css">
     <!-- BOOTSTRAP CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    
+    <!-- Conexao com JS -->
+    <script src="../js/index.js" defer></script> 
 </head>
 <body id="telaBody">
     <nav class="navbar navbar-expand-lg navbar-dark barraNav" style="padding: 0.8em;">
         <!-- logo -->
         <a href="splash.html" class="navbar-brand p-0 d-block" id="container_logoHome">
-            <img src="/img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
+            <img src="../img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
         </a>
 
         <!-- Menu Hamburguer -->
@@ -30,31 +33,31 @@
             <ul class="navbar-nav ml-1 justify-content-around" id="navegadores_links">
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="person-add-outline" class="icones_nav"></ion-icon>
-                    <a href="/html/cadastro.html" class="nav-link" id="linksNavegacao">Cadastro</a>
+                    <a href="cadastro.html" class="nav-link" id="linksNavegacao">Cadastro</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="create-outline" class="icones_nav" id="linksNavegacaoSelecionado"></ion-icon>
-                    <a href="/html/alteracao.html" class="nav-link" id="linksNavegacaoSelecionado">Alteração</a>
+                    <a href="alteracao.html" class="nav-link" id="linksNavegacaoSelecionado">Alteração</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="document-text-outline" class="icones_nav"></ion-icon>
-                    <a href="/html/documentos.html" class="nav-link" id="linksNavegacao">Documentos</a>
+                    <a href="documentos.html" class="nav-link" id="linksNavegacao">Documentos</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="checkbox-outline" class="icones_nav"></ion-icon>
-                    <a href="/html/frequenciaBeneficiario.html" class="nav-link" id="linksNavegacao">Frequência</a>
+                    <a href="frequenciaBeneficiario.html" class="nav-link" id="linksNavegacao">Frequência</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="list-outline" class="icones_nav"></ion-icon>
-                    <a href="/html/Servicos.html" class="nav-link" id="linksNavegacao">Serviços</a>
+                    <a href="Servicos.html" class="nav-link" id="linksNavegacao">Serviços</a>
                 </li>
             </ul>
         </div>
     </nav>
-
+    <!-- TÍTULO -->
     <div class="d-flex justify-content-between w-100" id="titulo_home">
         <span class="text-start w-25">
-            <h3 style="color: var(--cor_letras);">Alteração Dependente</h3>
+            <h3 style="color: var(--cor_letras);">Alteração Beneficiário</h3>
         </span>
         <div class="container_userPaginas">
             <span class="mr-3 d-none d-md-block" id="usuario_home">
@@ -71,8 +74,8 @@
                 <span id="IconUsuarioPaginas"></span>
                 <!-- Criando um DropDown com o icon -->
                 <div id="dropdownUser" class="container_dropDownUser">
-                    <a href="/html/usuario.html">Sua conta</a>
-                    <a href="/html/login.html" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
+                    <a href="usuario.html">Sua conta</a>
+                    <a href="login.html" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
                 </div>
             </div>
         </div>
@@ -80,7 +83,7 @@
     <main class="mt-5 d-flex flex-column container">
         <div class="d-flex justify-content-around w-100 input-group mb-4">
             <select class="form-select form-select-md w-50">
-                <option value="">CPF do(a) Dependente</option>
+                <option value="">CPF do(a) Beneficiário(a)</option>
             </select>
             <button id="buttonPesquisarCPF">
                 Pesquisar
@@ -104,24 +107,93 @@
                 <input type="date" class="form-control">
             </span>
             <span class="col-lg-4">
-                <label for="">Parentesco</label>
+                <label for="">Estado Civil</label>
                 <select class="form-select form-select-md">
                     <option value=""></option>
-                    <option value="">Filho(a)</option>
-                    <option value="">Mãe ou pai</option>                    
-                    <option value="">Neto(a)</option>
-                    <option value="">Irmão</option>
-                    <option value="">Outro</option>
+                    <option value="">Solteiro</option>
+                    <option value="">Casado</option>
+                    <option value="">Viúvo</option>
                 </select>
             </span>
-        </div>                  
+        </div>
+        <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
+            <span class="col-lg-5 col-sm-5 col-xs-12">
+                <label>Telefone:</label>
+                <input type="number" class="form-control">
+            </span>
+            <span class="col-lg-6 col-sm-6 col-xs-12">
+                <label>Email:</label>
+                <input type="text" class="form-control form-control-xl">
+            </span>
+        </div>
+            <!-- ENDEREÇO -->
+        <h3 style="text-align: center;" class="mb-3 mt-5">
+                Endereço        
+        </h3>
+        <div class="d-flex flex-column container">
+            <label class="form-label">Endereço Completo:</label>
+            <input type="text" class="form-control border">            
+        </div>
+        <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
+            <span class="col-lg-3 col-sm-3 col-md-4">
+                <label for="">Cidade</label>
+                <input type="text" class="form-control">
+            </span>
+            <span class="col-lg-3 col-sm-4 col-md-4">
+                <label for="">Estado</label>
+                <select class="form-select form-select-md">
+                    <option value=""></option>
+                    <option value="">AC - Acre</option>
+                    <option value="">AL - Alagoas</option>
+                    <option value="">AP - Amapá</option>
+                    <option value="">AM - Amazonas</option>
+                    <option value="">BA - Bahia</option>
+                    <option value="">CE - Ceará</option>
+                    <option value="">DF - Distrito Federal</option>
+                    <option value="">ES - Espírito Santo</option>
+                    <option value="">GO - Goiás</option>
+                    <option value="">MA - Maranhão</option>
+                    <option value="">MT - Mato Grosso</option>
+                    <option value="">MS - Mato Grosso do Sul</option>
+                    <option value="">MG - Minas Gerais</option>
+                    <option value="">PA - Pará</option>
+                    <option value="">PB - Paraíba</option>
+                    <option value="">PR - Paraná</option>
+                    <option value="">PE - Pernambuco</option>
+                    <option value="">PI - Piauí</option>
+                    <option value="">RJ - Rio de Janeiro</option>
+                    <option value="">RN - Rio Grande do Norte</option>
+                    <option value="">RS - Rio Grande do Sul</option>
+                    <option value="">RO - Rondônia</option>
+                    <option value="">RR - Roraima</option>
+                    <option value="">SC - Santa Catarina</option>
+                    <option value="">SE - Sergipe</option>
+                    <option value="">TO - Tocantis</option>                    
+                </select>
+            </span>
+            <span class="col-lg-4 col-sm-4 col-md-3">
+                <label for="">Situação da moradia</label>
+                <select class="form-select form-select-md">
+                    <option value=""></option>
+                    <option value="">Solteiro</option>
+                    <option value="">Casado</option>
+                    <option value="">Viúvo</option>
+                </select>
+            </span>
+        </div>
+        <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
+            <span class="col-12">
+                <label>Valor do Aluguel + Despesas (Água e luz):</label>
+                <input type="number" class="form-control">
+            </span>            
+        </div>
         <!-- SITUAÇÃO -->
         <h3 style="text-align: center;" class="mb-3 mt-5">
             Situação
         </h3>
         <div class="d-flex justify-content-between formularios_Beneficiario  mt-3 container">
             <div class="d-flex flex-row col-lg-8 col-sm-9 container justify-content-between ps-0">
-                <span class="col-lg-4 col-md-5 container p-0">
+                <span class="col-lg-4 col-md-5 col-sm-5 container p-0">
                     <label for="">Possui Benefício?</label>
                     <div class="d-flex container justify-content-start p-0">
                         <div class="form-check col-6">
@@ -134,19 +206,38 @@
                         </div>               
                     </div>
                 </span>
-                <span class="col-lg-8 col-md-7">
+                <span class="col-lg-8 col-md-7 col-sm-7">
                     <label for="">Qual o nome do Benefício?</label>
                     <input type="text" class="form-control">
                 </span> 
             </div>           
-            <span class="col-lg-4">
+            <span class="col-lg-4 col-sm-3">
                 <label for="">Valor</label>
                 <input type="text" class="form-control">
             </span> 
-        </div>       
+        </div>
+        <div class="d-flex flex-row justify-content-between container formularios_Beneficiario mt-3">        
+            <span class="col-lg-4 col-md-4 col-sm-5 justify-content-between">
+                <label for="">Possui Filhos?</label>
+                <div class="d-flex container justify-content-start p-0">
+                    <div class="form-check col-6">
+                        <input type="radio" class="form-check-input" name="rbPossuiBenf">
+                        <label for="">Sim</label>                        
+                    </div> 
+                    <div class="form-check col-6">
+                        <input type="radio" class="form-check-input" name="rbPossuiBenf">
+                        <label for="">Não</label>
+                    </div>               
+                </div>
+            </span>
+            <span class="col-lg-7 col-md-6 col-sm-6">
+                <label for="">Quantos menores?</label>
+                <input type="number" class="form-control">
+            </span> 
+        </div>
         <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">
-            <div class="d-flex col-lg-6 col-md-7 flex-row container justify-content-between p-0">
-                <span class="col-lg-6 col-md-6 justify-content-start">
+            <div class="d-flex col-lg-6 col-md-7 col-sm-8 flex-row container justify-content-between p-0">
+                <span class="col-lg-6 col-md-6 col-sm-6 justify-content-start">
                     <label for="">PCD?</label>
                     <div class="d-flex container justify-content-start p-0">
                         <div class="form-check col-6">
@@ -159,7 +250,7 @@
                         </div>               
                     </div>
                 </span>
-                <span class="col-lg-6 col-md-6 justify-content-start">
+                <span class="col-lg-6 col-md-6 col-sm-6 justify-content-start">
                     <label for="">Possui Laudo Médico?</label>
                     <div class="d-flex container justify-content-start p-0">
                         <div class="form-check col-6">
@@ -173,18 +264,28 @@
                     </div>
                 </span>                 
             </div>           
-            <span class="col-lg-6 col-md-5">
+            <span class="col-lg-6 col-md-5 col-sm-4">
                 <label for="">Nome da doença</label>
                 <input type="text" class="form-control">
             </span> 
-        </div>        
+        </div> 
+        <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
+            <span class="col-lg-5 col-sm-5 col-xs-12">
+                <label>Quantos trabalham em casa:</label>
+                <input type="number" class="form-control">
+            </span>
+            <span class="col-lg-6 col-sm-6 col-xs-12">
+                <label>Renda Familiar total:</label>
+                <input type="text" class="form-control">
+            </span>
+        </div>
         <div class="mt-3 container">
             <label for="">Data do Cadastro</label>
             <input type="date" class="form-control" disabled>
         </div>
         <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">
             <span class="align-items-center text-center">
-                <a href="/html/cadastro.html" class="text-decoration-none">
+                <a href="cadastro.html" class="text-decoration-none">
                     <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
                 </a>
                 <p>Voltar</p>
@@ -211,7 +312,5 @@
     <!-- IONICONS -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <!-- LINKANDO JS EXTERNO -->
-    <script src="/js/index.js"></script>
 </body>
 </html>

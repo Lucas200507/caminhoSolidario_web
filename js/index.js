@@ -143,67 +143,67 @@ aplicarIcone(iconUsuarioPaginas, icon);
 /*************************************************************************************************************************************************** */
 /*                    -------------------  Navegação de páginas  -------------------                       */
 function navegar_cadastrarBeneficiario(){
-    window.location.href = "/html/cadastro/cadastroBeneficiario.html";
+    window.location.href = "cadastroBeneficiario.html";
     
 }
 
 function navegar_cadastrarVoluntario(){
-    window.location.href = "/html/cadastro/cadastroVoluntario.html";
+    window.location.href = "cadastroVoluntario.html";
     
 }
 
 function navegar_cadastrarDependente(){
-    window.location.href = "/html/cadastro/cadastroDependente.html";
+    window.location.href = "cadastroDependente.html";
     
 }
 
 function navegar_alterarBeneficiario(){
-    window.location.href = "/html/alteracao/alteracaoBeneficiario.html";
+    window.location.href = "alteracaoBeneficiario.html";
 }
 
 function navegar_alterarVoluntario(){
-    window.location.href = "/html/alteracao/alteracaoVoluntario.html";
+    window.location.href = "alteracaoVoluntario.html";
 }
 
 function navegar_alterarDependente(){
-    window.location.href = "/html/alteracao/alteracaoDependente.html";
+    window.location.href = "alteracaoDependente.html";
 }
 
 function navegar_lancarFrequencia(){
-    window.location.href = "/html/frequencia/lancarFrequencia.html";
+    window.location.href = "lancarFrequencia.html";
 }
 
 function navegar_verificarFrequencia(){
-    window.location.href = "/html/frequencia/verificarFrequencia.html";
+    window.location.href = "verificarFrequencia.html";
 }
 
 function navegar_documentos(){
-    window.location.href = "/html/documentos.html";
+    window.location.href = "documentos.html";
 }
 
 function navegar_documentosDependente(){
-    window.location.href = "/html/documentos/documentosDependente.html";
+    window.location.href = "documentosDependente.html";
 }
 
 function navegar_documentosBeneficiario(){
-    window.location.href = "/html/documentos/documentosBeneficiario.html";
+    window.location.href = "documentosBeneficiario.html";
 }
 
 function navegar_usuario(){        
-    window.location.href = "/html/usuario.html#resetarSenha";
+    window.location.href = "usuario.html#resetarSenha";
 }
 
 function cancelarCadastro(){
-    window.alert("Cancelou meu nobre");
+    window.alert("Cancelou");
 }
 
 function Cadastrar_Voluntario(){
     senhaTemporaria = document.getElementById('senhaTemporaria').value;
     confirmarSenha = document.getElementById('confirmarSenha').value;
     if (senhaTemporaria == confirmarSenha){
-        window.alert('As senhas são enguais');
+        window.alert('As senhas são iguais');
     } else {
-        window.alert('As senhas são deferentes');
+        window.alert('As senhas são diferentes');
     }
 }
 
@@ -236,5 +236,5 @@ function resetarSenhaU(){
 }
 
 function logout(){
-    window.alert('hello');
+    window.alert('Saindo!!!');
 }
