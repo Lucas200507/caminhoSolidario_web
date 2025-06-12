@@ -1,5 +1,5 @@
 # PASSO A PASSO PARA A UTILIZAÇÃO
-  BAIXE O BANCO (/BANCO - caminho_solidario/SQL_CaminhoSolidario
+  BAIXE O BANCO (/BANCO - caminho_solidario/SQL_CaminhoSolidario<br>
   Clone ou baixe o repositório
   Em server.js, altere a conexão do banco:
     const db = mysql.createConnection({
