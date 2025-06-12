@@ -1,4 +1,24 @@
-
+# PASSO A PASSO PARA A UTILIZAÇÃO
+  BAIXE O BANCO (/BANCO - caminho_solidario/SQL_CaminhoSolidario
+  Clone ou baixe o repositório
+  Em server.js, altere a conexão do banco:
+    const db = mysql.createConnection({
+      host: SUA_HOST,
+      user: SEU_USER,
+      password: SUA_SENHA,
+      database: SEU_BANCO,
+      port: SUA_PORTA
+    })
+  Em login.js, altere a url
+    const resposta = await fetch('http://localhost:3307/api/login', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          }, 
+          body: JSON.stringify({usuario, senha})
+      });
+  
+  
 # Revisão de Código e Protótipo - WEB ✍️
 
 
