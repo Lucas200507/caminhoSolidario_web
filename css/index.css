@@ -13,7 +13,8 @@
     --container_MainHome_border:solid 2px transparent;
     --container_MainHome_boxShadow: 5px 5px 5px rgba(0, 0, 0, 0.486);
     --container_MainHome_background_hover: rgba(197, 197, 197, 0.411);
-
+    --background_titulo_colunasVF: #17a2b9;    
+    --cor_letras_titulo_colunasVF: white;
 
     --cor_ConfSenhaU: green;
     --borda_container_mudarTema: 2px solid black;
@@ -31,6 +32,8 @@
     --container_MainHome_border:solid 2px transparent;
     --container_MainHome_boxShadow: 5px 5px 5px rgba(255, 255, 255, 0.486);
     --container_MainHome_background_hover: rgba(71, 71, 71, 0.329);
+    --background_titulo_colunasVF: gray;
+    --cor_letras_titulo_colunasVF: black;
 
     --cor_ConfSenhaU: white;
     --borda_container_mudarTema: 2px solid white;
@@ -63,7 +66,9 @@ html{
     padding: 0;    
 }
 
-
+#subtitulos_paginas{
+    color: var(--cor_letras);
+}
 
 body{
     margin: 0;
@@ -461,7 +466,7 @@ label{
     }
 
     .containers_Documentos{
-        display: flex;
+        display: flex;        
         flex-direction: row;
         justify-content: space-between;              
         margin-bottom: 3em; 
@@ -471,6 +476,10 @@ label{
         box-shadow: 0 6px #3f3a3a27;        
     }
     
+     #visualizarDocumentos span, #visualizarDocumentos ion-icon{
+        color: var(--cor_letras);
+    }
+
     #visualizarDocumentos{
         display: flex;
         align-items: center;
@@ -568,8 +577,10 @@ label{
 }
 
 .titulo_colunasVF{
-    background-color: gray;
-    color: white;
+    font-weight: bold;
+    background-color: var(--background_titulo_colunasVF);
+    color: var(--cor_letras_titulo_colunasVF);
+    
     text-align: center;
     padding: 0 40px;   
 
@@ -581,6 +592,14 @@ label{
     align-items: center;
     border-bottom: 1px #0000006e solid;
     height: 40px;
+}
+
+.titulo_tabela_VF{
+    color: red;
+}
+
+#frequencia{
+    color: var(--cor_letras);
 }
 /*****************************************************************************/
         /* USUARIO */
@@ -805,6 +824,7 @@ label{
     #logo_navegacaoHome{
         width: 60%;
     }
+      
 }
 
 @media(min-width: 768px){
@@ -819,7 +839,7 @@ label{
     }
 
     .containers_Documentos{
-        width: 70%;
+        width: 90%;
         justify-content: space-around;
     }    
 }
@@ -875,6 +895,10 @@ label{
 
     .subcontainers_Documentos{
         width: 40%;
+    }
+
+    .containers_Documentos{
+        width: 100%;        
     }
 
 }
