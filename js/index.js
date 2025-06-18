@@ -11,11 +11,11 @@ function AplicarTemaSalvo() {
     if (tema === 'escuro') {
         corpo_pagina.classList.add('dark');
         corpo_pagina.style.background = '#161616e8';
-        if (logo) logo.src = '/img/Caminho Solidário-branco.png';
+        if (logo) logo.src = '../img/logo_sem_nome-Branco.png';
     } else {
         corpo_pagina.classList.remove('dark');
         corpo_pagina.style.background = 'white';
-        if (logo) logo.src = '/img/logodolado - Copia.png';
+        if (logo) logo.src = '../img/logo_semnome.png';
     }
 }
 
@@ -27,12 +27,12 @@ function Mudar_tema() {
     if (corpo_pagina.classList.contains('dark')) {
         corpo_pagina.classList.remove('dark');
         corpo_pagina.style.background = 'white';
-        if (logo) logo.src = '/img/logodolado - Copia.png';
+        if (logo) logo.src = '../img/logo_semnome.png';
         localStorage.setItem('tema', 'claro');
     } else {
         corpo_pagina.classList.add('dark');
         corpo_pagina.style.background = '#161616e8';
-        if (logo) logo.src = '/img/Caminho Solidário-branco.png';
+        if (logo) logo.src = '../img/logo_sem_nome-Branco.png';
         localStorage.setItem('tema', 'escuro');
     }
 }

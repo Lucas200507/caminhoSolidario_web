@@ -31,7 +31,7 @@
 
         <!-- navegação -->
         <div class="collapse navbar-collapse justify-content-end" id="navegacaoHome">
-            <ul class="navbar-nav ml-1 justify-content-around" id="navegadores_links">
+            <ul class="navbar-nav justify-content-around" id="navegadores_links">
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="person-add-outline" class="icones_nav"></ion-icon>
                     <a href="cadastro.html" class="nav-link" id="linksNavegacao">Cadastro</a>
@@ -82,41 +82,47 @@
         </div>
     </div>
 
-    <main class="d-flex w-100 flex-row p-5 align-items-center justify-content-center">
-        <div class="d-flex flex-column w-auto" id="container_principalHome">
-            <span class="d-flex flex-row align-items-center m-3 container_MainHome"
-                onclick="navegar_cadastrarBeneficiario()">
-                <ion-icon name="person-add-outline" class="icones_mainHome"></ion-icon>
-                <p class="textos_servicos">Cadastrar Beneficiário</p>
-            </span>
-            <span class="d-flex flex-row align-items-center m-3 container_MainHome"
-                onclick="navegar_cadastrarVoluntario()">
-                <ion-icon name="person-outline" class="icones_mainHome"></ion-icon>
-                <p class="textos_servicos">Cadastrar Voluntário</p>
-            </span>
-            <span class="d-flex flex-row align-items-center m-3 container_MainHome"
-                onclick="navegar_cadastrarDependente()">
-                <ion-icon name="people-outline" class="icones_mainHome"></ion-icon>
-                <p class="textos_servicos">Cadastrar Dependente(s)</p>
-            </span>
-            <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_documentos()">
-                <ion-icon name="documents-outline" class="icones_mainHome"></ion-icon>
-                <p class="textos_servicos">Verificar Documentos</p>
-            </span>
-            <span class="d-flex flex-row align-items-center m-3 container_MainHome"
-                onclick="navegar_verificarFrequencia()">
-                <ion-icon name="calendar-outline" class="icones_mainHome"></ion-icon>
-                <p class="textos_servicos">Verificar Frequência</p>
-            </span>
-            <span class="d-flex flex-row align-items-center m-3 container_MainHome"
-                onclick="navegar_lancarFrequencia()">
-                <ion-icon name="checkbox-outline" class="icones_mainHome"></ion-icon>
-                <p class="textos_servicos">Lançar Frequência</p>
-            </span>
-            <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_usuario()">
-                <ion-icon name="close-circle-outline" class="icones_mainHome"></ion-icon>
-                <p class="textos_servicos">Resetar Senha</p>
-            </span>
+    <main class="d-flex w-100 flex-row mt-5">
+        <div class="container_servicos_main">
+            <div>
+                <span class="d-flex flex-row align-items-center m-3 container_MainHome"
+                    onclick="navegar_cadastrarBeneficiario()">
+                    <ion-icon name="person-add-outline" class="icones_mainHome"></ion-icon>
+                    <p class="textos_servicos">Cadastrar Beneficiário</p>
+                </span>
+                <span class="d-flex flex-row align-items-center m-3 container_MainHome"
+                    onclick="navegar_cadastrarVoluntario()">
+                    <ion-icon name="person-outline" class="icones_mainHome"></ion-icon>
+                    <p class="textos_servicos">Cadastrar Voluntário</p>
+                </span>
+            </div>
+            <div>
+                 <span class="d-flex flex-row align-items-center m-3 container_MainHome"
+                    onclick="navegar_cadastrarDependente()">
+                    <ion-icon name="people-outline" class="icones_mainHome"></ion-icon>
+                    <p class="textos_servicos">Cadastrar Dependente(s)</p>
+                </span>
+                <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_documentos()">
+                    <ion-icon name="documents-outline" class="icones_mainHome"></ion-icon>
+                    <p class="textos_servicos">Verificar Documentos</p>
+                </span>
+                <span class="d-flex flex-row align-items-center m-3 container_MainHome"
+                    onclick="navegar_verificarFrequencia()">
+                    <ion-icon name="calendar-outline" class="icones_mainHome"></ion-icon>
+                    <p class="textos_servicos">Verificar Frequência</p>
+                </span>
+            </div>
+            <div>
+                <span class="d-flex flex-row align-items-center m-3 container_MainHome"
+                    onclick="navegar_lancarFrequencia()">
+                    <ion-icon name="checkbox-outline" class="icones_mainHome"></ion-icon>
+                    <p class="textos_servicos">Lançar Frequência</p>
+                </span>
+                <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_usuario()">
+                    <ion-icon name="close-circle-outline" class="icones_mainHome"></ion-icon>
+                    <p class="textos_servicos">Resetar Senha</p>
+                </span>
+            </div>           
         </div>
     </main>
 
