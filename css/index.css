@@ -18,7 +18,10 @@
     --background_titulo_colunasVF: #17a2b9;    
     --cor_letras_titulo_colunasVF: white;
 
+    --cor_logout_usuario: #8b0a0a;
+    --borda_logout_usuario: #8b0a0a solid 1px;    
     --cor_ConfSenhaU: green;
+    --background_ConfSenhaU: transparent;
     --borda_container_mudarTema: 2px solid black;
 }
 
@@ -39,7 +42,10 @@
     --background_titulo_colunasVF: gray;
     --cor_letras_titulo_colunasVF: black;
 
+    --cor_logout_usuario: white;
+    --borda_logout_usuario: white solid 1px;    
     --cor_ConfSenhaU: white;
+    --background_ConfSenhaU: green;
     --borda_container_mudarTema: 2px solid white;
 }
 
@@ -333,8 +339,7 @@ label{
     
 }
 
-#logo_navegacaoHome{
-    width: 100%;
+#logo_navegacaoHome{    
     margin-left: 5em;
 }
 
@@ -394,9 +399,16 @@ label{
 }
 /* //////////////////////////////////////////////////////////////////////////////////////// /*
 /*          SERVIÇOS            */
+.container_servicos{
+    display: flex;
+    justify-content: center;
+}
+
 .container_servicos_main{
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    width: 80%;
 }
 
 
@@ -723,25 +735,31 @@ label{
     z-index: 4;
 }
 
-#resetarSenha{    
+#resetarSenha_usuario{
     background-color: red;
+    color: white;
+    
 }
 
-#resetarSenha:hover {
-    background-color: #8b0a0a;;
+#resetarSenha_usuario:hover {
+    background-color: #8b0a0a;
 }
 
-#logout{
-    background-color: #f5f5f56c;    
+#logout_usuario{
+    color: var(--cor_logout_usuario);
+    background-color: transparent;    
+    border: var(--borda_logout_usuario);
 }
 
-#logout:hover{
-    font-weight: bold;
-    background-color: #dbdadadc;
+#logout_usuario:hover{
+    color: #8b0a0a;
+    font-weight: bold;    
+    background-color: #dbdadadc;    
 }
 
 #ConfSenhaU{
     color: var(--cor_ConfSenhaU);
+    background-color: var(--background_ConfSenhaU);
     border: solid 1px rgba(0, 0, 0, 0.233);
 }
 
@@ -770,13 +788,13 @@ label{
     }
 
     #logo_navegacaoHome{
-        width: 15%;
+        width: 3em;
     }
 
     #container_logoHome{
         height: 100%;
-        width: 65%;
-        padding: 5%;        
+        padding: 5%;
+        margin-left: 0.3em;        
     }
 
     .container_servicos_main{
@@ -785,7 +803,7 @@ label{
     }
 
     .container_MainHome p{
-        font-size: 2em;
+        font-size: 1.4em;
     }
 
     .container_userPaginas{
@@ -825,19 +843,19 @@ label{
 
     #visualizarDocumentos{
         width: 30%;
-    }    
+    } 
+    
+    #resetarSenha_usuario, #logout_usuario{
+        width: 75%;
+    }
+       
 }
 
 @media (min-width: 375px){
-    #container_logoHome{
-        width: 70%;
-        height: 100%;        
-    }
-
-    #logo_navegacaoHome{
-        width: 20%;
-    }
-      
+    #container_logoHome{        
+        height: 100%;
+        width: auto;        
+    }  
 }
 
 @media(min-width: 768px){
@@ -854,14 +872,17 @@ label{
     .containers_Documentos{
         width: 60%;
         justify-content: space-around;
-    }    
-}
+    }  
+    
+    .container_logoHome{
+        margin-left: 1em;
+    }
 
-@media (min-width: 600px){
-     #logo_navegacaoHome{
-        width: 15%;
+    #resetarSenha_usuario, #logout_usuario{
+        width: 50%;
     }
 }
+
 
 @media (min-width: 880px){
     #rodapeI{
@@ -874,17 +895,12 @@ label{
         
     }
 
-    #logo_navegacaoHome{
-        width: 60%;
+    .container_servicos_main{      
+        flex-direction: row;
     }
 
-    #container_logoHome{
-        width: 10%;
-    }
-
-    .container_servicos_main{
-        width: 50%;
-        
+     .container_MainHome p{
+        font-size: 1.5em;
     }
 
     #main_cadastro{
@@ -921,6 +937,10 @@ label{
         justify-content: space-between;        
     }
 
+     #resetarSenha_usuario, #logout_usuario{
+        width: 25%;
+    }
+
 }
 
 @media (max-width: 700px){
@@ -944,10 +964,7 @@ label{
    #titulo_home span{
         font-size: 30px;            
     }
-
-    .container_servicos_main{
-        width: 100%;        
-    }   
+    
 
     .container_userPaginas{
         width: 30%;
@@ -955,16 +972,12 @@ label{
 }
 
 @media (min-width: 1024px){    
-    #logo_navegacaoHome{
-        width: 40%;
-    }
-
-    .container_servicos_main{
-        width: 25%;        
-    }
-
     .container_userPaginas{
         width: 30%;
+    }
+
+     .container_MainHome p{
+        font-size: 2em;
     }
 }
 
