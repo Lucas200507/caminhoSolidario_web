@@ -848,6 +848,10 @@ label{
     #resetarSenha_usuario, #logout_usuario{
         width: 75%;
     }
+
+    #formResetarSenha{
+        width: 75%;
+    }
        
 }
 
@@ -879,6 +883,10 @@ label{
     }
 
     #resetarSenha_usuario, #logout_usuario{
+        width: 50%;
+    }
+
+     #formResetarSenha{
         width: 50%;
     }
 }
