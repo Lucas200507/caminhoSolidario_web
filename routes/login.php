@@ -25,9 +25,9 @@
 
         $result = $conexao->query($sql);
         if(mysqli_num_rows($result) > 0){ // se tiver mais de uma linha de registros iguais ao usuário e senha
-            header('Location: ../Servicos.html'); // navega para o home            
+            header('Location: ../html/Servicos.html'); // navega para o home            
         } else {
-            echo "Não há esse usuário no BANCO";
+            header('Location: ../html/login.html'); // navega para o home      
         }
     }
 ?>

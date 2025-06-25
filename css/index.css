@@ -85,6 +85,12 @@ body{
     padding: 0;    
     background-color: var(--body_background);    
 }
+
+#mensagem_erro{
+    display: none;
+    color: red;
+    font-size: 2em;
+}
 /*********************************************************************************************************/
 /* Telas do voluntário*/
 

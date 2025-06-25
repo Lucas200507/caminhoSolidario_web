@@ -3,6 +3,7 @@ import express from 'express';
 const router = express.Router();
 import bd from '../BD.js';
 
+
 // IMPRIMINDO OS USUÁRIOS
 router.get('/', (req, res) => {
     bd.query('SELECT * FROM login', (err, results) => {
