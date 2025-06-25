@@ -17,19 +17,17 @@
         //print_r($_REQUEST); // RECUPERA TODOS OS DADOS ENVIADOS
         
         // precisa verificar se existe o usuário e senha no banco
-        include_once('conexao_banco.php'); // ACESSANDO A CONEXÃO
+        include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
         $usuario = $_GET['cpf'];
         $senha = $_GET['senha'];
         
-        $sql = "SELECT * FROM login WHERE user = '$usuario' AND senha = '$senha'";
+        $sql = "SELECT * FROM login WHERE cpf = '$usuario' AND senha = '$senha'";
 
         $result = $conexao->query($sql);
-
         if(mysqli_num_rows($result) > 0){ // se tiver mais de uma linha de registros iguais ao usuário e senha
-            header('Location: ../html/Servicos.html'); // navega para o home
+            header('Location: ../Servicos.html'); // navega para o home            
         } else {
             echo "Não há esse usuário no BANCO";
         }
-
     }
 ?>
