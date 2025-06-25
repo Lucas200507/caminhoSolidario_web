@@ -12,7 +12,7 @@
 <body>  
     <div class="container_login d-flex align-items-center justify-content-center flex-column">
         <img src="../img/logodolado.png" alt="">
-        <form class="d-block p-3 form_login" id="formulario_login">
+        <form class="d-block p-3 form_login" id="formulario_login" method="get" action="../routes/login.php">
             <div class="form-group d-flex flex-column mt-3">
                 <label for="">
                     <input type="text" placeholder="CPF:" class="form-control border-primary text-dark w-100" name="etCpf" id="cpf">
@@ -27,8 +27,8 @@
                     <label for="" class="form-check-label">Lembrar Senha</label>
                 </div>
                 <a href="esqueceu_senha.html" class="text-primary">Esqueceu sua senha?</a>
-            </div>
-            <a href="#" class="btn btn-block btn-light btn-outline-primary btn-lg" id="btEntrar" onclick="verificarLogin()">Entrar</a>            
+            </div>            
+            <input type="submit" class="btn btn-block btn-light btn-outline-primary btn-lg" onclick="verificarLogin()" id="btEntrar">             
             <p id="mensagem_erro" class="color-danger mt-3 h4"></p>
                 <div class="text-center mt-3 mb-2 border-bottom border-dark pb-3">
                     <a href="tela_esperaVoluntario.html" class="h6 text-decoration-none">Cadastrar como voluntário</a> 
