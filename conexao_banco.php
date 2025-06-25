@@ -12,9 +12,9 @@ Port number: 3306 -->
 
     $conexao = new mysqli($dbHost, $dbUser, $dbPassword, $dbName);
 
-    // if($conexao->connect_errno){
-    //     echo "Erro";
-    // } else {
-    //     echo "Conectado com sucesso";
-    // }
+     if($conexao->connect_errno){
+         echo "Erro";
+     } else {
+         echo "Conectado com sucesso";
+     }
 ?>
