@@ -5,7 +5,7 @@
   - Abra o xampp
   - Execute o Apache e o Mysql
   - Abra o admin do Mysql
-  - Na barra de endereço entre em: localhost/PORT/caminhoSolidario_web-main
+  - Na barra de endereço entre em: localhost:PORT/caminhoSolidario_web-main
 
   ## Por que precisa fazer esses passos ?
   - É necessário executar essas tarefas para iniciar o servidor no xampp para a execução do arquivo php e assim conectar com o banco online.
