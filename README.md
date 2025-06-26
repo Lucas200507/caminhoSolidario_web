@@ -9,6 +9,10 @@
 
   ## Por que precisa fazer esses passos ?
   - É necessário executar essas tarefas para iniciar o servidor no xampp para a execução do arquivo php e assim conectar com o banco online.
+
+  ## USUÁRIO TESTE :
+  - cpf: 01234567890
+  - senha: teste
   
 # Revisão de Código e Protótipo - WEB ✍️
   O objetivo desse conteúdo é revisar todos os códigos desenvolvidos no projeto web. 
