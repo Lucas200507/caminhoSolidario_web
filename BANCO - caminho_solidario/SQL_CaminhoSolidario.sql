@@ -7,7 +7,6 @@ CREATE TABLE login(
 id_user INT PRIMARY KEY auto_increment,
 cpf VARCHAR(11) NOT NULL,
 senha VARCHAR(60) NOT NULL,
-situacao CHAR(1) NOT NULL
 );
 
 -- ---------------------------------------------
