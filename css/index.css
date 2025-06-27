@@ -1,5 +1,4 @@
 /* UNIVERSAL */
-
 :root{
     --altura_tela: 100vh;    
     --transparencia_sol: flex;
@@ -91,6 +90,16 @@ body{
     color: red;
     font-size: 2em;
 }
+
+
+/* TELA ESPERA VOLUNTARIO */
+#combo_box_tela_espera{
+    border: rgb(13, 110, 253)  solid 1px;
+    padding: 0.3em;
+    border-radius: 0.3em;
+    color: gray;
+}
+
 /*********************************************************************************************************/
 /* Telas do voluntário*/
 

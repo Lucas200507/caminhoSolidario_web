@@ -1,20 +1,27 @@
 # PASSO A PASSO PARA A UTILIZAÇÃO
-  - Baixe o projeto.zip
-  - Mova-o em: C:/xampp/htdocs
-  - Extraia o projeto
-  - Abra o xampp
-  - Execute o Apache e o Mysql
-  - Abra o admin do Mysql
-  - Na barra de endereço entre em: localhost:PORT/caminhoSolidario_web-main
-
-  ## Por que precisa fazer esses passos ?
-  - É necessário executar essas tarefas para iniciar o servidor no xampp para a execução do arquivo php e assim conectar com o banco online.
-
-  ## USUÁRIO TESTE :
-  - cpf: 01234567890
-  - senha: teste
-  
+  BAIXE O BANCO (/BANCO - caminho_solidario/SQL_CaminhoSolidario<br>
+  Clone ou baixe o repositório<br>
+  Em server.js, altere a conexão do banco:<br>
+    const db = mysql.createConnection({<br>
+      host: SUA_HOST,<br>
+      user: SEU_USER,<br>
+      password: SUA_SENHA,<br>
+      database: SEU_BANCO,<br>
+      port: SUA_PORTA<br>
+    })<br>
+  Em login.js, altere a url<br>
+    const resposta = await fetch('http://localhost:3307/api/login', {<br>
+          method: 'POST',<br>
+          headers: {<br>
+              'Content-Type': 'application/json',<br>
+          }, 
+          body: JSON.stringify({usuario, senha})<br>
+      });<br>
+  <br>
+  <br>
 # Revisão de Código e Protótipo - WEB ✍️
+
+
   O objetivo desse conteúdo é revisar todos os códigos desenvolvidos no projeto web. 
   A meta final é atingir as boas práticas de programação, garantindo que os códigos estejam organizados, legíveis, padronizados — e que estejam iguais ao protótipo desenvolvido.
 
