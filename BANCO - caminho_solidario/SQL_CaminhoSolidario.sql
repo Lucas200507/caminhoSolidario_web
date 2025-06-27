@@ -30,6 +30,21 @@ DROP TABLE login;
 
 -- --------------------------------------------
 
+CREATE TABLE espera_voluntario(
+	id_esperaVol INT PRIMARY KEY AUTO_INCREMENT,
+    cpf VARCHAR(12) NOT NULL,
+    nome_completo VARCHAR(60) NOT NULL,
+    email VARCHAR(45) NOT NULL,
+    telefone VARCHAR(12) not null,
+    data_pedido DATE,
+    id_enderecoV INT,
+    FOREIGN KEY (id_enderecoV) REFERENCES endereco_voluntario (id_enderecoV)
+);
+
+SELECT * FROM espera_voluntario;
+DROP TABLE espera_voluntario;
+
+-- -------------------------------------------
 CREATE TABLE pessoa(
 idPessoa INT PRIMARY KEY AUTO_INCREMENT,
 nome_completo VARCHAR(100) NOT NULL,
@@ -185,22 +200,6 @@ SELECT * FROM relatorio;
 DROP TABLE relatorio;
 
 -- ----------------------------------------
-
-CREATE TABLE espera_voluntario(
-	id_esperaVol INT PRIMARY KEY AUTO_INCREMENT,
-    cpf VARCHAR(12) NOT NULL,
-    nome_completo VARCHAR(60) NOT NULL,
-    email VARCHAR(45) NOT NULL,
-    telefone VARCHAR(12) not null,
-    data_pedido DATE,
-    id_enderecoV INT,
-    FOREIGN KEY (id_enderecoV) REFERENCES endereco_voluntario (id_enderecoV)
-);
-
-SELECT * FROM espera_voluntario;
-DROP TABLE espera_voluntario;
-
--- -------------------------------------------
 
 CREATE TABLE endereco_voluntario(
 id_enderecoV INT PRIMARY KEY AUTO_INCREMENT,
