@@ -92,4 +92,5 @@
     
         $result = mysqli_query($conexao, "INSERT INTO login(user, senha) VALUES('$usuario', '$senha')");
     }    
-    */     -->
+
+   
