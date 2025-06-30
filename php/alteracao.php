@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro - Caminho Solidario</title>
+    <title>Alteracao - Caminho Solidario</title>
     <!-- icone no titulo da pagina -->
     <link rel="icon" href="../img/logo_semnome.png">
 
@@ -15,8 +15,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 
-     <!-- Conexao com JS -->
-        <script src="../js/index.js" defer></script>   
+    <!-- Conexao com JS -->
+    <script src="../js/index.js" defer></script>        
 </head>
 
 <body id="telaBody">
@@ -24,7 +24,7 @@
     <body id="telaBody">
         <nav class="navbar navbar-expand-lg navbar-dark barraNav" style="padding: 0.8em;">
             <!-- logo -->
-            <a href="login.html" class="navbar-brand p-0 d-block" id="container_logoHome">
+            <a href="login.php" class="navbar-brand p-0 d-block" id="container_logoHome">
                 <img src="../img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
             </a>
 
@@ -38,33 +38,32 @@
             <div class="collapse navbar-collapse justify-content-end" id="navegacaoHome">
                 <ul class="navbar-nav ml-1 justify-content-around" id="navegadores_links">
                     <li class="nav-item itens_navegadores">
-                        <ion-icon name="person-add-outline" class="icones_nav"
-                            id="linksNavegacaoSelecionado"></ion-icon>
-                        <a href="#" class="nav-link" id="linksNavegacaoSelecionado">Cadastro</a>
+                        <ion-icon name="person-add-outline" class="icones_nav"></ion-icon>
+                        <a href="cadastro.php" class="nav-link" id="linksNavegacao">Cadastro</a>
                     </li>
                     <li class="nav-item itens_navegadores">
-                        <ion-icon name="create-outline" class="icones_nav"></ion-icon>
-                        <a href="alteracao.html" class="nav-link" id="linksNavegacao">Alteração</a>
+                        <ion-icon name="create-outline" class="icones_nav" id="linksNavegacaoSelecionado"></ion-icon>
+                        <a href="#" class="nav-link" id="linksNavegacaoSelecionado">Alteração</a>
                     </li>
                     <li class="nav-item itens_navegadores">
                         <ion-icon name="document-text-outline" class="icones_nav"></ion-icon>
-                        <a href="documentos.html" class="nav-link" id="linksNavegacao">Documentos</a>
+                        <a href="documentos.php" class="nav-link" id="linksNavegacao">Documentos</a>
                     </li>
                     <li class="nav-item itens_navegadores">
                         <ion-icon name="checkbox-outline" class="icones_nav"></ion-icon>
-                        <a href="frequenciaBeneficiario.html" class="nav-link" id="linksNavegacao">Frequência</a>
+                        <a href="frequenciaBeneficiario.php" class="nav-link" id="linksNavegacao">Frequência</a>
                     </li>
                     <li class="nav-item itens_navegadores">
                         <ion-icon name="list-outline" class="icones_nav"></ion-icon>
-                        <a href="Servicos.html" class="nav-link" id="linksNavegacao">Serviços</a>
+                        <a href="Servicos.php" class="nav-link" id="linksNavegacao">Serviços</a>
                     </li>
                 </ul>
             </div>
         </nav>
-
+        <!-- TITULO -->
         <div class="d-flex justify-content-between w-100" id="titulo_home">
             <span class="text-start w-25">
-                <h3 style="color: var(--cor_letras);">Cadastro</h3>
+                <h3 style="color: var(--cor_letras);">Alteração</h3>
             </span>
             <div class="container_userPaginas">
                 <span class="mr-3 d-none d-md-block" id="usuario_home">
@@ -81,27 +80,33 @@
                     <span id="IconUsuarioPaginas"></span>
                     <!-- Criando um DropDown com o icon -->
                     <div id="dropdownUser" class="container_dropDownUser">
-                        <a href="usuario.html">Sua conta</a>
-                        <a href="login.html" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
+                        <a href="usuario.php">Sua conta</a>
+                        <a href="login.php" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
                     </div>
                 </div>
             </div>
         </div>
         <main style="height: 700px;" id="main_cadastro">
-            <div class="container_icones_cadastro d-flex align-items-center flex-column" id="cadastrar_beneficiario"
-                onclick="navegar_cadastrarBeneficiario()">
-                <ion-icon name="person-add-outline" class="icones_cadastro"></ion-icon>
-                <p style="font-size: 25px; font-weight: bold;">Cadastrar Beneficiário</p>
+            <div class="container_icones_cadastro d-flex align-items-center flex-column"
+                onclick="navegar_alterarBeneficiario()">
+                <span class="person_alterar" style="position: relative;">
+                    <ion-icon name="person-outline" class="icones_cadastro"></ion-icon>
+                    <ion-icon name="pencil-outline" class="icones_pen"></ion-icon>
+                </span>
+                <p style="font-size: 25px; font-weight: bold;">Alterar Beneficiário</p>
             </div>
             <div class="container_icones_cadastro d-flex align-items-center flex-column"
-                onclick="navegar_cadastrarVoluntario()">
-                <ion-icon name="person-outline" class="icones_cadastro"></ion-icon>
-                <p style="font-size: 25px; font-weight: bold;">Cadastrar Voluntário</p>
+                onclick="navegar_alterarVoluntario()">
+                <span class="person_alterar" style="position: relative;">
+                    <ion-icon name="person-outline" class="icones_cadastro"></ion-icon>
+                    <ion-icon name="pencil-outline" class="icones_pen"></ion-icon>
+                </span>
+                <p style="font-size: 25px; font-weight: bold;">Alterar Voluntário</p>
             </div>
             <div class="container_icones_cadastro d-flex align-items-center flex-column"
-                onclick="navegar_cadastrarDependente()">
+                onclick="navegar_alterarDependente()">
                 <ion-icon name="people-outline" class="icones_cadastro"></ion-icon>
-                <p style="font-size: 25px; font-weight: bold;">Cadastrar Dependente(s)</p>
+                <p style="font-size: 25px; font-weight: bold;">Alterar Dependente(s)</p>
             </div>
         </main>
 

@@ -86,11 +86,16 @@ body{
 }
 
 #mensagem_erro{
-    display: none;
-    color: red;
+    display: block;
+    color: blue;
     font-size: 2em;
 }
 
+#mensagem_erro2{
+    display: block;
+    color: red;
+    font-size: 2em;
+}
 
 /* TELA ESPERA VOLUNTARIO */
 #combo_box_tela_espera{

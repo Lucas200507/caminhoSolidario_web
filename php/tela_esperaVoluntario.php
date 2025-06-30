@@ -23,14 +23,14 @@
                 <label for=""><input type="text" placeholder="Email:" class="mb-2 form-control border-primary text-dark w-100" name="email"></label>
                 <label for=""><input type="text" placeholder="Telefone:" class="mb-2 form-control border-primary text-dark w-100" name="telefone"></label>
                 <label for=""><input type="text" placeholder="CPF:" class="mb-2 form-control border-primary text-dark w-100" name="cpf"></label>
-                <select name="estado" id="combo_box_tela_espera">
+                <select name="estado" id="combo_box_tela_espera form-select form-select-md w-50">
                     <option value="">Estado: </option>
                     <option value="DF">Distrito Federal</option>
                     <option value="outros">Outros</option>
                 </select>              
             </div>            
             <input type="submit" name="submit" value="Enviar" class="btn btn-light btn-outline-primary btn-block btn-lg mb-2">        
-            <a href="login.html">
+            <a href="login.php">
                 <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
             </a>
         </form>        
@@ -46,19 +46,19 @@
 </body>
 </html>
 <?php
-    if(isset($_POST('submit') && !empty($_POST['nome'])  && !empty($_POST['email']) && !empty($_POST['telefone']) && !empty($_POST['cpf']) && !empty($_POST['estado']))){
-        // Conectando com o banco: 
-        include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
+    // if(isset($_POST['submit']) && !empty($_POST['nome']) && !empty($_POST['email']) && !empty($_POST['telefone']) && !empty($_POST['cpf']) && !empty($_POST['estado']))){
+    //     // Conectando com o banco: 
+    //     include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
 
-        $nome = $_POST['nome'];
-        $email = $_POST['email'];
-        $telefone = $_POST['telefone'];
-        $cpf = $_POST['cpf'];
-        $estado = $_POST['estado'];
+    //     $nome = $_POST['nome'];
+    //     $email = $_POST['email'];
+    //     $telefone = $_POST['telefone'];
+    //     $cpf = $_POST['cpf'];
+    //     $estado = $_POST['estado'];
         
-        $sql = "INSERT INTO espera_voluntario(nome, email, telefone, cpf, estado) VALUES('$nome','$email','$telefone','$cpf','$estado')";
+    //     $sql = "INSERT INTO espera_voluntario(nome, email, telefone, cpf, estado) VALUES('$nome','$email','$telefone','$cpf','$estado')";
 
-    }
+    // }
 
 
 ?>

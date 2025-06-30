@@ -21,7 +21,7 @@
                 <label for=""><input type="text" placeholder="Email:" class="form-control border-primary text-dark w-100" name="etEmail"></label>
             </div>
            <button class="btn btn-primary btn-block btn-lg mb-3">Enviar email</button>
-           <a href="login.html">
+           <a href="login.php">
             <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
            </a>           
         </form>

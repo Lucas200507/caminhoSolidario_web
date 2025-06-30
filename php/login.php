@@ -12,31 +12,33 @@
 <body>      
     <div class="container_login d-flex align-items-center justify-content-center flex-column">
         <img src="../img/logodolado.png" alt="">
-        <form class="d-block p-3 form_login" id="formulario_login" method="get" action="../routes/login.php">
+        <form class="d-block p-3 form_login" id="formulario_login" method="get" action="">
             <div class="form-group d-flex flex-column mt-3">
                 <label for="">
                     <input type="text" placeholder="CPF:" class="form-control border-primary text-dark w-100" name="cpf" id="cpf">
                 </label>
                 <label for="">
                     <input type="text" placeholder="Senha:" class="form-control border-primary text-dark w-100" name="senha" id="senha" >
-                </label>
-                <div id="mensagem_erro">
-                    Usuário ou senha inválidos, tente novamente.
-                </div>
+                </label>                
             </div>            
             <div class="form-group justify-content-between d-flex justify-content-between links_login" style="font-size: 90%;">
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="cbLembrar_senha">
                     <label for="" class="form-check-label">Lembrar Senha</label>
                 </div>
-                <a href="esqueceu_senha.html" class="text-primary">Esqueceu sua senha?</a>
+                <a href="esqueceu_senha.php" class="text-primary">Esqueceu sua senha?</a>
             </div>            
-            <input type="submit" class="btn btn-block btn-light btn-outline-primary btn-lg" name="submit" value="Entrar">             
-            <p id="mensagem_erro" class="color-danger mt-3 h4"></p>
+            <input type="submit" class="btn btn-block btn-light btn-outline-primary btn-lg" name="submit" value="Entrar">                         
                 <div class="text-center mt-3 mb-2 border-bottom border-dark pb-3">
-                    <a href="tela_esperaVoluntario.html" class="h6 text-decoration-none">Cadastrar como voluntário</a> 
+                    <a href="tela_esperaVoluntario.php" class="h6 text-decoration-none">Cadastrar como voluntário</a> 
                 </div>
         </form>
+        <div id="mensagem_erro">
+            Usuário ou senha inválidos, tente novamente.
+        </div>
+        <div id="mensagem_erro2">
+            Todos os campos devem ser preenchidos.
+        </div>
     </div>
 
     <div id="rodapeI">
@@ -48,3 +50,38 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
+<?php
+    // Método POST
+    /* if(isset($_POST['submit'])){
+        // print_r('Nome: '.$_POST['usuario']);
+        // print_r('<br>Senha: '.$_POST['senha']);
+        // INCLUIR A CONEXÃO 
+        include_once('server.php');
+    
+        $usuario = $_POST['usuario'];
+        $senha = $_POST['senha'];
+    
+        $result = mysqli_query($conexao, "INSERT INTO login(user, senha) VALUES('$usuario', '$senha')");
+    }    
+    */
+    // Método GET
+    if (isset($_GET['submit']) && !empty($_GET['cpf']) && !empty($_GET['senha'])){
+        //print_r($_REQUEST); // RECUPERA TODOS OS DADOS ENVIADOS
+        
+        // precisa verificar se existe o usuário e senha no banco
+        include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
+        $usuario = $_GET['cpf'];
+        $senha = $_GET['senha'];
+        
+        $sql = "SELECT * FROM login WHERE cpf = '$usuario' AND senha = '$senha'";
+
+        $result = $conexao->query($sql);
+        if(mysqli_num_rows($result) > 0){ // se tiver mais de uma linha de registros iguais ao usuário e senha
+            header('Location: ../html/Servicos.php'); // navega para o home            
+        } else {
+            header('Location: ../html/login.php'); // navega para o home      
+        }
+    } else {
+        
+    }
+?> 
