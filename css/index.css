@@ -1,5 +1,4 @@
 /* UNIVERSAL */
-
 :root{
     --altura_tela: 100vh;    
     --transparencia_sol: flex;
@@ -86,11 +85,32 @@ body{
     background-color: var(--body_background);    
 }
 
-#mensagem_erro{
-    display: none;
-    color: red;
-    font-size: 2em;
+.container_mensagem_erro{
+    text-align: center;
+    padding: 1em;    
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.486);
+    border-radius: 2em;
+    font-size: 20px;
 }
+
+#mensagem_erro{
+    display: block;
+    color: black;
+}
+
+#mensagem_erro2{
+    display: block;
+    color: red;
+}
+
+/* TELA ESPERA VOLUNTARIO */
+#combo_box_tela_espera{    
+    border: rgb(13, 110, 253)  solid 1px;
+    padding: 0.3em;
+    border-radius: 0.3em;
+    color: gray;
+}
+
 /*********************************************************************************************************/
 /* Telas do voluntário*/
 
@@ -231,6 +251,8 @@ label{
     background-color: #f1f1f1;    
     min-width: 140px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    margin-top: 0.2em;
+    right: 0;
     z-index: 1;
 }
 
@@ -793,6 +815,10 @@ label{
         width: 90%;        
     }
 
+    .container_mensagem_erro{
+        width: 80%;
+    }
+
     #logo_navegacaoHome{
         width: 3em;
     }
@@ -907,6 +933,10 @@ label{
         display: flex;
         width: 40%;
         
+    }
+
+    .container_mensagem_erro{
+        width: 40%;
     }
 
     .container_servicos_main{      

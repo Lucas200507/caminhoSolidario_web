@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 </head>
-<body>    
+<body id="sem_tema">    
 <div class="container_login d-flex align-items-center justify-content-center flex-column">
         <img src="../img/logo_nomeembaixo.png" alt="" class="mb-5">
         <h3>ESQUECEU A SENHA ?</h3>
@@ -21,7 +21,7 @@
                 <label for=""><input type="text" placeholder="Email:" class="form-control border-primary text-dark w-100" name="etEmail"></label>
             </div>
            <button class="btn btn-primary btn-block btn-lg mb-3">Enviar email</button>
-           <a href="login.html">
+           <a href="login.php">
             <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
            </a>           
         </form>

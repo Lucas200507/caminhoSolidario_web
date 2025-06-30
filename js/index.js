@@ -4,6 +4,11 @@
 
 // Função para aplicar o tema salvo ao carregar a página
 function AplicarTemaSalvo() {
+    // Não aplique o tema
+    if(document.body.id === "sem_tema"){
+        return;
+    }
+
     const tema = localStorage.getItem('tema');
     const corpo_pagina = document.body;
     const logo = document.getElementById('logo_navegacaoHome');
@@ -147,69 +152,60 @@ document.addEventListener('DOMContentLoaded', aplicarUser);
 /*************************************************************************************************************************************************** */
 /*                    -------------------  Navegação de páginas  -------------------                       */
 function navegar_cadastrarBeneficiario(){
-    window.location.href = "cadastroBeneficiario.html";
+    window.location.href = "cadastroBeneficiario.php";
     
 }
 
 function navegar_cadastrarVoluntario(){
-    window.location.href = "cadastroVoluntario.html";
+    window.location.href = "cadastroVoluntario.php";
     
 }
 
 function navegar_cadastrarDependente(){
-    window.location.href = "cadastroDependente.html";
+    window.location.href = "cadastroDependente.php";
     
 }
 
 function navegar_alterarBeneficiario(){
-    window.location.href = "alteracaoBeneficiario.html";
+    window.location.href = "alteracaoBeneficiario.php";
 }
 
 function navegar_alterarVoluntario(){
-    window.location.href = "alteracaoVoluntario.html";
+    window.location.href = "alteracaoVoluntario.php";
 }
 
 function navegar_alterarDependente(){
-    window.location.href = "alteracaoDependente.html";
+    window.location.href = "alteracaoDependente.php";
 }
 
 function navegar_lancarFrequencia(){
-    window.location.href = "lancarFrequencia.html";
+    window.location.href = "lancarFrequencia.php";
 }
 
 function navegar_verificarFrequencia(){
-    window.location.href = "verificarFrequencia.html";
+    window.location.href = "verificarFrequencia.php";
 }
 
 function navegar_documentos(){
-    window.location.href = "documentos.html";
+    window.location.href = "documentos.php";
 }
 
 function navegar_documentosDependente(){
-    window.location.href = "documentosDependente.html";
+    window.location.href = "documentosDependente.php";
 }
 
 function navegar_documentosBeneficiario(){
-    window.location.href = "documentosBeneficiario.html";
+    window.location.href = "documentosBeneficiario.php";
 }
 
 function navegar_usuario(){        
-    window.location.href = "usuario.html#resetarSenha";
+    window.location.href = "usuario.php#resetarSenha";
 }
 
 function cancelarCadastro(){
     window.alert("Cancelou");
 }
 
-function Cadastrar_Voluntario(){
-    senhaTemporaria = document.getElementById('senhaTemporaria').value;
-    confirmarSenha = document.getElementById('confirmarSenha').value;
-    if (senhaTemporaria == confirmarSenha){
-        window.alert('As senhas são iguais');
-    } else {
-        window.alert('As senhas são diferentes');
-    }
-}
 
  /************************************************ */
 // Usuário

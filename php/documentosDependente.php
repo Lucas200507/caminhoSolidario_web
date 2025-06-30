@@ -22,7 +22,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark justify-content-between"
         style="padding: 0.8em;">
         <!-- logo -->
-        <a href="login.html" class="navbar-brand p-0 d-block" id="container_logoHome">
+        <a href="login.php" class="navbar-brand p-0 d-block" id="container_logoHome">
             <img src="../img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
         </a>
 
@@ -38,23 +38,23 @@
             <ul class="navbar-nav ml-1 justify-content-around" id="navegadores_links">
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="person-add-outline" class="icones_nav"></ion-icon>
-                    <a href="cadastro.html" class="nav-link" id="linksNavegacao">Cadastro</a>
+                    <a href="cadastro.php" class="nav-link" id="linksNavegacao">Cadastro</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="create-outline" class="icones_nav"></ion-icon>
-                    <a href="alteracao.html" class="nav-link" id="linksNavegacao">Alteração</a>
+                    <a href="alteracao.php" class="nav-link" id="linksNavegacao">Alteração</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="document-text-outline" class="icones_nav" id="linksNavegacaoSelecionado"></ion-icon>
-                    <a href="documentos.html" class="nav-link" id="linksNavegacaoSelecionado">Documentos</a>
+                    <a href="documentos.php" class="nav-link" id="linksNavegacaoSelecionado">Documentos</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="checkbox-outline" class="icones_nav"></ion-icon>
-                    <a href="frequenciaBeneficiario.html" class="nav-link" id="linksNavegacao">Frequência</a>
+                    <a href="frequenciaBeneficiario.php" class="nav-link" id="linksNavegacao">Frequência</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="list-outline" class="icones_nav"></ion-icon>
-                    <a href="../Servicos.html" class="nav-link" id="linksNavegacao">Serviços</a>
+                    <a href="Servicos.php" class="nav-link" id="linksNavegacao">Serviços</a>
                 </li>
             </ul>
         </div>
@@ -79,8 +79,8 @@
                 <span id="IconUsuarioPaginas"></span>
                 <!-- Criando um DropDown com o icon -->
                 <div id="dropdownUser" class="container_dropDownUser">
-                    <a href="usuario.html">Sua conta</a>
-                    <a href="login.html" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
+                    <a href="usuario.php">Sua conta</a>
+                    <a href="login.php" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
                 </div>
             </div>
         </div>
@@ -136,7 +136,7 @@
             </div>
             <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">
                 <span class="align-items-center text-center">
-                    <a href="documentos.html" class="text-decoration-none">
+                    <a href="documentos.php" class="text-decoration-none">
                         <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
                     </a>
                     <p>Voltar</p>

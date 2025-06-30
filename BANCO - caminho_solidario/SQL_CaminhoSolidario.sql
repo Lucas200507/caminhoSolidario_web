@@ -2,14 +2,19 @@ CREATE DATABASE caminho_solidario;
 USE caminho_solidario;
 
 -- TABELAS
-
+-- EU COLOCARIA A SITUAÇÃO: VOLUNTÁRIO, ADMINISTRADOR OU DEPENDENTE
 CREATE TABLE login(
 id_user INT PRIMARY KEY auto_increment,
 cpf VARCHAR(11) NOT NULL,
 senha VARCHAR(60) NOT NULL,
-situacao CHAR(1) NOT NULL
+situacao CHAR(1) NOT NULL, -- V - Voluntario / A - Adminstrador
+idPessoa INT,
+FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa) -- RELACIONAMENTO COM PESSOA
 );
 
+INSERT INTO login (cpf, senha, situacao, idPessoa) VALUES (SELECT cpf FROM pessoa WHERE idPessoa = 1, 'teste', 'A', 1);
+
+-- TEMOS QUE FAZER O RELACIONAMENTO ENTRE LOGIN E PESSOA
 -- ---------------------------------------------
 
 -- DELIMITER
@@ -24,17 +29,34 @@ END
 //
 DELIMITER ;
 
-INSERT INTO login(cpf, senha, situacao) VALUES ("12345678900", "321", "V"), ("12345678910", "123", "B");
+INSERT INTO login(cpf, senha, situacao) VALUES ("12345678900", "321"), ("12345678910", "123");
 SELECT * FROM login;
 DROP TABLE login;
 
 -- --------------------------------------------
 
+CREATE TABLE espera_voluntario(
+	id_esperaVol INT PRIMARY KEY AUTO_INCREMENT,
+    cpf VARCHAR(12) NOT NULL,
+    nome_completo VARCHAR(60) NOT NULL,
+    email VARCHAR(45) NOT NULL,
+    telefone VARCHAR(12) not null,
+    data_pedido DATE,
+    id_enderecoV INT,
+    FOREIGN KEY (id_enderecoV) REFERENCES endereco_voluntario (id_enderecoV)
+);
+
+SELECT * FROM espera_voluntario;
+DROP TABLE espera_voluntario;
+
+-- -------------------------------------------
 CREATE TABLE pessoa(
 idPessoa INT PRIMARY KEY AUTO_INCREMENT,
 nome_completo VARCHAR(100) NOT NULL,
 cpf VARCHAR(12) NOT NULL,
 telefone VARCHAR(12) NOT NULL);
+
+INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste', '0123456789', '6195847-2351');
 
 SELECT * FROM pessoa;
 DROP TABLE pessoa;
@@ -185,22 +207,6 @@ SELECT * FROM relatorio;
 DROP TABLE relatorio;
 
 -- ----------------------------------------
-
-CREATE TABLE espera_voluntario(
-	id_esperaVol INT PRIMARY KEY AUTO_INCREMENT,
-    cpf VARCHAR(12) NOT NULL,
-    nome_completo VARCHAR(60) NOT NULL,
-    email VARCHAR(45) NOT NULL,
-    telefone VARCHAR(12) not null,
-    data_pedido DATE,
-    id_enderecoV INT,
-    FOREIGN KEY (id_enderecoV) REFERENCES endereco_voluntario (id_enderecoV)
-);
-
-SELECT * FROM espera_voluntario;
-DROP TABLE espera_voluntario;
-
--- -------------------------------------------
 
 CREATE TABLE endereco_voluntario(
 id_enderecoV INT PRIMARY KEY AUTO_INCREMENT,
