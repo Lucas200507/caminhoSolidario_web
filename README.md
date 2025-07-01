@@ -1,17 +1,17 @@
 # PASSO A PASSO PARA A UTILIZAÇÃO 
-  Baixe em formato zip o repositório;
-  Abra o Xampp,
-  Execute o Apache e o MySQL,
-  Abra o Explorador de arquivos,
-  Navegue no Explorador de arquivos e extraia o projeto 'caminhoSolidario_web',
-  Copie a pasta do projeto,
-  Navegue em 'C:\xampp\htdocs\',
-  Cole o projeto na pasta,
-  Abra em um navegador: http://localhost:8081/caminhoSolidario_web/splash.html
+  Baixe em formato zip o repositório;<br>
+  Abra o Xampp,<br>
+  Execute o Apache e o MySQL,<br>
+  Abra o Explorador de arquivos,<br>
+  Navegue no Explorador de arquivos e extraia o projeto 'caminhoSolidario_web',<br>
+  Copie a pasta do projeto,<br>
+  Navegue em 'C:\xampp\htdocs\',<br>
+  Cole o projeto na pasta,<br>
+  Abra em um navegador: http://localhost:8081/caminhoSolidario_web/splash.html<br>
 
   ## USUÁRIO TESTE
-  CPF: 0123456789
-  SENHA: teste
+  CPF: 0123456789<br>
+  SENHA: teste<br>
 
 # Revisão de Código e Protótipo - WEB ✍️
   O objetivo desse conteúdo é revisar todos os códigos desenvolvidos no projeto web. 
