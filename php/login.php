@@ -37,7 +37,7 @@
 </head>
 <body id="sem_tema">      
     <div class="container_login d-flex align-items-center justify-content-center flex-column">
-        <img src="../img/logodolado.png" alt="">
+        <img src="../img/logodolado.png" alt="" class="logo_login">
         <form class="d-block p-3 form_login" id="formulario_login" method="get" action="">
             <div class="form-group d-flex flex-column mt-3">
                 <label for="">
