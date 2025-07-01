@@ -53,7 +53,7 @@
     display: block;
     position: fixed;
     bottom: 0;
-    background: url(/img/rodape2.png);
+    background: url(../img/rodape2.png);
     z-index: -1; /*camada*/
     background-repeat: no-repeat;
     background-size: cover;
@@ -810,6 +810,14 @@ label{
     #rodapeI{
         height: 100px;
     }
+
+    .logo_splash{
+        width: 80%;
+    }
+
+    .logo_login{
+        width: 80%;
+    }
     
     .form_login{
         display: flex;
@@ -888,14 +896,18 @@ label{
        
 }
 
-@media (min-width: 375px){
+@media (min-width: 375px){ 
+    .logo_login{
+        width: 60%;
+    }
+    
     #container_logoHome{        
         height: 100%;
         width: auto;        
     }  
 }
 
-@media(min-width: 768px){
+@media(min-width: 768px){    
     .formularios_Beneficiario{
         display: flex;
         flex-direction: row;
@@ -928,6 +940,14 @@ label{
 @media (min-width: 880px){
     #rodapeI{
         height: 145px;
+    }
+
+     .logo_splash{
+        width: 40%;
+    }
+
+    .logo_login{
+        width: 30%;
     }
     
     .form_login{
@@ -1029,5 +1049,8 @@ label{
 @media (min-width: 1400px){
     .container_userPaginas{
         width: 15%;
-    }    
+    } 
+    .logo_splash{
+        width: 30%;
+    }
 }
