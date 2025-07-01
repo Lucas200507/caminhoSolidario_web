@@ -41,12 +41,13 @@ CREATE TABLE espera_voluntario(
     nome_completo VARCHAR(60) NOT NULL,
     email VARCHAR(45) NOT NULL,
     telefone VARCHAR(12) not null,
-    data_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Pega a data e hora no momento exato do insert
-    estado VARCHAR(15) NOT NULL    
+    data_pedido DATE,
+    id_enderecoV INT,
+    FOREIGN KEY (id_enderecoV) REFERENCES endereco_voluntario (id_enderecoV)
 );
 
 SELECT * FROM espera_voluntario;
-
+DROP TABLE espera_voluntario;
 
 -- -------------------------------------------
 CREATE TABLE pessoa(

@@ -9,11 +9,16 @@
         include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
         $usuario = $_GET['cpf'];
         $senha = $_GET['senha'];
-        
+        // Para CRIPTOGRAFIA
+        // $sql = "SELECT * FROM login WHERE cpf ='$usuario' AND senha = UPPER(MD5('$senha'))";
         $sql = "SELECT * FROM login WHERE cpf = '$usuario' AND senha = '$senha'";
 
         $result = $conexao->query($sql);
         if(mysqli_num_rows($result) > 0){ // se tiver mais de uma linha de registros iguais ao usuário e senha             
+            // PRECISA GUARDAR O USUARIO LOGADO LOCALMENTE
+            session_start(); // Iniciando as sessões
+            $_SESSION['usuario'] = $usuario;
+            $_SESSION['senha'] = $senha;
             header('Location: ../php/Servicos.php'); // navega para o home            
         } else {
             // Login errado
@@ -37,7 +42,7 @@
 </head>
 <body id="sem_tema">      
     <div class="container_login d-flex align-items-center justify-content-center flex-column">
-        <img src="../img/logodolado.png" alt="" class="logo_login">
+        <img src="../img/logodolado.png" alt="">
         <form class="d-block p-3 form_login" id="formulario_login" method="get" action="">
             <div class="form-group d-flex flex-column mt-3">
                 <label for="">
@@ -92,5 +97,4 @@
     
         $result = mysqli_query($conexao, "INSERT INTO login(user, senha) VALUES('$usuario', '$senha')");
     }    
-
-   
+    */     -->

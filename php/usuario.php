@@ -54,6 +54,7 @@
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="list-outline" class="icones_nav"></ion-icon>
                     <a href="Servicos.php" class="nav-link" id="linksNavegacao">Serviços</a>
+                </li>
             </ul>
         </div>       
     </nav>
@@ -106,7 +107,6 @@
                 <div class="d-flex container justify-content-around w-100 align-items-center mb-5"
                     style="margin-top: 3em;">
                     <span class="align-items-center text-center">
-
                         <a href="Servicos.php" class="text-decoration-none">
                             <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
                         </a>

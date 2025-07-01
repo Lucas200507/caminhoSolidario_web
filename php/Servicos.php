@@ -1,3 +1,8 @@
+<?php
+    include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
+    include_once('../routes/verificacao_logado.php');
+
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -21,7 +26,7 @@
         <!-- logo -->
         <a href="login.php" class="navbar-brand p-0 d-block" id="container_logoHome">
             <img src="./img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
-        </a>
+        </a>        
 
         <!-- Menu Hamburguer -->
         <button class="navbar-toggler" data-toggle="collapse" data-target="#navegacaoHome" id="botaoHamburguer">
@@ -76,7 +81,7 @@
                 <!-- Criando um DropDown com o icon -->
                 <div id="dropdownUser" class="container_dropDownUser">
                     <a href="usuario.php">Sua conta</a>
-                    <a href="login.php" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
+                    <a href="../routes/deslogar.php" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
                 </div>
             </div>
         </div>

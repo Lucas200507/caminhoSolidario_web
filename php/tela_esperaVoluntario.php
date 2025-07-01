@@ -1,5 +1,6 @@
 <?php   
-    $campo_vazio = False;
+    $cpf_cadastrado_lista = False;
+    $cpf_cadastrado_login = False;
     $cadastrado = False;
      if(isset($_POST['submit']) && !empty($_POST['nome']) && !empty($_POST['email']) && !empty($_POST['telefone']) && !empty($_POST['cpf']) && !empty($_POST['estado'])){
          // Conectando com o banco: 
@@ -10,16 +11,28 @@
          $telefone = $_POST['telefone'];
          $cpf = $_POST['cpf'];
          $estado = $_POST['estado'];
-        
-        $sql = "INSERT INTO espera_voluntario(nome_completo, email, telefone, cpf, estado) VALUES('$nome','$email','$telefone','$cpf','$estado')";
-        $cadastrado = True;        
+
+         // Precisa verificar se já possui o mesmo cpf na lista: -- Precisa verificar se já está cadastrado na tabela login 
+            $sql1 = "SELECT * FROM espera_voluntario WHERE cpf = '$cpf'";
+            $sql2 = "SELECT * FROM login WHERE cpf = '$cpf'";
+            $result1 = $conexao->query($sql1);
+            $result2 = $conexao->query($sql2);
+            if (mysqli_num_rows($result1) > 0){ // Já possui esse cpf
+                $cpf_cadastrado_lista = True;
+            } else if (mysqli_num_rows($result2) > 0){
+                $cpf_cadastrado_login = True;
+            } else { // Não possui ainda o cpf no banco
+                $sql = "INSERT INTO espera_voluntario(nome_completo, email, telefone, cpf, estado) VALUES('$nome','$email','$telefone','$cpf','$estado')";
+                // Inserindo no banco
+                $result = mysqli_query($conexao, $sql);
+
+                $cadastrado = True;    
+            }
         
      }  else if(isset($POST['submit']) && (empty($POST['nome']) || empty($POST['email']) || empty($POST['telefone']) || empty($POST['cpf']) || empty($POST['estado']))){
         $campo_vazio = True;
      }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -58,9 +71,13 @@
                     window.location.href = "login.php";
                     
                 </script>                
-            <?php elseif($campo_vazio): ?>
-                <div id="mensagem_campoVazio_esperaVoluntario" class="container_mensagem_esperaVoluntario">
-                    É necessário preencher todos os campos.
+            <?php elseif($cpf_cadastrado_lista): ?>
+                <div id="mensagem_campoVazio_esperaVoluntario" class="container_mensagem_erro w-100">
+                    Você já está cadastrado na lista de espera, favor, aguarde o email em até 5 dias úteis.
+                </div>
+            <?php elseif($cpf_cadastrado_login): ?>
+                <div id="mensagem_campoVazio_esperaVoluntario" class="container_mensagem_erro w-100">
+                    Você já está cadastrado no sistema como voluntário.
                 </div>
              <?php endif; ?>  
             <a href="login.php">

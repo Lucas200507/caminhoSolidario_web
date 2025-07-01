@@ -48,8 +48,3 @@ Aplicando as boas práticas, compreendemos que um código limpo é primordial de
 - Bárbara Letícia Soares Cavalcanti
 - Daiana Arruda Rodrigues Santos Ribeiro
 - Lucas Ataide Martins
-
-
-
-
-
