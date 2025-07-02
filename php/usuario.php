@@ -1,3 +1,9 @@
+<?php
+    include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
+    include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
+    // Acessando o dados_usuario_logado para receber seus dados 
+    include_once("../routes/dados_usuarioLogado.php");
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -75,14 +81,14 @@
                 onclick="alterarIcon()"><ion-icon name="image-outline"></ion-icon></a>                              
             </span>
             <span id="IconUsuarioU" onmouseover="iconHoverIn()" onmouseout="iconHoverOut()" class="mb-4"></span>           
-            <h2 id="nomeUsuario"></h2>
+            <h2><?php echo $nome ?></h2>
         </div>
         <!-- DADOS DO USUÁRIO -->
         <div class="dadosUsuario mb-5 w-100">
             <form action="">
                 <div class="d-flex flex-column container">
                     <label class="form-label">Nome Completo:</label>
-                    <input type="text" required class="form-control border" id="nomeCompleto_user">
+                    <input type="text" required class="form-control border" id="nomeCompleto_user" value="<?php echo $nome ?>">
                 </div>
                 <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                     <span class="col-12">
@@ -139,7 +145,7 @@
                         <a href="" id="ConfSenhaU" class="btn">Confirmar Senha</a>
                     </span>
                 </div>
-                <a href="login.php" class="btn mt-3" id="logout_usuario" onclick="logout()">Logout</a>
+                <a href="../routes/deslogar.php" class="btn mt-3" id="logout_usuario" onclick="logout()">Logout</a>
             </div>
 
     </main>

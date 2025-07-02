@@ -1,3 +1,9 @@
+<?php
+    include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
+    include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
+    // Acessando o dados_usuario_logado para receber seus dados 
+    include_once("../routes/dados_usuarioLogado.php");
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -67,11 +73,11 @@
             <span class="mr-3 d-none d-md-block" id="usuario_home">
                 <div id="nome-titulo_home" class="d-flex flex-row">
                     <p class="d-block pe-1">Nome: </p>
-                    <p id="nomeUsuario"></p>
+                    <p><?php echo $nome ?></p>
                 </div>
                 <div id="funcao-titulo_home" class="d-flex flex-row">
                     <p class="mr-2 pe-1">Função: </p>
-                    <p>Voluntário</p>
+                    <p> <?php echo $funcao ?></p>                    
                 </div>
             </span>
             <div class="container_iconPaginas">
@@ -79,7 +85,7 @@
                 <!-- Criando um DropDown com o icon -->
                 <div id="dropdownUser" class="container_dropDownUser">
                     <a href="usuario.php">Sua conta</a>
-                    <a href="login.php" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
+                    <a href="../routes/deslogar.php" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
                 </div>
             </div>
         </div>

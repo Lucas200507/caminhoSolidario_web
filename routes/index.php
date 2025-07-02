@@ -1,4 +1,7 @@
-
+<?php
+      include_once("../routes/dados_usuarioLogado.php");
+?>
+<script>    
 /********************************************************************************************************* */
 /*                    -------------------  Usuário  -------------------                       */
 
@@ -44,39 +47,41 @@ function Mudar_tema() {
 // Aplica o tema salvo automaticamente ao carregar a página
 document.addEventListener('DOMContentLoaded', AplicarTemaSalvo);
 
-// Função para salvar o usuário no localStorage
-    let usuario = document.getElementById('nomeCompleto_user').value.trim();
-    if (usuario) {
-        let usuarioFormatado = usuario.split(' ')[0]; // Primeiro nome
-        localStorage.setItem('nome_usuario', usuarioFormatado);
-        localStorage.setItem('usuario_completo', usuario);
+// // Função para salvar o usuário no localStorage
+// function Salvar_user() {
+//     let usuario = document.getElementById('nomeCompleto_user').value.trim();
+//     if (usuario) {
+//         let usuarioFormatado = usuario.split(' ')[0]; // Primeiro nome
+//         localStorage.setItem('nome_usuario', usuarioFormatado);
+//         localStorage.setItem('usuario_completo', usuario);
 
-        // Define o ícone de acordo com a primeira letra e salva no localStorage
-        let primeiraLetra = usuario.charAt(0).toUpperCase();
-        let icon = definirIcone(primeiraLetra);
-        localStorage.setItem('userIcon', icon);
+//         // Define o ícone de acordo com a primeira letra e salva no localStorage
+//         let primeiraLetra = usuario.charAt(0).toUpperCase();
+//         let icon = definirIcone(primeiraLetra);
+//         localStorage.setItem('userIcon', icon);
 
-        // Atualiza na página atual
-        aplicarUser();
-    }
+//         // Atualiza na página atual
+//         aplicarUser();
+//     }
+// }
 
 // nomeCompleto_user
 
 // Função para aplicar o nome do usuário e o ícone
-function aplicarUser() {
-    const nome_usuario = localStorage.getItem('nome_usuario') || 'Usuário';
-    const icon = localStorage.getItem('userIcon');
+// function aplicarUser() {
+//     const nome_usuario = localStorage.getItem('nome_usuario') || 'Usuário';
+//     const icon = localStorage.getItem('userIcon');
 
-    // Aplica o nome do usuário nas páginas
-    let nomeUsuarioElemento = document.getElementById('nomeUsuario');
-    if (nomeUsuarioElemento) {
-        nomeUsuarioElemento.textContent = nome_usuario;
-    }
+//     // Aplica o nome do usuário nas páginas
+//     let nomeUsuarioElemento = document.getElementById('nomeUsuario');
+//     if (nomeUsuarioElemento) {
+//         nomeUsuarioElemento.textContent = nome_usuario;
+//     }
 
-    // Aplica o ícone em todos os lugares necessários
-    aplicarIcone(document.getElementById('IconUsuarioU'), icon);
-    aplicarIcone(document.getElementById('IconUsuarioPaginas'), icon);
-}
+//     // Aplica o ícone em todos os lugares necessários
+//     aplicarIcone(document.getElementById('IconUsuarioU'), icon);
+//     aplicarIcone(document.getElementById('IconUsuarioPaginas'), icon);
+// }
 
 // Função para definir o ícone baseado na primeira letra
 function definirIcone(letra) {
@@ -236,3 +241,4 @@ function resetarSenhaU(){
 function logout(){
     window.alert('Saindo!!!');
 }
+</script>

@@ -19,7 +19,7 @@
             session_start(); // Iniciando as sessões
             $_SESSION['usuario'] = $usuario;
             $_SESSION['senha'] = $senha;
-            header('Location: ../php/Servicos.php'); // navega para o home            
+            header("Location: ../php/Servicos.php"); // navega para o home            
         } else {
             // Login errado
             $login_errado = True;                
