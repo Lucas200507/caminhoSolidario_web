@@ -12,7 +12,7 @@ idPessoa INT,
 FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa) -- RELACIONAMENTO COM PESSOA
 );
 
-INSERT INTO login (cpf, senha, situacao, idPessoa) VALUES (SELECT cpf FROM pessoa WHERE idPessoa = 1, 'teste', 'A', 1);
+INSERT INTO login (cpf, senha, situacao, idPessoa) SELECT cpf, 'teste', 'A', 2 FROM pessoa WHERE idPessoa = 2;
 
 -- TEMOS QUE FAZER O RELACIONAMENTO ENTRE LOGIN E PESSOA
 -- ---------------------------------------------
@@ -56,7 +56,7 @@ nome_completo VARCHAR(100) NOT NULL,
 cpf VARCHAR(12) NOT NULL,
 telefone VARCHAR(12) NOT NULL);
 
-INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste', '0123456789', '6195847-2351');
+INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste2', '01234567890', '6195847-2351');
 
 SELECT * FROM pessoa;
 DROP TABLE pessoa;
