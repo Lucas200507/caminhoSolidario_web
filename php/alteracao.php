@@ -1,3 +1,7 @@
+<?php
+    include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
+    include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -81,7 +85,7 @@
                     <!-- Criando um DropDown com o icon -->
                     <div id="dropdownUser" class="container_dropDownUser">
                         <a href="usuario.php">Sua conta</a>
-                        <a href="login.php" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
+                        <a href="../routes/deslogar.php" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
                     </div>
                 </div>
             </div>
