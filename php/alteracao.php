@@ -3,6 +3,7 @@
     include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
