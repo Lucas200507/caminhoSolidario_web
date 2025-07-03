@@ -1,5 +1,11 @@
+<?php
+    include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
+    include_once('../routes/verificacao_logado.php');  
+    // Acessando o dados_usuario_logado para receber seus dados 
+    include_once("../routes/dados_usuarioLogado.php");
+?>
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br">    
 
 <head>
     <meta charset="UTF-8">
@@ -16,12 +22,12 @@
     <script src="../js/index.js" defer></script>
 </head>
 
-<body id="telaBody">
+<body id="telaBody">        
     <nav class="navbar navbar-expand-lg navbar-dark barraNav flex-row justify-content-between" style="padding: 0.8em;">
         <!-- logo -->
-        <a href="login.php" class="navbar-brand p-0 d-block" id="container_logoHome">
+        <a href="#" class="navbar-brand p-0 d-block" id="container_logoHome">
             <img src="./img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
-        </a>
+        </a>        
 
         <!-- Menu Hamburguer -->
         <button class="navbar-toggler" data-toggle="collapse" data-target="#navegacaoHome" id="botaoHamburguer">
@@ -64,19 +70,19 @@
             <span class="mr-3 d-none d-md-block" id="usuario_home">
                 <div id="nome-titulo_home" class="d-flex flex-row">
                     <p class="d-block pe-1">Nome: </p>
-                    <p id="nomeUsuario"></p>
+                    <p><?php echo $nome ?></p>
                 </div>
                 <div id="funcao-titulo_home" class="d-flex flex-row">
                     <p class="mr-2 pe-1">Função: </p>
-                    <p>Voluntário</p>
+                    <p> <?php echo $funcao ?></p>                    
                 </div>
             </span>
             <div class="container_iconPaginas">
-                <span id="IconUsuarioPaginas"></span>
+                <span id="IconUsuarioPaginas" style="background-image: url('<?php echo $icone ?>');"></span>
                 <!-- Criando um DropDown com o icon -->
                 <div id="dropdownUser" class="container_dropDownUser">
                     <a href="usuario.php">Sua conta</a>
-                    <a href="login.php" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
+                    <a href="../routes/deslogar.php" style="color: rgb(139, 10, 10);" onclick="logout()">Sair</a>
                 </div>
             </div>
         </div>
@@ -84,6 +90,7 @@
 
     <main class="d-flex w-100 flex-row mt-5 container_servicos">
         <div class="container_servicos_main">
+            <!-- CADASTRO -->
             <div>
                 <span class="d-flex flex-row align-items-center m-3 container_MainHome"
                     onclick="navegar_cadastrarBeneficiario()">
@@ -95,24 +102,26 @@
                     <ion-icon name="person-outline" class="icones_mainHome"></ion-icon>
                     <p class="textos_servicos">Cadastrar Voluntário</p>
                 </span>
-            </div>
-            <div>
-                 <span class="d-flex flex-row align-items-center m-3 container_MainHome"
+                <span class="d-flex flex-row align-items-center m-3 container_MainHome"
                     onclick="navegar_cadastrarDependente()">
                     <ion-icon name="people-outline" class="icones_mainHome"></ion-icon>
                     <p class="textos_servicos">Cadastrar Dependente(s)</p>
                 </span>
-                <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_documentos()">
-                    <ion-icon name="documents-outline" class="icones_mainHome"></ion-icon>
-                    <p class="textos_servicos">Verificar Documentos</p>
-                </span>
+            </div>
+            <!-- ALTERAR -->
+            <div>                                                                        
                 <span class="d-flex flex-row align-items-center m-3 container_MainHome"
                     onclick="navegar_verificarFrequencia()">
                     <ion-icon name="calendar-outline" class="icones_mainHome"></ion-icon>
                     <p class="textos_servicos">Verificar Frequência</p>
                 </span>
             </div>
+            <!-- DOCUMENTOS -->             
             <div>
+                <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_documentos()">
+                    <ion-icon name="documents-outline" class="icones_mainHome"></ion-icon>
+                    <p class="textos_servicos">Verificar Documentos</p>
+                </span>
                 <span class="d-flex flex-row align-items-center m-3 container_MainHome"
                     onclick="navegar_lancarFrequencia()">
                     <ion-icon name="checkbox-outline" class="icones_mainHome"></ion-icon>
@@ -121,7 +130,7 @@
                 <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_usuario()">
                     <ion-icon name="close-circle-outline" class="icones_mainHome"></ion-icon>
                     <p class="textos_servicos">Resetar Senha</p>
-                </span>
+                </span>                
             </div>           
         </div>
     </main>

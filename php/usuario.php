@@ -1,3 +1,9 @@
+<?php
+    include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
+    include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
+    // Acessando o dados_usuario_logado para receber seus dados 
+    include_once("../routes/dados_usuarioLogado.php");
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -21,7 +27,7 @@
 <body id="telaBody">
     <nav class="navbar navbar-expand-lg navbar-dark justify-content-between" style="padding: 0.8em;">
         <!-- logo -->
-        <a href="login.php" class="navbar-brand p-0 d-block" id="container_logoHome">
+        <a href="#" class="navbar-brand p-0 d-block" id="container_logoHome">
             <img src="../img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
         </a>
 
@@ -41,19 +47,19 @@
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="create-outline" class="icones_nav"></ion-icon>
-                    <a href="alteracao.phpcadastro.php" class="nav-link" id="linksNavegacao">Alteração</a>
+                    <a href="alteracao.php" class="nav-link" id="linksNavegacao">Alteração</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="document-text-outline" class="icones_nav"></ion-icon>
-                    <a href="documentos.phpcadastro.php" class="nav-link" id="linksNavegacao">Documentos</a>
+                    <a href="documentos.php" class="nav-link" id="linksNavegacao">Documentos</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="checkbox-outline" class="icones_nav"></ion-icon>
-                    <a href="frequenciaBeneficiario.phpcadastro.php" class="nav-link" id="linksNavegacao">Frequência</a>
+                    <a href="frequenciaBeneficiario.php" class="nav-link" id="linksNavegacao">Frequência</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="list-outline" class="icones_nav"></ion-icon>
-                    <a href="Servicos.phpcadastro.php" class="nav-link" id="linksNavegacao">Serviços</a>
+                    <a href="Servicos.php" class="nav-link" id="linksNavegacao">Serviços</a>
                 </li>
             </ul>
         </div>       
@@ -74,15 +80,15 @@
                 <a href="#" id="imgFotoU" onmouseover="iconHoverIn()" onmouseout="iconHoverOut()" class="iconImg"
                 onclick="alterarIcon()"><ion-icon name="image-outline"></ion-icon></a>                              
             </span>
-            <span id="IconUsuarioU" onmouseover="iconHoverIn()" onmouseout="iconHoverOut()" class="mb-4"></span>           
-            <h2 id="nomeUsuario"></h2>
+            <span id="IconUsuarioU" onmouseover="iconHoverIn()" onmouseout="iconHoverOut()" class="mb-4" style="background-image: url('<?php echo $icone ?>');"></span>           
+            <h2><?php echo $nome ?></h2>
         </div>
         <!-- DADOS DO USUÁRIO -->
         <div class="dadosUsuario mb-5 w-100">
             <form action="">
                 <div class="d-flex flex-column container">
                     <label class="form-label">Nome Completo:</label>
-                    <input type="text" required class="form-control border" id="nomeCompleto_user">
+                    <input type="text" required class="form-control border" id="nomeCompleto_user" value="<?php echo $nome ?>">
                 </div>
                 <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                     <span class="col-12">
@@ -107,7 +113,7 @@
                 <div class="d-flex container justify-content-around w-100 align-items-center mb-5"
                     style="margin-top: 3em;">
                     <span class="align-items-center text-center">
-                        <a href="Servicos.phpcadastro.php" class="text-decoration-none">
+                        <a href="Servicos.php" class="text-decoration-none">
                             <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
                         </a>
                         <p>Voltar</p>
@@ -139,7 +145,7 @@
                         <a href="" id="ConfSenhaU" class="btn">Confirmar Senha</a>
                     </span>
                 </div>
-                <a href="login.php" class="btn mt-3" id="logout_usuario" onclick="logout()">Logout</a>
+                <a href="../routes/deslogar.php" class="btn mt-3" id="logout_usuario" onclick="logout()">Logout</a>
             </div>
 
     </main>

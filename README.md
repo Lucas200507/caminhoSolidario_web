@@ -1,27 +1,19 @@
-# PASSO A PASSO PARA A UTILIZAÇÃO
-  BAIXE O BANCO (/BANCO - caminho_solidario/SQL_CaminhoSolidario<br>
-  Clone ou baixe o repositório<br>
-  Em server.js, altere a conexão do banco:<br>
-    const db = mysql.createConnection({<br>
-      host: SUA_HOST,<br>
-      user: SEU_USER,<br>
-      password: SUA_SENHA,<br>
-      database: SEU_BANCO,<br>
-      port: SUA_PORTA<br>
-    })<br>
-  Em login.js, altere a url<br>
-    const resposta = await fetch('http://localhost:3307/api/login', {<br>
-          method: 'POST',<br>
-          headers: {<br>
-              'Content-Type': 'application/json',<br>
-          }, 
-          body: JSON.stringify({usuario, senha})<br>
-      });<br>
-  <br>
-  <br>
+# PASSO A PASSO PARA A UTILIZAÇÃO 
+  Baixe em formato zip o repositório;<br>
+  Abra o Xampp,<br>
+  Execute o Apache e o MySQL,<br>
+  Abra o Explorador de arquivos,<br>
+  Navegue no Explorador de arquivos e extraia o projeto 'caminhoSolidario_web',<br>
+  Copie a pasta do projeto,<br>
+  Navegue em 'C:\xampp\htdocs\',<br>
+  Cole o projeto na pasta,<br>
+  Abra em um navegador: http://localhost:8081/caminhoSolidario_web/splash.html<br>
+
+  ## USUÁRIO TESTE
+  CPF: 0123456789<br>
+  SENHA: teste<br>
+
 # Revisão de Código e Protótipo - WEB ✍️
-
-
   O objetivo desse conteúdo é revisar todos os códigos desenvolvidos no projeto web. 
   A meta final é atingir as boas práticas de programação, garantindo que os códigos estejam organizados, legíveis, padronizados — e que estejam iguais ao protótipo desenvolvido.
 
@@ -56,8 +48,3 @@ Aplicando as boas práticas, compreendemos que um código limpo é primordial de
 - Bárbara Letícia Soares Cavalcanti
 - Daiana Arruda Rodrigues Santos Ribeiro
 - Lucas Ataide Martins
-
-
-
-
-

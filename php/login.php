@@ -1,3 +1,34 @@
+<?php    
+    $em_branco = False;
+    $login_errado = False;
+    // Método GET
+    if (isset($_GET['submit']) && !empty($_GET['cpf']) && !empty($_GET['senha'])){
+        //print_r($_REQUEST); // RECUPERA TODOS OS DADOS ENVIADOS
+        
+        // precisa verificar se existe o usuário e senha no banco
+        include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
+        $usuario = $_GET['cpf'];
+        $senha = $_GET['senha'];
+        // Para CRIPTOGRAFIA
+        // $sql = "SELECT * FROM login WHERE cpf ='$usuario' AND senha = UPPER(MD5('$senha'))";
+        $sql = "SELECT * FROM login WHERE cpf = '$usuario' AND senha = '$senha'";
+
+        $result = $conexao->query($sql);
+        if(mysqli_num_rows($result) > 0){ // se tiver mais de uma linha de registros iguais ao usuário e senha             
+            // PRECISA GUARDAR O USUARIO LOGADO LOCALMENTE
+            session_start(); // Iniciando as sessões
+            $_SESSION['usuario'] = $usuario;
+            $_SESSION['senha'] = $senha;
+            header("Location: ../php/Servicos.php"); // navega para o home            
+        } else {
+            // Login errado
+            $login_errado = True;                
+        }
+    } else if (isset($_GET['submit']) && (empty($_GET['cpf']) || empty($_GET['senha']))){
+        // Está vazio
+        $em_branco = True;        
+    }
+?> 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -9,7 +40,7 @@
     <!-- BOOTSTRAP CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">    
 </head>
-<body>      
+<body id="sem_tema">      
     <div class="container_login d-flex align-items-center justify-content-center flex-column">
         <img src="../img/logodolado.png" alt="">
         <form class="d-block p-3 form_login" id="formulario_login" method="get" action="">
@@ -18,7 +49,7 @@
                     <input type="text" placeholder="CPF:" class="form-control border-primary text-dark w-100" name="cpf" id="cpf">
                 </label>
                 <label for="">
-                    <input type="text" placeholder="Senha:" class="form-control border-primary text-dark w-100" name="senha" id="senha" >
+                    <input type="password" placeholder="Senha:" class="form-control border-primary text-dark w-100" name="senha" id="senha" >
                 </label>                
             </div>            
             <div class="form-group justify-content-between d-flex justify-content-between links_login" style="font-size: 90%;">
@@ -32,13 +63,16 @@
                 <div class="text-center mt-3 mb-2 border-bottom border-dark pb-3">
                     <a href="tela_esperaVoluntario.php" class="h6 text-decoration-none">Cadastrar como voluntário</a> 
                 </div>
-        </form>
-        <div id="mensagem_erro">
-            Usuário ou senha inválidos, tente novamente.
-        </div>
-        <div id="mensagem_erro2">
-            Todos os campos devem ser preenchidos.
-        </div>
+        </form>       
+        <?php if($em_branco): ?>        
+                <div id="mensagem_erro2" class="container_mensagem_erro">
+                    Todos os campos devem ser preenchidos.
+                </div>
+        <?php elseif($login_errado): ?>           
+                <div id="mensagem_erro" class="container_mensagem_erro">
+                    Usuário ou senha inválidos, tente novamente.
+                </div>
+        <?php endif; ?>
     </div>
 
     <div id="rodapeI">
@@ -50,8 +84,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
-<?php
-    // Método POST
+<!-- 
+// Método POST
     /* if(isset($_POST['submit'])){
         // print_r('Nome: '.$_POST['usuario']);
         // print_r('<br>Senha: '.$_POST['senha']);
@@ -63,25 +97,4 @@
     
         $result = mysqli_query($conexao, "INSERT INTO login(user, senha) VALUES('$usuario', '$senha')");
     }    
-    */
-    // Método GET
-    if (isset($_GET['submit']) && !empty($_GET['cpf']) && !empty($_GET['senha'])){
-        //print_r($_REQUEST); // RECUPERA TODOS OS DADOS ENVIADOS
-        
-        // precisa verificar se existe o usuário e senha no banco
-        include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
-        $usuario = $_GET['cpf'];
-        $senha = $_GET['senha'];
-        
-        $sql = "SELECT * FROM login WHERE cpf = '$usuario' AND senha = '$senha'";
-
-        $result = $conexao->query($sql);
-        if(mysqli_num_rows($result) > 0){ // se tiver mais de uma linha de registros iguais ao usuário e senha
-            header('Location: ../html/Servicos.php'); // navega para o home            
-        } else {
-            header('Location: ../html/login.php'); // navega para o home      
-        }
-    } else {
-        
-    }
-?> 
+    */     -->

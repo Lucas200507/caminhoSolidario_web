@@ -12,7 +12,7 @@ idPessoa INT,
 FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa) -- RELACIONAMENTO COM PESSOA
 );
 
-INSERT INTO login (cpf, senha, situacao, idPessoa) VALUES (SELECT cpf FROM pessoa WHERE idPessoa = 1, 'teste', 'A', 1);
+INSERT INTO login (cpf, senha, situacao, idPessoa) SELECT cpf, 'teste', 'A', 2 FROM pessoa WHERE idPessoa = 2;
 
 -- TEMOS QUE FAZER O RELACIONAMENTO ENTRE LOGIN E PESSOA
 -- ---------------------------------------------
@@ -56,13 +56,13 @@ nome_completo VARCHAR(100) NOT NULL,
 cpf VARCHAR(12) NOT NULL,
 telefone VARCHAR(12) NOT NULL);
 
-INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste', '0123456789', '6195847-2351');
+INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste2', '01234567890', '6195847-2351');
 
 SELECT * FROM pessoa;
 DROP TABLE pessoa;
 
 -- --------------------------------------------
-
+-- NÃO VEJO NECESSIDADE, PODERIAMOS USAR A VIEW tbVoluntario e definir apenas sua situação
 CREATE TABLE adm(
 idAdm INT PRIMARY KEY AUTO_INCREMENT,
 email VARCHAR(50) not null,
@@ -74,13 +74,14 @@ SELECT * FROM adm;
 DROP TABLE adm;
 
 -- --------------------------------------------
-
-CREATE TABLE voluntario(
-idVoluntarios INT PRIMARY KEY AUTO_INCREMENT,
-email_voluntario VARCHAR(50) not null,
-senha_voluntario VARCHAR(50) NOT NULL,
-idPessoa INT,
-FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa));
+-- Para a tela Usuario
+CREATE TABLE voluntario (
+    idVoluntarios INT PRIMARY KEY AUTO_INCREMENT,
+    email_voluntario VARCHAR(50) NOT NULL,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    idPessoa INT NOT NULL,
+    FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa)
+);
 
 INSERT INTO voluntario(email_voluntario,senha_voluntario,idPessoa) VALUES("joaogomes@gmail.com","123",1);
 
@@ -223,14 +224,18 @@ DROP TABLE endereco_voluntario;
 
 -- VIEWS 
 
-CREATE VIEW tbVoluntario AS
+CREATE VIEW tbUsuarios_web AS
 SELECT
 v.idVoluntarios AS ID,
+p.cpf,
 p.nome_completo AS voluntario,
 v.email_voluntario AS email,
-v.senha_voluntario AS senha
+l.senha AS senha,
+l.situacao,
+v.data_cadastro
 FROM voluntario v
-INNER JOIN pessoa p ON p.idPessoa = v.idPessoa;
+INNER JOIN pessoa p ON p.idPessoa = v.idPessoa
+INNER JOIN login l ON l.idPessoa = v.idPessoa;
 
 SELECT * FROM tbVoluntario;
 

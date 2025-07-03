@@ -53,7 +53,7 @@
     display: block;
     position: fixed;
     bottom: 0;
-    background: url(/img/rodape2.png);
+    background: url(../img/rodape2.png);
     z-index: -1; /*camada*/
     background-repeat: no-repeat;
     background-size: cover;
@@ -85,25 +85,23 @@ body{
     background-color: var(--body_background);    
 }
 
+
+.container_mensagem_erro{
+    text-align: center;
+    padding: 1em;    
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.486);
+    border-radius: 2em;
+    font-size: 20px;
+}
+
 #mensagem_erro{
-    display: block;
-    color: blue;
-    font-size: 2em;
+    color: black;
 }
 
 #mensagem_erro2{
-    display: block;
     color: red;
-    font-size: 2em;
 }
 
-/* TELA ESPERA VOLUNTARIO */
-#combo_box_tela_espera{
-    border: rgb(13, 110, 253)  solid 1px;
-    padding: 0.3em;
-    border-radius: 0.3em;
-    color: gray;
-}
 
 /*********************************************************************************************************/
 /* Telas do voluntário*/
@@ -225,17 +223,16 @@ label{
 
 /* DROP DOWN ICON */
 #IconUsuarioPaginas{
-    display: block;   
+    display: block;     
     height: 2.5em;
     width: 2.5em;
-    border-radius: 50%;
-    /*background-image: var(--icon); */
+    border-radius: 50%;    
     background-position: center;
     background-size: cover;
 }
 
 .container_iconPaginas{
-    position: relative;
+    position: relative;    
     display: inline-block;    
 }
 
@@ -245,6 +242,8 @@ label{
     background-color: #f1f1f1;    
     min-width: 140px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    margin-top: 0.2em;
+    right: 0;
     z-index: 1;
 }
 
@@ -801,10 +800,30 @@ label{
     #rodapeI{
         height: 100px;
     }
+
+    .logo_splash{
+        width: 80%;
+    }
+
+    .logo_login{
+        width: 80%;
+    }
+
+    .texto_esqueceuSenha{
+        font-size: 0.9em;
+    }
+
+    .logo_esqueceu_senha{
+        width: 80%;
+    }
     
     .form_login{
         display: flex;
         width: 90%;        
+    }
+
+    .container_mensagem_erro{
+        width: 80%;
     }
 
     #logo_navegacaoHome{
@@ -875,14 +894,26 @@ label{
        
 }
 
-@media (min-width: 375px){
+@media (min-width: 375px){ 
+    .logo_login{
+        width: 40%;
+    }
+    
+    .logo_esqueceu_senha{
+        width: 60%;
+    }
+
     #container_logoHome{        
         height: 100%;
         width: auto;        
     }  
 }
 
-@media(min-width: 768px){
+@media(min-width: 768px){  
+    .logo_esqueceu_senha{
+        width: 60%;
+    }
+    
     .formularios_Beneficiario{
         display: flex;
         flex-direction: row;
@@ -909,6 +940,10 @@ label{
      #formResetarSenha{
         width: 50%;
     }
+
+     .texto_esqueceuSenha{
+        font-size: 1.3em;
+    }
 }
 
 
@@ -916,11 +951,27 @@ label{
     #rodapeI{
         height: 145px;
     }
+
+     .logo_splash{
+        width: 50%;
+    }
+
+    .logo_login{
+        width: 30%;
+    }
+
+    .logo_esqueceu_senha{
+        width: 30%;
+    }
     
     .form_login{
         display: flex;
         width: 40%;
         
+    }
+
+    .container_mensagem_erro{
+        width: 40%;
     }
 
     .container_servicos_main{      
@@ -1012,5 +1063,8 @@ label{
 @media (min-width: 1400px){
     .container_userPaginas{
         width: 15%;
-    }    
+    } 
+    .logo_splash{
+        width: 30%;
+    }
 }
