@@ -25,10 +25,7 @@
     <!-- Conexao com JS -->
     <script src="../js/index.js" defer></script>        
 </head>
-
 <body id="telaBody">
-
-    <body id="telaBody">
         <nav class="navbar navbar-expand-lg navbar-dark barraNav" style="padding: 0.8em;">
             <!-- logo -->
             <a href="#" class="navbar-brand p-0 d-block" id="container_logoHome">
@@ -76,7 +73,7 @@
                 <span class="mr-3 d-none d-md-block" id="usuario_home">
                     <div id="nome-titulo_home" class="d-flex flex-row">
                         <p class="d-block pe-1">Nome: </p>
-                        <p><?php echo $nome ?></p>
+                        <p><?php echo $primeiro_nome ?></p>
                     </div>
                     <div id="funcao-titulo_home" class="d-flex flex-row">
                         <p class="mr-2 pe-1">Função: </p>

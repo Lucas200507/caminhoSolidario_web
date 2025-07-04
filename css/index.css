@@ -262,9 +262,6 @@ label{
     display: block;
 }
 
-#nomeUsuario{
-    color: var(--cor_letras);
-}
 
 /*///////////////////////////////////////////////////////////////*/
         /* SPLASH */
@@ -754,10 +751,13 @@ label{
     z-index: 4;
 }
 
+#nomeUsuario{
+    color: var(--cor_letras);    
+}
+
 #resetarSenha_usuario{
     background-color: red;
-    color: white;
-    
+    color: white;    
 }
 
 #resetarSenha_usuario:hover {

@@ -230,6 +230,7 @@ v.idVoluntarios AS ID,
 p.cpf,
 p.nome_completo AS voluntario,
 v.email_voluntario AS email,
+p.telefone,
 l.senha AS senha,
 l.situacao,
 v.data_cadastro

@@ -11,7 +11,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro Dependente</title>
+    <title>Verificar Frequência</title>
     <!-- icone no titulo da pagina -->
     <link rel="icon" href="../img/logo_semnome.png">
 
@@ -72,7 +72,7 @@
             <span class="mr-3 d-none d-md-block" id="usuario_home">
                 <div id="nome-titulo_home" class="d-flex flex-row">
                     <p class="d-block pe-1">Nome: </p>
-                    <p><?php echo $nome ?></p>
+                    <p><?php echo $primeiro_nome ?></p>
                 </div>
                 <div id="funcao-titulo_home" class="d-flex flex-row">
                     <p class="mr-2 pe-1">Função: </p>
@@ -160,70 +160,8 @@
                         <td>2024</td>
                         <td>JAN</td>
                         <td>Fabricio Romano</td>
-                        <td>45174186486</td>
+                        <td>45174186486</td>                   
                     </tr>
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>
-                    </tr>
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>
-                    </tr>
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>
-                    </tr>
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>
-                    </tr>
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>
-                    </tr>
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>
-                    </tr>
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>
-                    </tr>
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>
-                    </tr>
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>
-                    </tr>
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>
-                    </tr>
-
-
                 </tbody>
 
                 <tr>
@@ -231,6 +169,22 @@
 
                 </tr>
             </table>
+        </div>
+         <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">
+            <span class="align-items-center text-center">
+                <a href="frequenciaBeneficiario.php" class="text-decoration-none">
+                    <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
+                </a>
+                <p>Voltar</p>
+            </span>
+            <span class="align-items-center text-center" onclick="cancelarCadastro()">
+                <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
+                <p>Cancelar</p>
+            </span>
+            <span class="align-items-center text-center">
+                <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
+                <p>Salvar</p>
+            </span>
         </div>
     </main>
 

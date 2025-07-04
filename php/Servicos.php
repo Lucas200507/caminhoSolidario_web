@@ -70,7 +70,7 @@
             <span class="mr-3 d-none d-md-block" id="usuario_home">
                 <div id="nome-titulo_home" class="d-flex flex-row">
                     <p class="d-block pe-1">Nome: </p>
-                    <p><?php echo $nome ?></p>
+                    <p><?php echo $primeiro_nome ?></p>
                 </div>
                 <div id="funcao-titulo_home" class="d-flex flex-row">
                     <p class="mr-2 pe-1">Função: </p>
@@ -128,7 +128,7 @@
                     <p class="textos_servicos">Lançar Frequência</p>
                 </span>
                 <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_usuario()">
-                    <ion-icon name="close-circle-outline" class="icones_mainHome"></ion-icon>
+                    <ion-icon name="refresh-outline" class="icones_mainHome"></ion-icon>                                   
                     <p class="textos_servicos">Resetar Senha</p>
                 </span>                
             </div>           

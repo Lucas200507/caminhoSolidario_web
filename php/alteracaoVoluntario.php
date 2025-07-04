@@ -11,7 +11,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro Voluntário</title>
+    <title>Alteração Voluntário</title>
     <!-- icone no titulo da pagina -->
     <link rel="icon" href="../img/logo_semnome.png">
 
@@ -72,7 +72,7 @@
             <span class="mr-3 d-none d-md-block" id="usuario_home">
                 <div id="nome-titulo_home" class="d-flex flex-row">
                     <p class="d-block pe-1">Nome: </p>
-                    <p><?php echo $nome ?></p>
+                    <p><?php echo $primeiro_nome ?></p>
                 </div>
                 <div id="funcao-titulo_home" class="d-flex flex-row">
                     <p class="mr-2 pe-1">Função: </p>

@@ -103,6 +103,11 @@ function cancelarCadastro(){
     window.alert("Cancelou");
 }
 
+function Cancelar_tUsuario(){
+    //RECARREGAR A PÁGINA
+    // window.location.href = "usuario.php";
+}
+
 
  /************************************************ */
 // Usuário

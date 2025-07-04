@@ -81,34 +81,34 @@
                 onclick="alterarIcon()"><ion-icon name="image-outline"></ion-icon></a>                              
             </span>
             <span id="IconUsuarioU" onmouseover="iconHoverIn()" onmouseout="iconHoverOut()" class="mb-4" style="background-image: url('<?php echo $icone ?>');"></span>           
-            <h2><?php echo $nome ?></h2>
+            <h2 id="nomeUsuario"><?php echo $primeiro_nome ?></h2>
         </div>
         <!-- DADOS DO USUÁRIO -->
         <div class="dadosUsuario mb-5 w-100">
             <form action="">
                 <div class="d-flex flex-column container">
                     <label class="form-label">Nome Completo:</label>
-                    <input type="text" required class="form-control border" id="nomeCompleto_user" value="<?php echo $nome ?>">
+                    <input type="text" required class="form-control border" id="nomeCompleto_user" value="<?php echo $nome_completo ?>">
                 </div>
                 <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                     <span class="col-12">
                         <label for="">CPF</label>
-                        <input type="text" disabled class="form-control">
+                        <input type="text" disabled class="form-control" value="<?php echo $cpf_logado ?>">
                     </span>
                 </div>
                 <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                     <span class="col-lg-5  col-xs-12">
                         <label>Telefone:</label>
-                        <input type="tel" required class="form-control">
+                        <input type="tel" required class="form-control" value="<?php echo $telefone?>">
                     </span>
                     <span class="col-lg-6  col-xs-12">
                         <label>Email:</label>
-                        <input type="email" required class="form-control form-control-xl">
+                        <input type="email" required class="form-control form-control-xl" value="<?php echo $email_logado?>">
                     </span>
                 </div>
                 <div class="mt-3 container">
                     <label for="">Data do Cadastro</label>
-                    <input type="date" class="form-control">
+                    <input type="date" class="form-control" value="<?php echo $data_cadastro_usuario?>" disabled>
                 </div>
                 <div class="d-flex container justify-content-around w-100 align-items-center mb-5"
                     style="margin-top: 3em;">
@@ -119,7 +119,7 @@
                         <p>Voltar</p>
                     </span>
                     <span class="align-items-center text-center">
-                        <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
+                        <ion-icon name="close-circle-outline" id="btCancelar" onclick="Cancelar_tUsuario()"></ion-icon>
                         <p>Cancelar</p>
                     </span>
                     <span class="align-items-center text-center" onclick="Salvar_user()">
@@ -142,7 +142,7 @@
                             placeholder="Confirmar senha">
                     </div>
                     <span class="d-flex justify-content-center mt-4 mb-3">
-                        <a href="" id="ConfSenhaU" class="btn">Confirmar Senha</a>
+                        <a href="" id="ConfSenhaU" class="btn">Confirmar</a>
                     </span>
                 </div>
                 <a href="../routes/deslogar.php" class="btn mt-3" id="logout_usuario" onclick="logout()">Logout</a>

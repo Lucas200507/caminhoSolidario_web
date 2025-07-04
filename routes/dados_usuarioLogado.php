@@ -1,4 +1,6 @@
 <?php
+    //  TEM QUE VERIFICAR QUAL É A FUNCÃO DO USUÁRIO LOGADO - ADM: todas as telas / Voluntário: limitado
+
     include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
  
     // Inserindo os dados do usuário
@@ -8,8 +10,13 @@
         $result = $conexao->query($sql);
             if (mysqli_num_rows($result) > 0){ // verifica se possui alguem com esse cpf
                 while ($user_data = mysqli_fetch_assoc($result)){
-                    $nome = $user_data['voluntario'];
-                    $funcao = $user_data['situacao'];              
+                    $primeiro_nome = strtok($user_data['voluntario'], " "); // separa a array antes do primeiro espaço da string
+                    $nome_completo = $user_data['voluntario']; 
+                    $funcao = $user_data['situacao']; 
+                    $email_logado = $user_data['email'];   
+                    $telefone = $user_data['telefone'];
+                    $senha = $user_data['senha'];
+                    $data_cadastro_usuario = $user_data['data_cadastro'];
                 }
                 if($funcao == "A"){
                     $funcao = "Adminstrador";
@@ -18,9 +25,8 @@
                 }    
                 
                 // Aplicar ícone do usuário
-                $icone = obter_background_icone($nome);                                                
+                $icone = obter_background_icone($primeiro_nome);                                                
             }
-
          } else {
              // Não identificou um cpf cadastrado (MUITO DIFÍCIL)
             header("Location: ../routes/deslogar.php");

@@ -46,10 +46,10 @@
         <form class="d-block p-3 form_login" id="formulario_login" method="get" action="">
             <div class="form-group d-flex flex-column mt-3">
                 <label for="">
-                    <input type="text" placeholder="CPF:" class="form-control border-primary text-dark w-100" name="cpf" id="cpf">
+                    <input type="text" placeholder="CPF:" class="form-control border-primary text-dark w-100" name="cpf" id="cpf" required>
                 </label>
                 <label for="">
-                    <input type="password" placeholder="Senha:" class="form-control border-primary text-dark w-100" name="senha" id="senha" >
+                    <input type="password" placeholder="Senha:" class="form-control border-primary text-dark w-100" name="senha" id="senha" required>
                 </label>                
             </div>            
             <div class="form-group justify-content-between d-flex justify-content-between links_login" style="font-size: 90%;">
