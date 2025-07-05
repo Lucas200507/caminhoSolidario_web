@@ -12,8 +12,10 @@ idPessoa INT,
 FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa) -- RELACIONAMENTO COM PESSOA
 );
 
+
 INSERT INTO login (cpf, senha, situacao, idPessoa) SELECT cpf, 'teste', 'A', 1 FROM pessoa WHERE idPessoa = 1;
 INSERT INTO login (cpf, senha, situacao, idPessoa) SELECT cpf, 'teste2', 'V', 2 FROM pessoa WHERE idPessoa = 2;
+
 
 SELECT * FROM login;
 SELECT * FROM tbUsuarios_web;
@@ -59,8 +61,10 @@ nome_completo VARCHAR(100) NOT NULL,
 cpf VARCHAR(12) NOT NULL,
 telefone VARCHAR(12) NOT NULL);
 
+
 INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste', '01234567890', '6190000-0000');
 INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste2 de tal', '01234567891', '6190000-0000');
+
 
 SELECT * FROM pessoa;
 DROP TABLE pessoa;
@@ -77,6 +81,7 @@ CREATE TABLE usuarios_web(
 
 INSERT INTO usuarios_web(email,idPessoa) VALUES("teste@gmail.com",1);
 INSERT INTO usuarios_web(email,idPessoa) VALUES("teste2@gmail.com",2);
+
 
 -- --------------------------------------------
 -- NÃO VEJO NECESSIDADE, PODERIAMOS USAR A VIEW tbVoluntario e definir apenas sua situação
@@ -101,7 +106,9 @@ CREATE TABLE voluntario (
     FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa)
 );
 
+
 INSERT INTO voluntario(email_voluntario,idPessoa) VALUES("joaogomes@gmail.com",1);
+
 
 SELECT * FROM voluntario;
 DROP TABLE voluntario;
@@ -244,6 +251,7 @@ DROP TABLE endereco_voluntario;
 
 CREATE VIEW tbUsuarios_web AS
 SELECT
+
 u.idUsuariosWeb AS ID,
 p.cpf,
 p.nome_completo AS usuario,
@@ -255,6 +263,7 @@ u.data_cadastro
 FROM usuarios_web u
 INNER JOIN pessoa p ON p.idPessoa = u.idPessoa
 INNER JOIN login l ON l.idPessoa = u.idPessoa;
+
 
 SELECT * FROM tbUsuarios_web;
 

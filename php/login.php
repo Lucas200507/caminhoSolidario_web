@@ -11,6 +11,7 @@
         $senha = $_GET['senha'];
         // Para CRIPTOGRAFIA
         // $sql = "SELECT * FROM login WHERE cpf ='$usuario' AND senha = UPPER(MD5('$senha'))";
+
         $sql = "SELECT * FROM login WHERE cpf = '$usuario' AND senha = UPPER(MD5('$senha'))";
 
         $result = $conexao->query($sql);
