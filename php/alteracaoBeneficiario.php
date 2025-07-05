@@ -10,7 +10,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro Beneficiário</title>
+    <title>Alteração Beneficiário</title>
     <!-- icone no titulo da pagina -->
     <link rel="icon" href="../img/logo_semnome.png" >
 
@@ -24,7 +24,7 @@
 <body id="telaBody">
     <nav class="navbar navbar-expand-lg navbar-dark barraNav" style="padding: 0.8em;">
         <!-- logo -->
-        <a href="login.php" class="navbar-brand p-0 d-block" id="container_logoHome">
+        <a href="#" class="navbar-brand p-0 d-block" id="container_logoHome">
             <img src="../img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
         </a>
 
@@ -69,7 +69,7 @@
             <span class="mr-3 d-none d-md-block" id="usuario_home">
                 <div id="nome-titulo_home" class="d-flex flex-row">
                     <p class="d-block pe-1">Nome: </p>
-                    <p><?php echo $nome ?></p>
+                    <p><?php echo $primeiro_nome ?></p>
                 </div>
                 <div id="funcao-titulo_home" class="d-flex flex-row">
                     <p class="mr-2 pe-1">Função: </p>
@@ -77,7 +77,7 @@
                 </div>
             </span>
             <div class="container_iconPaginas">
-                <span id="IconUsuarioPaginas"></span>
+                <span id="IconUsuarioPaginas" style="background-image: url('<?php echo $icone ?>');"></span>
                 <!-- Criando um DropDown com o icon -->
                 <div id="dropdownUser" class="container_dropDownUser">
                     <a href="usuario.php">Sua conta</a>
@@ -285,10 +285,7 @@
                 <input type="text" class="form-control">
             </span>
         </div>
-        <div class="mt-3 container">
-            <label for="">Data do Cadastro</label>
-            <input type="date" class="form-control" disabled>
-        </div>
+        
         <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">
             <span class="align-items-center text-center">
                 <a href="alteracao.php" class="text-decoration-none">

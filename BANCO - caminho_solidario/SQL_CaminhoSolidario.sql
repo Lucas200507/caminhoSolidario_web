@@ -12,8 +12,11 @@ idPessoa INT,
 FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa) -- RELACIONAMENTO COM PESSOA
 );
 
-INSERT INTO login (cpf, senha, situacao, idPessoa) SELECT cpf, 'teste', 'A', 2 FROM pessoa WHERE idPessoa = 2;
+INSERT INTO login (cpf, senha, situacao, idPessoa) SELECT cpf, 'teste', 'A', 1 FROM pessoa WHERE idPessoa = 1;
+INSERT INTO login (cpf, senha, situacao, idPessoa) SELECT cpf, 'teste2', 'V', 2 FROM pessoa WHERE idPessoa = 2;
 
+SELECT * FROM login;
+SELECT * FROM tbUsuarios_web;
 -- TEMOS QUE FAZER O RELACIONAMENTO ENTRE LOGIN E PESSOA
 -- ---------------------------------------------
 
@@ -29,7 +32,7 @@ END
 //
 DELIMITER ;
 
-INSERT INTO login(cpf, senha, situacao) VALUES ("12345678900", "321"), ("12345678910", "123");
+
 SELECT * FROM login;
 DROP TABLE login;
 
@@ -56,23 +59,38 @@ nome_completo VARCHAR(100) NOT NULL,
 cpf VARCHAR(12) NOT NULL,
 telefone VARCHAR(12) NOT NULL);
 
-INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste2', '01234567890', '6195847-2351');
+INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste', '01234567890', '6190000-0000');
+INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste2 de tal', '01234567891', '6190000-0000');
 
 SELECT * FROM pessoa;
 DROP TABLE pessoa;
+
+-- -----------------------------------------
+-- LUCAS: Estou usando essa tabela ao invés de voluntario e adm
+CREATE TABLE usuarios_web(
+	idUsuariosWeb INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(50) not null,
+	data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	idPessoa INT NOT NULL,
+	FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa)
+);
+
+INSERT INTO usuarios_web(email,idPessoa) VALUES("teste@gmail.com",1);
+INSERT INTO usuarios_web(email,idPessoa) VALUES("teste2@gmail.com",2);
 
 -- --------------------------------------------
 -- NÃO VEJO NECESSIDADE, PODERIAMOS USAR A VIEW tbVoluntario e definir apenas sua situação
 CREATE TABLE adm(
 idAdm INT PRIMARY KEY AUTO_INCREMENT,
-email VARCHAR(50) not null,
-senha_adm VARCHAR(45) NOT NULL,
-idPessoa INT,
+email_adm VARCHAR(50) not null,
+data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+idPessoa INT NOT NULL,
 FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa));
 
 SELECT * FROM adm;
 DROP TABLE adm;
 
+INSERT INTO adm(email_adm,idPessoa) VALUES("teste@gmail.com",1);
 -- --------------------------------------------
 -- Para a tela Usuario
 CREATE TABLE voluntario (
@@ -83,7 +101,7 @@ CREATE TABLE voluntario (
     FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa)
 );
 
-INSERT INTO voluntario(email_voluntario,senha_voluntario,idPessoa) VALUES("joaogomes@gmail.com","123",1);
+INSERT INTO voluntario(email_voluntario,idPessoa) VALUES("joaogomes@gmail.com",1);
 
 SELECT * FROM voluntario;
 DROP TABLE voluntario;
@@ -226,18 +244,19 @@ DROP TABLE endereco_voluntario;
 
 CREATE VIEW tbUsuarios_web AS
 SELECT
-v.idVoluntarios AS ID,
+u.idUsuariosWeb AS ID,
 p.cpf,
-p.nome_completo AS voluntario,
-v.email_voluntario AS email,
+p.nome_completo AS usuario,
+u.email,
+p.telefone,
 l.senha AS senha,
 l.situacao,
-v.data_cadastro
-FROM voluntario v
-INNER JOIN pessoa p ON p.idPessoa = v.idPessoa
-INNER JOIN login l ON l.idPessoa = v.idPessoa;
+u.data_cadastro
+FROM usuarios_web u
+INNER JOIN pessoa p ON p.idPessoa = u.idPessoa
+INNER JOIN login l ON l.idPessoa = u.idPessoa;
 
-SELECT * FROM tbVoluntario;
+SELECT * FROM tbUsuarios_web;
 
 -- ------
 

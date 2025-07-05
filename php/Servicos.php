@@ -5,7 +5,7 @@
     include_once("../routes/dados_usuarioLogado.php");
 ?>
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br">    
 
 <head>
     <meta charset="UTF-8">
@@ -22,10 +22,10 @@
     <script src="../js/index.js" defer></script>
 </head>
 
-<body id="telaBody">
+<body id="telaBody">        
     <nav class="navbar navbar-expand-lg navbar-dark barraNav flex-row justify-content-between" style="padding: 0.8em;">
         <!-- logo -->
-        <a href="login.php" class="navbar-brand p-0 d-block" id="container_logoHome">
+        <a href="#" class="navbar-brand p-0 d-block" id="container_logoHome">
             <img src="./img/logodolado - Copia.png" alt="" id="logo_navegacaoHome" class=" m-0">
         </a>        
 
@@ -66,11 +66,12 @@
         <span class="text-start w-25">
             <h3 style="color: var(--cor_letras);">Serviços</h3>
         </span>
+    <!--  ICON USUÁRIO -->
         <div class="container_userPaginas">
-            <span class="mr-3 d-none d-md-block" id="usuario_home">
+            <span class="mr-5 d-none d-md-block" id="usuario_home">
                 <div id="nome-titulo_home" class="d-flex flex-row">
                     <p class="d-block pe-1">Nome: </p>
-                    <p><?php echo $nome ?></p>
+                    <p><?php echo $primeiro_nome ?></p>
                 </div>
                 <div id="funcao-titulo_home" class="d-flex flex-row">
                     <p class="mr-2 pe-1">Função: </p>
@@ -78,7 +79,7 @@
                 </div>
             </span>
             <div class="container_iconPaginas">
-                <span id="IconUsuarioPaginas"></span>
+                <span id="IconUsuarioPaginas" style="background-image: url('<?php echo $icone ?>');"></span>
                 <!-- Criando um DropDown com o icon -->
                 <div id="dropdownUser" class="container_dropDownUser">
                     <a href="usuario.php">Sua conta</a>
@@ -90,44 +91,49 @@
 
     <main class="d-flex w-100 flex-row mt-5 container_servicos">
         <div class="container_servicos_main">
+            <!-- CADASTRO -->
             <div>
                 <span class="d-flex flex-row align-items-center m-3 container_MainHome"
                     onclick="navegar_cadastrarBeneficiario()">
                     <ion-icon name="person-add-outline" class="icones_mainHome"></ion-icon>
                     <p class="textos_servicos">Cadastrar Beneficiário</p>
                 </span>
+                <?php if ($funcao == "Administrador"): ?>
+                    <span class="d-flex flex-row align-items-center m-3 container_MainHome"
+                        onclick="navegar_cadastrarVoluntario()">
+                        <ion-icon name="person-outline" class="icones_mainHome"></ion-icon>
+                        <p class="textos_servicos">Cadastrar Voluntário</p>
+                    </span>
+                <?php endif ?>
                 <span class="d-flex flex-row align-items-center m-3 container_MainHome"
-                    onclick="navegar_cadastrarVoluntario()">
-                    <ion-icon name="person-outline" class="icones_mainHome"></ion-icon>
-                    <p class="textos_servicos">Cadastrar Voluntário</p>
-                </span>
-            </div>
-            <div>
-                 <span class="d-flex flex-row align-items-center m-3 container_MainHome"
                     onclick="navegar_cadastrarDependente()">
                     <ion-icon name="people-outline" class="icones_mainHome"></ion-icon>
                     <p class="textos_servicos">Cadastrar Dependente(s)</p>
                 </span>
-                <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_documentos()">
-                    <ion-icon name="documents-outline" class="icones_mainHome"></ion-icon>
-                    <p class="textos_servicos">Verificar Documentos</p>
-                </span>
+            </div>
+            <!-- ALTERAR -->
+            <div>                                                                        
                 <span class="d-flex flex-row align-items-center m-3 container_MainHome"
                     onclick="navegar_verificarFrequencia()">
                     <ion-icon name="calendar-outline" class="icones_mainHome"></ion-icon>
                     <p class="textos_servicos">Verificar Frequência</p>
                 </span>
             </div>
+            <!-- DOCUMENTOS -->             
             <div>
+                <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_documentos()">
+                    <ion-icon name="documents-outline" class="icones_mainHome"></ion-icon>
+                    <p class="textos_servicos">Verificar Documentos</p>
+                </span>
                 <span class="d-flex flex-row align-items-center m-3 container_MainHome"
                     onclick="navegar_lancarFrequencia()">
                     <ion-icon name="checkbox-outline" class="icones_mainHome"></ion-icon>
                     <p class="textos_servicos">Lançar Frequência</p>
                 </span>
                 <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_usuario()">
-                    <ion-icon name="close-circle-outline" class="icones_mainHome"></ion-icon>
+                    <ion-icon name="refresh-outline" class="icones_mainHome"></ion-icon>                                   
                     <p class="textos_servicos">Resetar Senha</p>
-                </span>
+                </span>                
             </div>           
         </div>
     </main>

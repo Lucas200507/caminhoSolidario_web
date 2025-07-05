@@ -7,6 +7,7 @@
   Copie a pasta do projeto,<br>
   Navegue em 'C:\xampp\htdocs\',<br>
   Cole o projeto na pasta,<br>
+  Renomeie a pasta para 'caminhoSolidario_web',<br>
   Abra em um navegador: http://localhost:8081/caminhoSolidario_web/splash.html<br>
 
   ## USUÁRIO TESTE
@@ -17,11 +18,12 @@
   O objetivo desse conteúdo é revisar todos os códigos desenvolvidos no projeto web. 
   A meta final é atingir as boas práticas de programação, garantindo que os códigos estejam organizados, legíveis, padronizados — e que estejam iguais ao protótipo desenvolvido.
 
-⚠️  Aplicar boas práticas de código em projetos web, como HTML, CSS e JavaScript, resulta em código mais legível, fácil de manter, colaborativo e eficiente. Isso envolve seguir padrões de codificação, utilizar ferramentas de formatação, adotar princípios de design como DRY e KISS, e realizar testes abrangentes. 
+⚠️  Aplicar boas práticas de código em projetos web, como HTML, CSS, JavaScript e PHP resulta em código mais legível, fácil de manter, colaborativo e eficiente. Isso envolve seguir padrões de codificação, utilizar ferramentas de formatação, adotar princípios de design como DRY e KISS, e realizar testes abrangentes. 
 
 ### ╰┈➤ 📲 Link do Protótipo 
 
-https://j438n7.axshare.com/#id=5rte33&p=paginaservicos
+Axure: https://j438n7.axshare.com/#id=5rte33&p=paginaservicos
+Figma: https://www.figma.com/design/LcHS4ID82PxC34UEfhqCiK/Mercado-Solid%C3%A1rio?node-id=505-5&p=f&t=s1ibAxXzZL5FXRhv-0
 
 ---
 

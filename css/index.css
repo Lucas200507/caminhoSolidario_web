@@ -223,18 +223,18 @@ label{
 
 /* DROP DOWN ICON */
 #IconUsuarioPaginas{
-    display: block;   
+    display: block;     
     height: 2.5em;
     width: 2.5em;
-    border-radius: 50%;
-    /*background-image: var(--icon); */
+    border-radius: 50%;    
     background-position: center;
     background-size: cover;
 }
 
 .container_iconPaginas{
-    position: relative;
+    position: relative;    
     display: inline-block;    
+    margin-left: 1em;
 }
 
 .container_dropDownUser{
@@ -263,9 +263,6 @@ label{
     display: block;
 }
 
-#nomeUsuario{
-    color: var(--cor_letras);
-}
 
 /*///////////////////////////////////////////////////////////////*/
         /* SPLASH */
@@ -755,10 +752,13 @@ label{
     z-index: 4;
 }
 
+#nomeUsuario{
+    color: var(--cor_letras);    
+}
+
 #resetarSenha_usuario{
     background-color: red;
-    color: white;
-    
+    color: white;    
 }
 
 #resetarSenha_usuario:hover {
@@ -848,7 +848,7 @@ label{
 
     .container_userPaginas{
         justify-content: end;
-        margin-right: 1em;
+        margin-right: 2em;                
     }
 
     .container_icones_cadastro{
@@ -993,9 +993,9 @@ label{
     }
 
     .container_userPaginas{
-        justify-content: space-between;
+        justify-content: end;
         margin-right: 0;
-        width: 30%;
+        width: 50%;
     }
 
     .container_icones_cadastro{
@@ -1044,11 +1044,7 @@ label{
    #titulo_home span{
         font-size: 30px;            
     }
-    
-
-    .container_userPaginas{
-        width: 30%;
-    }  
+ 
 }
 
 @media (min-width: 1024px){    
@@ -1063,7 +1059,7 @@ label{
 
 @media (min-width: 1400px){
     .container_userPaginas{
-        width: 15%;
+        width: 30%;
     } 
     .logo_splash{
         width: 30%;
