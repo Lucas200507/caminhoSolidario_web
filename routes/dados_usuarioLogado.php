@@ -92,30 +92,4 @@
                     return 'https://cdn-icons-png.flaticon.com/512/847/847969.png'; // Um ícone padrão
         }
     }
-    
-
-
-    // if(isset($_GET['cpf'])){
-    //     $cpf_logado = $_GET['cpf'];
-    //     $sql = "SELECT * FROM tbUsuarios_web WHERE cpf = $cpf_logado";
-        
-    //     $result = $conexao->query($sql);
-    //     // print_r($result);
-    //     if (mysqli_num_rows($result) > 0){
-    //         while ($user_data = mysqli_fetch_assoc($result)){                
-    //             $nome = $user_data['voluntario'];
-    //             $funcao = $user_data['situacao'];                
-    //             // Na tela usuario, deve pegar os restantes dos dados (email, data_cadastro, senha)
-    //         }
-    //         if($funcao == "A"){
-    //             $funcao = "Adminstrador";
-    //         } else {
-    //             $funcao = "Voluntário";
-    //         }          
-    //     } else {
-    //         // Não identificou um cpf cadastrado (MUITO DIFÍCIL)
-    //         header("Location: ../routes/deslogar.php");
-    //     }
-    
-    // }    
 ?>

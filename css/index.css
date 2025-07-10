@@ -90,8 +90,7 @@ body{
     text-align: center;
     padding: 1em;    
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.486);
-    border-radius: 2em;
-    font-size: 20px;
+    border-radius: 2em;    
 }
 
 #mensagem_erro{
@@ -105,6 +104,11 @@ body{
 
 /*********************************************************************************************************/
 /* Telas do voluntário*/
+
+.botoes_crud{
+    border: none;
+    background: none;
+}
 
 #btVoltar{
     font-size: 35px;
@@ -451,8 +455,7 @@ label{
 .container_icones_cadastro:hover{
     color: rgb(56, 144, 160);
 }
-
-
+    
 /****************************************************************/
             /*ALTERAÇÃO*/
 /*  relative - elemento pai
@@ -824,7 +827,8 @@ label{
     }
 
     .container_mensagem_erro{
-        width: 80%;
+        width: 90%;
+        font-size: 15px;        
     }
 
     #logo_navegacaoHome{
@@ -855,6 +859,14 @@ label{
         display: flex;
         margin: 0.5em;        
     }
+
+    .container_formularios label{
+        font-size: 15px;
+    }
+
+    #form_beneficiario_beneficio{
+        padding: 0;
+    }   
 
     .formularios_Beneficiario{
         display: flex;
@@ -895,11 +907,7 @@ label{
        
 }
 
-@media (min-width: 375px){ 
-    .logo_login{
-        width: 40%;
-    }
-    
+@media (min-width: 375px){         
     .logo_esqueceu_senha{
         width: 60%;
     }
@@ -908,17 +916,17 @@ label{
         height: 100%;
         width: auto;        
     }  
+
 }
 
 @media(min-width: 768px){  
-    .logo_esqueceu_senha{
+    .logo_login{
         width: 60%;
     }
-    
-    .formularios_Beneficiario{
-        display: flex;
-        flex-direction: row;
-    }
+
+    .logo_esqueceu_senha{
+        width: 60%;
+    }        
 
     .container_documentos{
         padding: 3em;
@@ -945,10 +953,14 @@ label{
      .texto_esqueceuSenha{
         font-size: 1.3em;
     }
+
+     .container_formularios label{
+        font-size: 17px;
+    }
 }
 
 
-@media (min-width: 880px){
+@media (min-width: 880px){    
     #rodapeI{
         height: 145px;
     }
@@ -972,7 +984,8 @@ label{
     }
 
     .container_mensagem_erro{
-        width: 40%;
+        width: 70%;
+        font-size: 20px;
     }
 
     .container_servicos_main{      
@@ -1001,12 +1014,7 @@ label{
     .container_icones_cadastro{
         display: flex;
         margin: 0;        
-    }
-
-    .formularios_Beneficiario{
-        display: flex;
-        flex-direction: row;
-    }
+    } 
 
     .subcontainers_Documentos{
         width: 40%;
@@ -1048,6 +1056,10 @@ label{
 }
 
 @media (min-width: 1024px){    
+    .logo_esqueceu_senha{
+        width: 20%;
+    }
+
     .container_userPaginas{
         width: 30%;
     }
@@ -1055,13 +1067,21 @@ label{
      .container_MainHome p{
         font-size: 2em;
     }
+
+    .formularios_Beneficiario{
+        display: flex;
+        flex-direction: row;
+    }
+
+     #form_beneficiario_beneficio{
+        padding-right: 1em;
+    }  
 }
 
 @media (min-width: 1400px){
     .container_userPaginas{
         width: 30%;
     } 
-
     .logo_splash{
         width: 30%;
     }

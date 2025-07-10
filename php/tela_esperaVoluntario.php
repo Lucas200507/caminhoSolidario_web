@@ -9,7 +9,9 @@
          $nome = $_POST['nome'];
          $email = $_POST['email'];
          $telefone = $_POST['telefone'];
+         $telefone = str_replace(['(', ')', ' '], '', $telefone);
          $cpf = $_POST['cpf'];
+         $cpf = str_replace(['.', '-'], '', $cpf);
          $estado = $_POST['estado'];
 
          // Precisa verificar se já possui o mesmo cpf na lista: -- Precisa verificar se já está cadastrado na tabela login 
@@ -55,8 +57,8 @@
             <div class="form-group d-flex flex-column mt-3">
                 <label for=""><input type="text" placeholder="Nome:" class="mb-2 form-control border-primary text-dark w-100" name="nome" required></label>
                 <label for=""><input type="email" placeholder="Email:" class="mb-2 form-control border-primary text-dark w-100" name="email" required></label>
-                <label for=""><input type="tel" placeholder="Telefone:" class="mb-2 form-control border-primary text-dark w-100" name="telefone" required></label>
-                <label for=""><input type="text" placeholder="CPF:" class="mb-2 form-control border-primary text-dark w-100" name="cpf" required></label>
+                <label for=""><input type="text" maxlength="15" minlength="15" id="telefone" placeholder="Telefone:" class="mb-2 form-control border-primary text-dark w-100" name="telefone" required></label>
+                <label for=""><input type="text" maxlength="14" minlength="14" id="cpf" placeholder="CPF:" class="mb-2 form-control border-primary text-dark w-100" name="cpf" required></label>
                 <select name="estado"  class="form-select form-select-md w-100 mb-2 border-primary" required>
                     <option value="">Estado: </option>
                     <option value="DF">Distrito Federal</option>
@@ -87,6 +89,7 @@
     </div>
     <div id="rodapeI">
     </div>
+    <script src="../js/mascaras.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

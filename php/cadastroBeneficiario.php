@@ -1,8 +1,200 @@
 <?php
+
+    // PRECISA FAZER UM INPUT PARA VERIFICAR SE TEM DEPENDENTES E QUANTOS
+        // SE TIVER, IRÁ APARECER O INPUT "POSSUI FILHOS, QUANTOS MENORES E QUANTOS TRABALHAM EM CASA
+
     include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
     include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
     // Acessando o dados_usuario_logado para receber seus dados 
-    include_once("../routes/dados_usuarioLogado.php");
+    include_once("../routes/dados_usuarioLogado.php");   
+
+    $em_branco = False;
+    $possuiDependentes = False;
+   // CPF TEM QUE PEGAR APENAS OS 11 PRIMEIROS NÚMEROS 
+   // CEP TEM QUE PEGAR APENAS OS 8 PRIMEIROS NÚMEROS
+
+     if (isset($_POST['cadastrar']) 
+     && !empty($_POST['nome_completoBeneficiario']) 
+     && !empty($_POST['cpfBeneficiario']) 
+     && !empty($_POST['data_nascimentoBeneficiario']) 
+     && !empty($_POST['estado_civilBeneficiario']) 
+     && !empty($_POST['telefoneBeneficiario']) 
+     && !empty($_POST['emailBeneficiario']) 
+     && !empty($_POST['endereco_completoBeneficiario'])
+     && !empty($_POST['cepBeneficiario']) 
+     && !empty($_POST['cidadeBeneficiario']) 
+     && !empty($_POST['estadoBeneficiario'])
+     && !empty($_POST['situacao_moradiaBeneficiario'])
+     && !empty($_POST['valor_despesasBeneficiario'])  // SO SE FOR ALUGADA
+     && !empty($_POST['rbPossuiBenf'])     
+     && !empty($_POST['rbPCD'])     
+     && !empty($_POST['rbPossuiDependentes'])       
+     && !empty($_POST['renda_familiarBeneficiario'])){
+
+      
+        $nome_completoBeneficiario = $_POST['nome_completoBeneficiario']; // PESSOA
+        $cpfBeneficiario = $_POST['cpfBeneficiario']; // PESSOA
+        $cpfBeneficiario = str_replace(['-', '.', ' '], '', $cpfBeneficiario); // FORMATANDO
+        $data_nascimentoBeneficiario = $_POST['data_nascimentoBeneficiario']; // BENEFICIARIO
+        $estado_civilBeneficiario = $_POST['estado_civilBeneficiario']; // BENEFICIARIO
+        $telefoneBeneficiario = $_POST['telefoneBeneficiario']; // PESSOA
+        $telefoneBeneficiario = str_replace(['(', ')', ' '], '', $telefoneBeneficiario); // FORMATANDO
+        $emailBeneficiario = $_POST['emailBeneficiario']; // PESSOA
+        $endereco_completoBeneficiario = $_POST['endereco_completoBeneficiario']; // ENDERECO
+        $cep = $_POST['cepBeneficiario']; // Endereco
+        $cep = str_replace(['-', '.', ' '], '', $cep); //FORMATANDO
+        $cidadeBeneficiario = $_POST['cidadeBeneficiario']; // ENDERECO
+        $estadoBeneficiario = $_POST['estadoBeneficiario']; // ENDERECO 
+        $situacao_moradiaBeneficiario = $_POST['situacao_moradiaBeneficiario']; // ENDERECO                     
+        $valor_despesasBeneficiario = $_POST['valor_despesasBeneficiario']; // ENDERECO
+        $renda_familiarBeneficiario = $_POST['renda_familiarBeneficiario']; // BENEFICIARIO
+        $rbPossuiBenf = $_POST['rbPossuiBenf']; 
+        $rbPCD = $_POST['rbPCD']; // beneficiario
+        $rbPossuiDependentes = $_POST['rbPossuiDependentes'];  
+        if (!empty($_POST['rbPossuiLaudo']))      {
+            $rbPossuiLaudo = $_POST['rbPossuiLaudo']; // Beneficiario
+        } else {
+            $rbPossuiLaudo = "N";
+        }
+        
+
+        if ($rbPossuiBenf == "S"){ // INSERIR NA TABELA beneficio_gov
+            if (!empty($_POST['beneficioBeneficiario']) && !empty($_POST['valor_benecicioBeneficiario'])){
+                $beneficio = $_POST['beneficioBeneficiario']; 
+                $valor_beneficio = $_POST['valor_benecicioBeneficiario'];
+            } else {
+                $em_branco = True;
+            }
+        } 
+
+        // TEM QUE SALVAR LOCALMENTE A QUANTIDA PARA INSERIR A QUANTIDADE CERTA DE DEPENDENTES
+        if ($rbPossuiDependentes == "S"){            
+            if (!empty($_POST['quantos_dependentes'])){
+                $quantos_dependentes = $_POST['quantos_dependentes']; // INSERIR NA TABELA beneficiario
+            } else {
+                $em_branco = True;
+            }
+        } else {
+            $quantos_dependentes = 0;
+            $dependentes_pendentes = 0;
+        }
+
+        // if ($rbPossuiFilhos == "sim"){
+        //     if(!empty($_POST['quantos_menoresBeneficiario']) && !empty($_POST['quantos_trabalhamBeneficiario'])){
+        //         $quantos_menores = $_POST['quantos_menoresBeneficiario'];
+        //         $quantos_trabalham = $_POST['quantos_trabalhamBeneficiario'];
+        //     } else {
+        //         $em_branco = True;
+        //     }
+        // }
+
+        // beneficiario
+        if ($rbPCD == "S"){
+            if (!empty($rbPossuiLaudo) && !empty($_POST['nome_doencaBeneficiario'])){                                 
+                $nome_doenca = $_POST['nome_doencaBeneficiario'];                                    
+            } else {
+                $em_branco = True;
+            }
+        } else {
+            $rbPossuiLaudo = "N";
+            $nome_doenca = "-";
+        }
+
+        // INSERTS
+        if ($em_branco == False){
+            // INSERT PESSOA
+            $sqlInsert_PESSOA = "INSERT INTO pessoa (nome_completo, cpf, telefone) VALUES ('$nome_completoBeneficiario', '$cpfBeneficiario', '$telefoneBeneficiario')";
+    
+            $result1 = $conexao->query($sqlInsert_PESSOA);
+    
+            // FAZER UM SELECT DO ID_PESSOA
+            $sqlSelect_PESSOA = "SELECT idPessoa FROM pessoa WHERE cpf = $cpfBeneficiario;";
+    
+            $result2 = $conexao->query($sqlSelect_PESSOA);
+            if (mysqli_num_rows($result2) > 0){
+                while($pessoa_data = mysqli_fetch_assoc($result2)){
+                    $idPessoa = $pessoa_data['idPessoa'];
+                }
+            }
+    
+            // INSERT ENDERECO
+            $sqlInsert_Endereco = "INSERT INTO endereco (endereco, cidade, estado, cep, situacao_moradia, valor_despesas, idPessoa) VALUES('$endereco_completoBeneficiario', '$cidadeBeneficiario', '$estadoBeneficiario', '$cep', '$situacao_moradiaBeneficiario', '$valor_despesasBeneficiario', '$idPessoa')";
+
+            $result3 = $conexao->query($sqlInsert_Endereco);
+
+            // SELECT ID ENDERECO
+            $sqlSelect_ENDERECO = "SELECT idEndereco FROM endereco WHERE cep = $cep;";
+
+            $result4 = $conexao->query($sqlSelect_ENDERECO);
+            if (mysqli_num_rows($result4) > 0){
+                while($endereco_data = mysqli_fetch_assoc($result4)){
+                    $idEndereco = $endereco_data['idEndereco'];
+                }
+            }
+
+            // INSERT BENEFICIOGOV
+            if (!empty($beneficio) && !empty($valor_beneficio)){
+                $sqlInsert_beneficioGov = "INSERT INTO BeneficioGov (nome_beneficio_gov, valor_beneficio) VALUES ('$beneficio', '$valor_beneficio')";
+                $result5 = $conexao->query($sqlInsert_beneficioGov);
+    
+                // SELECT ID BENEFICIOGOV
+                $sqlSelect_beneficioGov = "SELECT idBeneficioGov FROM BeneficioGov WHERE valor_beneficio = $valor_beneficio";
+                $result6 = $conexao->query($sqlSelect_beneficioGov);
+
+                if (mysqli_num_rows($result6) > 0){
+                    while($beneficio_data = mysqli_fetch_assoc($result4)){
+                        $idBeneficio = $beneficio_data['idBeneficioGov'];
+                    }
+                }
+
+                // INSERT BENEFICIARIO
+                $sqlInsert_Beneficiario = "INSERT INTO Beneficiario (data_nascimento, estado_civil, PCD, laudo, doenca, quantos_dependentes, renda_familiar, idPessoa, idEndereco, idBeneficioGov) VALUES ('$data_nascimentoBeneficiario', '$estado_civilBeneficiario', '$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes', '$renda_familiarBeneficiario', '$idPessoa', '$idEndereco', '$idBeneficio');";
+    
+                $result7 = $conexao->query($sqlInsert_Beneficiario);
+
+            } else {
+                // INSERT BENEFICIARIO
+                $sqlInsert_Beneficiario = "INSERT INTO Beneficiario (data_nascimento, estado_civil, PCD, laudo, doenca, quantos_dependentes, renda_familiar, idPessoa, idEndereco) VALUES ('$data_nascimentoBeneficiario', '$estado_civilBeneficiario', '$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes', '$renda_familiarBeneficiario', '$idPessoa', '$idEndereco');";
+    
+                $result7 = $conexao->query($sqlInsert_Beneficiario);
+            }
+            // VERIFICA SE O USUÁRIO POSSUI DEPENDENTES
+            $sqlSelect_beneficiario = "SELECT * FROM Beneficiario;";
+            $result8 = $conexao->query($sqlSelect_beneficiario);
+
+            if (mysqli_num_rows($result8) > 0){
+                while($beneficiario_data = mysqli_fetch_assoc($result8)){
+                    $idBeneficiario = $beneficiario_data['idBeneficiario'];
+                    $dependentes_pendentes = $beneficiario_data['quantos_dependentes'];
+                }
+            }
+
+            if ($dependentes_pendentes > 0){
+                header("Location: ../php/cadastroDependente.php?IDbeneficiario=$idBeneficiario&dependentes_pendentes=$dependentes_pendentes");
+            }
+        
+            // SALVAR OS DADOS CASO O BENEFICIARIO TENHA DEPENDENTES E REDIRECIONÁ-LO PARA LÁ
+            echo "Cadastrado";
+
+            // DEPOIS DO INSERT TEM QUE APAGAR TODOS OS DADOS
+            $data_nascimentoBeneficiario = NULL;        
+            $estado_civilBeneficiario = NULL; 
+            $rbPCD = NULL; 
+            $rbPossuiLaudo = NULL; 
+            $nome_doenca = NULL; 
+            $quantos_dependentes = NULL; 
+            $renda_familiarBeneficiario = NULL; 
+            $idPessoa = NULL; 
+            $idEndereco = NULL;
+            $idBeneficio = NULL;
+
+        }
+
+    } else {
+        $em_branco = True;
+    }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -87,105 +279,115 @@
             </div>
         </div>
     </div>
-    <main class="mt-5 d-flex flex-column container">
-        <form action="">
-
+    <main class="mt-5 d-flex flex-column container">         
+        <!-- <?php if($em_branco): ?>        
+            <div id="mensagem_erro2" class="container_mensagem_erro" style="margin-top: 2em; margin-button: 2em; margin-left:auto; margin-right: auto;">
+                Campos obrigatórios estão em branco. Ou em alguns casos, possuem a quantidade de caracteres abaixo do mínimo.
+            </div>
+        <?php endif; ?>           -->
+        <form action="" class="container_formularios" method="post">  
             <!-- DADOS PESSOAIS -->
             <h3 style="text-align: center;" class="mb-3" id="subtitulos_paginas">
                 Dados Pessoais
             </h3>
             <div class="d-flex flex-column container">
                 <label class="form-label">Nome Completo:</label>
-                <input type="text" required class="form-control border">            
+                <input type="text" required class="form-control border" name="nome_completoBeneficiario">            
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
-                <span class="col-lg-3">
+                <span class="col-xl-3">
                     <label for="">CPF</label>
-                    <input type="text" required class="form-control">
+                    <input type="text" maxlength="14" minlength="14" id="cpf" required class="form-control" name="cpfBeneficiario">
                 </span>
-                <span class="col-lg-3">
+                <span class="col-xl-3">
                     <label for="">Data Nascimento</label>
-                    <input type="date" required class="form-control">
+                    <input type="date" required class="form-control" name="data_nascimentoBeneficiario">
                 </span>
-                <span class="col-lg-4">
+                <span class="col-xl-4">
                     <label for="">Estado Civil</label>
-                    <select class="form-select form-select-md">
+                    <select class="form-select form-select-md" name="estado_civilBeneficiario" required>
                         <option value=""></option>
-                        <option value="">Solteiro</option>
-                        <option value="">Casado</option>
-                        <option value="">Viúvo</option>
+                        <option value="S">Solteiro</option>
+                        <option value="C">Casado</option>
+                        <option value="V">Viúvo</option>
                     </select>
                 </span>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5 col-xs-12">
                     <label>Telefone:</label>
-                    <input type="number" required class="form-control">
+                    <input type="text" maxlength="15" minlength="15" id="telefone" required class="form-control" name="telefoneBeneficiario">
                 </span>
                 <span class="col-lg-6 col-xs-12">
                     <label>Email:</label>
-                    <input type="text" required class="form-control form-control-xl">
+                    <input type="email" required class="form-control form-control-xl" name="emailBeneficiario">
                 </span>
             </div>
                 <!-- ENDEREÇO -->
             <h3 style="text-align: center;" class="mb-3 mt-5" id="subtitulos_paginas">
                     Endereço        
             </h3>
-            <div class="d-flex flex-column container">
-                <label class="form-label">Endereço Completo:</label>
-                <input type="text" required class="form-control border">            
+            <div class="d-flex justify-content-between container formularios_Beneficiario">
+                <span class="col-lg-7 col-xs-12">
+                    <label class="form-label">Endereço Completo:</label>
+                    <input type="text" required class="form-control border" name="endereco_completoBeneficiario">            
+                </span>
+                <span class="col-lg-4 col-xs-12">
+                    <label>CEP:</label>
+                    <input type="text" id="cep" maxlength="9" minlength="9" required class="form-control form-control-xl" name="cepBeneficiario">
+                </span>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
-                <span class="col-lg-3  col-md-4">
+                <span class="col-lg-3">
                     <label for="">Cidade</label>
-                    <input type="text" required class="form-control">
+                    <input type="text" required class="form-control" name="cidadeBeneficiario">
                 </span>
-                <span class="col-lg-3  col-md-4">
+                <span class="col-lg-3">
                     <label for="">Estado</label>
-                    <select class="form-select form-select-md">
+                    <select class="form-select form-select-md" name="estadoBeneficiario" required>
                         <option value=""></option>
-                        <option value="">AC - Acre</option>
-                        <option value="">AL - Alagoas</option>
-                        <option value="">AP - Amapá</option>
-                        <option value="">AM - Amazonas</option>
-                        <option value="">BA - Bahia</option>
-                        <option value="">CE - Ceará</option>
-                        <option value="">DF - Distrito Federal</option>
-                        <option value="">ES - Espírito Santo</option>
-                        <option value="">GO - Goiás</option>
-                        <option value="">MA - Maranhão</option>
-                        <option value="">MT - Mato Grosso</option>
-                        <option value="">MS - Mato Grosso do Sul</option>
-                        <option value="">MG - Minas Gerais</option>
-                        <option value="">PA - Pará</option>
-                        <option value="">PB - Paraíba</option>
-                        <option value="">PR - Paraná</option>
-                        <option value="">PE - Pernambuco</option>
-                        <option value="">PI - Piauí</option>
-                        <option value="">RJ - Rio de Janeiro</option>
-                        <option value="">RN - Rio Grande do Norte</option>
-                        <option value="">RS - Rio Grande do Sul</option>
-                        <option value="">RO - Rondônia</option>
-                        <option value="">RR - Roraima</option>
-                        <option value="">SC - Santa Catarina</option>
-                        <option value="">SE - Sergipe</option>
-                        <option value="">TO - Tocantis</option>                    
+                        <option value="AC">AC - Acre</option>
+                        <option value="AL">AL - Alagoas</option>
+                        <option value="AP">AP - Amapá</option>
+                        <option value="AM">AM - Amazonas</option>
+                        <option value="BA">BA - Bahia</option>
+                        <option value="CE">CE - Ceará</option>
+                        <option value="DF">DF - Distrito Federal</option>
+                        <option value="ES">ES - Espírito Santo</option>
+                        <option value="GO">GO - Goiás</option>
+                        <option value="MA">MA - Maranhão</option>
+                        <option value="MT">MT - Mato Grosso</option>
+                        <option value="MS">MS - Mato Grosso do Sul</option>
+                        <option value="MG">MG - Minas Gerais</option>
+                        <option value="PA">PA - Pará</option>
+                        <option value="PB">PB - Paraíba</option>
+                        <option value="PR">PR - Paraná</option>
+                        <option value="PE">PE - Pernambuco</option>
+                        <option value="PI">PI - Piauí</option>
+                        <option value="RJ">RJ - Rio de Janeiro</option>
+                        <option value="RN">RN - Rio Grande do Norte</option>
+                        <option value="RS">RS - Rio Grande do Sul</option>
+                        <option value="RO">RO - Rondônia</option>
+                        <option value="RR">RR - Roraima</option>
+                        <option value="SC">SC - Santa Catarina</option>
+                        <option value="SE">SE - Sergipe</option>
+                        <option value="TO">TO - Tocantis</option>                    
                     </select>
                 </span>
-                <span class="col-lg-4  col-md-3">
+                <span class="col-lg-4">
                     <label for="">Situação da moradia</label>
-                    <select class="form-select form-select-md">
+                    <select class="form-select form-select-md" name="situacao_moradiaBeneficiario" required>
                         <option value=""></option>
-                        <option value="">Solteiro</option>
-                        <option value="">Casado</option>
-                        <option value="">Viúvo</option>
+                        <option value="C">Comprada</option>
+                        <option value="A">Alugada</option>
+                        <option value="O">Outro</option>
                     </select>
                 </span>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-12">
                     <label>Valor do Aluguel + Despesas (Água e luz):</label>
-                    <input type="number" class="form-control">
+                    <input type="number" class="form-control" name="valor_despesasBeneficiario">
                 </span>            
             </div>
             <!-- SITUAÇÃO -->
@@ -193,93 +395,112 @@
                 Situação
             </h3>
             <div class="d-flex justify-content-between formularios_Beneficiario  mt-3 container">
-                <div class="d-flex flex-row col-lg-8 container justify-content-between ps-0">
-                    <span class="col-lg-4 col-md-5 container p-0">
+                <div class="d-flex flex-row col-lg-8 col-sm-12 container justify-content-between" id="form_beneficiario_beneficio">
+                    <span class="col-4 container p-0">
                         <label for="">Possui Benefício?</label>
                         <div class="d-flex container justify-content-start p-0">
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf">
+                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="S">
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf">
+                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="N">
                                 <label for="">Não</label>
                             </div>               
                         </div>
                     </span>
-                    <span class="col-lg-8 col-md-7 col-sm-7">
+                    <span class="col-8">
                         <label for="">Qual o nome do Benefício?</label>
-                        <input type="text" class="form-control">
+                         <input type="text" class="form-control" name="beneficioBeneficiario"> <!-- PODIA SER UM COMBOBOX -->
                     </span> 
                 </div>           
                 <span class="col-lg-4 ">
                     <label for="">Valor</label>
-                    <input type="text" class="form-control">
-                </span> 
-            </div>
-            <div class="d-flex flex-row justify-content-between container formularios_Beneficiario mt-3">        
-                <span class="col-lg-4 col-md-4 col-sm-5 justify-content-between">
-                    <label for="">Possui Filhos?</label>
-                    <div class="d-flex container justify-content-start p-0">
-                        <div class="form-check col-6">
-                            <input type="radio" class="form-check-input" name="rbPossuiBenf">
-                            <label for="">Sim</label>                        
-                        </div> 
-                        <div class="form-check col-6">
-                            <input type="radio" class="form-check-input" name="rbPossuiBenf">
-                            <label for="">Não</label>
-                        </div>               
-                    </div>
-                </span>
-                <span class="col-lg-7 col-md-6 col-sm-6">
-                    <label for="">Quantos menores?</label>
-                    <input type="number" required class="form-control">
+                    <input type="number" class="form-control" name="valor_benecicioBeneficiario">
                 </span> 
             </div>
             <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">
-                <div class="d-flex col-lg-6 col-md-7  flex-row container justify-content-between p-0">
-                    <span class="col-lg-6 col-md-6  justify-content-start">
+                <div class="d-flex col-lg-6 flex-row container justify-content-between p-0">
+                    <span class="col-6">
                         <label for="">PCD?</label>
-                        <div class="d-flex container justify-content-start p-0">
+                        <div class="d-flex container p-0">
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf">
+                                <input type="radio" class="form-check-input" name="rbPCD" value="S">
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf">
+                                <input type="radio" class="form-check-input" name="rbPCD" value="N">
                                 <label for="">Não</label>
                             </div>               
                         </div>
                     </span>
-                    <span class="col-lg-6 col-md-6  justify-content-start">
+                    <span class="col-6  justify-content-start">
                         <label for="">Possui Laudo Médico?</label>
                         <div class="d-flex container justify-content-start p-0">
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf">
+                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="S">
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf">
+                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="N">
                                 <label for="">Não</label>
                             </div>               
                         </div>
                     </span>                 
                 </div>           
-                <span class="col-lg-6 col-md-5 ">
+                <span class="col-lg-6">
                     <label for="">Nome da doença</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" name="nome_doencaBeneficiario">
                 </span> 
             </div> 
+              <div class="d-flex flex-row justify-content-between container formularios_Beneficiario mt-3">        
+                <span class="col-4">
+                    <label for="">Possui Dependentes?</label>                    
+                    <div class="d-flex container justify-content-start p-0">
+                        <div class="form-check col-6">
+                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="S" onclick="enviarValorPDependente('sim')">
+                            <label for="depSim">Sim</label>                        
+                        </div>                         
+                        <div class="form-check col-6">
+                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="N">
+                            <label for="depNao">Não</label>
+                        </div>               
+                    </div>
+                </span> 
+                <span class="col-lg-7  col-sm-6">
+                    <label for="">Quantos?</label>
+                    <input type="number" class="form-control" name="quantos_dependentes">
+                </span> 
+            </div>            
+            <!-- <div class="d-flex flex-row justify-content-between container formularios_Beneficiario mt-3">        
+                <span class="col-4">
+                    <label for="">Possui Filhos?</label>
+                    <div class="d-flex container justify-content-start p-0">
+                        <div class="form-check col-6">
+                            <input type="radio" class="form-check-input" name="rbPossuiFilhos" value="sim">
+                            <label for="">Sim</label>                        
+                        </div> 
+                        <div class="form-check col-6">
+                            <input type="radio" class="form-check-input" name="rbPossuiFilhos" value="nao">
+                            <label for="">Não</label>
+                        </div>               
+                    </div>
+                </span>
+                <span class="col-lg-7  col-sm-6">
+                    <label for="">Quantos menores?</label>
+                    <input type="number" class="form-control" name="quantos_menoresBeneficiario">
+                </span> 
+            </div>                           -->
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5  col-xs-12">
-                    <label>Quantos trabalham em casa:</label>
-                    <input type="number" required class="form-control">
+                    <label>Quantos trabalham:</label>
+                    <input type="number" class="form-control" name="quantos_trabalhamBeneficiario">
                 </span>
                 <span class="col-lg-6  col-xs-12">
                     <label>Renda Familiar total:</label>
-                    <input type="text" required class="form-control">
+                    <input type="number" required class="form-control" name="renda_familiarBeneficiario">
                 </span>
-            </div>
+            </div>            
             <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">
                 <span class="align-items-center text-center">
                     <a href="cadastro.php" class="text-decoration-none">
@@ -291,19 +512,22 @@
                     <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>  
                     <p>Cancelar</p>          
                 </span>
-                <span class="align-items-center text-center">
-                    <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
-                    <p>Salvar</p>
-                </span>
+                <button type="submit" class="botoes_crud" name="cadastrar" value="1">
+                    <span class="align-items-center text-center">
+                        <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
+                        <p>Salvar</p>
+                    </span>
+                </button>              
             </div>       
         </form>
     </main>
 
+    <!--        MÁSCARAS         -->
+    <script src="../js/mascaras.js"></script>
+    <!--        BOOTSTRAP        -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
-
-    
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>    
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js" integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+" crossorigin="anonymous"></script>

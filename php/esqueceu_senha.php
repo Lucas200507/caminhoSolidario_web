@@ -13,8 +13,8 @@
 </head>
 <body id="sem_tema">    
 <div class="container_login d-flex align-items-center justify-content-center flex-column">
-        <img src="../img/logo_nomeembaixo.png" alt="" class="mb-5">
-        <h3>ESQUECEU A SENHA ?</h3>
+        <img src="../img/logo_nomeembaixo.png" alt="" class="mb-5 logo_esqueceu_senha">
+        <h3 class="texto_esqueceuSenha">ESQUECEU A SENHA ?</h3>
         <form class="d-block p-3 form_login">
             <div class="form-group d-flex flex-column mt-3">
                 <label for=""><input type="text" placeholder="CPF:" class="form-control border-primary text-dark w-100" name="etCpf"></label>
