@@ -1,8 +1,10 @@
 <?php
+    // PARA ALTERAR A QUANTIDADE DE DEPENDENTES, PRECISA VERIFICAR SE JÁ POSSUI CADASTRADOS DEPENDENTES NO NOME DESTE BENEFICIÁRIO
     include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
     include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -88,8 +90,13 @@
     </div>
     <main class="mt-5 d-flex flex-column container">
         <div class="d-flex justify-content-around w-100 input-group mb-4">
-            <select class="form-select form-select-md w-50">
-                <option value="">CPF do(a) Beneficiário(a)</option>
+            <select class="form-select form-select-md w-50" name="cpfDependente" required>
+                <option value="">CPF do(a) Dependente</option>
+                <?php if(mysqli_num_rows($result) > 0): ?>
+                    <?php while($dependente_data = mysqli_fetch_assoc($result)): ?>
+                        <option value="<?= $dependente_data['cpf'] ?>"><?= $dependente_data['cpf'] ?></option>
+                    <?php endwhile; ?>
+                <?php endif ?>
             </select>
             <button id="buttonPesquisarCPF">
                 Pesquisar
@@ -271,7 +278,7 @@
                 </span>                 
             </div>           
             <span class="col-lg-6 col-md-5 col-sm-4">
-                <label for="">Nome da doença</label>
+                <label for="">Nome da Comorbidade</label>
                 <input type="text" class="form-control">
             </span> 
         </div> 

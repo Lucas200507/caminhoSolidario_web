@@ -4,8 +4,6 @@
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");
 
-
-    
     // PRECISA VERIFICAR SE O USUÁRIO VEIO DO CADASTRO BENEFICIARIO
     if (isset($_GET['IDbeneficiario']) && isset($_GET['dependentes_pendentes'])){
         $idBeneficiarioPendente = $_GET['IDbeneficiario'];
@@ -31,11 +29,11 @@
      && !empty($_POST['rbPCD'])     
      && !empty($_POST['rbPossuiBenf'])
      ){
-        while ($em_branco == False){        
+        if ($em_branco == False){        
             // SELECT ID_BENEFICIARIO
             if (!empty($_POST['cpfBeneficiario'])){
                 $cpfBeneficiario = $_POST['cpfBeneficiario'];
-                $sqlSelect_beneficiario = "SELECT * FROM tbBeneficiario WHERE cpf = $cpfBeneficiario;";
+                $sqlSelect_beneficiario = "SELECT * FROM tbBeneficiario WHERE cpf = $cpfBeneficiario";
                 $result3 = $conexao->query($sqlSelect_beneficiario);
                     if (mysqli_num_rows($result3) > 0){
                         while($benefiario_data = mysqli_fetch_assoc($result3)){
@@ -51,13 +49,14 @@
                             $qtd_dep_pendentes = $qnts_dependentes - $qtd_dep_cadastrados;
                             if ($qtd_dep_pendentes <= 0){
                                 $MAX_dep = True;
-                                $em_branco = True;
+                                $em_branco = True;                                
+
                             }
                         }
                     }
             
             } else {
-                $em_branco = True;
+                $em_branco = True;                
             }
             // PRECISA VERIFICAR SE JÁ POSSUI UM CPF IGUAL NA TABELA DEPENDENTE
             $cpf = $_POST['cpfDependente'];// filho_dependente
@@ -68,7 +67,7 @@
             // VERIFICA SE JÁ POSSUI O DEPENDENTE CADASTRADO
             if (mysqli_num_rows($result6) > 1){
                 $jaCadastrado = True;
-                $em_branco = True;
+                $em_branco = True;                
             }
 
 
@@ -89,7 +88,7 @@
                     $beneficio = $_POST['beneficioBeneficiario']; 
                     $valor_beneficio = $_POST['valor_benecicioBeneficiario'];
                 } else {
-                    $em_branco = True;
+                    $em_branco = True;                    
                 }
             }
             
@@ -97,7 +96,7 @@
                 if (!empty($rbPossuiLaudo) && !empty($_POST['nome_doencaBeneficiario'])){                                 
                     $nome_doenca = $_POST['nome_doencaBeneficiario'];                                    
                 } else {
-                    $em_branco = True;
+                    $em_branco = True;                    
                 }
             } else {
                 $rbPossuiLaudo = "N";
@@ -108,21 +107,19 @@
             if ($em_branco == False){
                 $sqlInsert_Dependente = "INSERT INTO filho_dependente (nome_filho_dependente, cpf, data_nascimento_filho_dep, parentesco, PCD, laudo, doenca, idBeneficiario) VALUES ('$nome', '$cpf', '$data_nascimento', '$parentesco', '$pcd', '$rbPossuiLaudo', '$nome_doenca', '$idBeneficiario');";
 
-                $result4 = $conexao->query($sqlInsert_Dependente); 
-                
-                $nome = NULL;
-                $cpf = NULL;
-                $data_nascimento = NULL;
-                $parentesco = NULL;
-                $pcd = NULL;
-                $rbPossuiLaudo = NULL;
-                $nome_doenca = NULL;
-                $idBeneficiario = NULL;
-
+                $result4 = $conexao->query($sqlInsert_Dependente);                                 
             }
         }
 
-     } 
+        $nome = NULL;
+        $cpf = NULL;
+        $data_nascimento = NULL;
+        $parentesco = NULL;
+        $pcd = NULL;
+        $rbPossuiLaudo = NULL;
+        $nome_doenca = NULL;
+        $idBeneficiario = NULL;
+     }      
 
 
 
@@ -336,7 +333,7 @@
                     </span>                 
                 </div>           
                 <span class="col-lg-6">
-                    <label for="">Nome da doença</label>
+                    <label for="">Nome da Comorbidade</label>
                     <input type="text" class="form-control" name="nome_doenca">
                 </span> 
             </div> 
