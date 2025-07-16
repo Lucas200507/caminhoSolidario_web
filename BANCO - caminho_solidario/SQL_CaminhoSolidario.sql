@@ -14,6 +14,8 @@ SELECT * FROM tbUsuarios_web;
 
 -- DELETE
 DELETE FROM pessoa WHERE idPessoa IN (99);
+
+
 -- ---------------------------------------------------------------------------------------------------------------------------
 		-- ADM / VOLUNTARIO / BENEFICIARIO
 -- ---------------------------------------------------------------------------------------------------------------------------
@@ -85,6 +87,7 @@ CREATE TABLE espera_voluntario(
 
 SELECT * FROM espera_voluntario;
 
+
 -- -----------------------------------------
 -- LUCAS: Estou usando essa tabela ao invés de voluntario e adm
 CREATE TABLE usuarios_web(
@@ -139,9 +142,8 @@ SELECT * FROM endereco;
 Create TABLE BeneficioGov(
 idBeneficioGov INT PRIMARY KEY AUTO_INCREMENT,
 idBeneficios_gov INT NOT NULL,
-
 FOREIGN KEY (idBeneficios_gov) REFERENCES nomeBeneficiosGov (idBeneficios_gov),
-
+valor_beneficio FLOAT(10));
 
 SELECT * FROM BeneficioGov;
 
@@ -152,7 +154,6 @@ CREATE TABLE nomeBeneficiosGov(
 );
 
 INSERT INTO nomeBeneficiosGov (nome_beneficiogov) VALUES ("Novo Bolsa Família"), ("Benefício de Prestação Continuada (BPC)"), ("Aposentadoria"), ("Vale-Gas"), ("Outros");
-
 -- --------------------------------------------
 
 CREATE TABLE Beneficiario (
