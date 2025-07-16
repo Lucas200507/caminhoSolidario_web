@@ -4,7 +4,11 @@
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");   
 
+    // Para cadastrar o usuário, verificar se já possui um cep cadastrado
+
+    // tem que pegar o dado do email
     $cadastrado = False;
+    $cep_jaCadastrado = False;
     $ja_cadastrado = False;
     $em_branco = False;
     $possuiDependentes = False;
@@ -53,14 +57,31 @@ if (mysqli_num_rows($result) > 0) {
     }
 }
 
+//verificar se já possui o cep
+$cep = str_replace(['-', '.', ' '], '', $_POST['cepBeneficiario']);
+$sql = "SELECT cep FROM endereco WHERE cep = '$cep';";
+$result = mysqli_query($conexao, $sql);
+
+if (!$result) {
+    die("Erro na consulta de endereco: " . mysqli_error($conexao));    
+}
+
+if (mysqli_num_rows($result) > 0) {
+    // Já possui alguém com o mesmo cep
+    $cep_jaCadastrado = True;
+    $em_branco = True;
+} else {
+    $cep_jaCadastrado = False;
+}
+
+
 if (!$em_branco) {
     $nome_completo = $_POST['nome_completoBeneficiario'];
     $data_nascimento = $_POST['data_nascimentoBeneficiario'];
     $estado_civil = $_POST['estado_civilBeneficiario'];
     $telefone = str_replace(['(', ')', '-', ' '], '', $_POST['telefoneBeneficiario']);
     $email = $_POST['emailBeneficiario'];
-    $endereco = $_POST['endereco_completoBeneficiario'];
-    $cep = str_replace(['-', '.', ' '], '', $_POST['cepBeneficiario']);
+    $endereco = $_POST['endereco_completoBeneficiario'];    
     $cidade = $_POST['cidadeBeneficiario'];
     $estado = $_POST['estadoBeneficiario'];
     $situacao_moradia = $_POST['situacao_moradiaBeneficiario'];
@@ -142,14 +163,15 @@ if (!$em_branco) {
         }
 
         // Inserir beneficiário
-        $sql = "INSERT INTO Beneficiario (data_nascimento, estado_civil, PCD, laudo, doenca, quantos_dependentes, renda_familiar, idPessoa, idEndereco, idBeneficioGov)
-                VALUES ('$data_nascimento', '$estado_civil', '$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes', '$renda_familiar', '$idPessoa', '$idEndereco', $idBeneficio)";
+        $sql = "INSERT INTO Beneficiario (data_nascimento, estado_civil, email, PCD, laudo, doenca, quantos_dependentes, renda_familiar, idPessoa, idEndereco, idBeneficioGov)
+                VALUES ('$data_nascimento', '$estado_civil', '$email','$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes', '$renda_familiar', '$idPessoa', '$idEndereco', $idBeneficio)";
         if (!mysqli_query($conexao, $sql)) {
             die("Erro ao inserir beneficiário: " . mysqli_error($conexao));
         }
         $idBeneficiario = mysqli_insert_id($conexao);
 
         $cadastrado = true;
+        $cpfBeneficiario = NULL; // Para não cadastrar novamente
 
         // Redirecionar se possuir dependentes
         if ($quantos_dependentes > 0) {
@@ -163,9 +185,11 @@ $em_branco = true;
 }
 
 if ($em_branco && isset($_POST['cadastrar'])) {
-echo '<script>alert("Existem campos em branco ou CPF já cadastrado.");</script>';
+    echo '<script>alert("Existem campos em branco.");</script>';
 } elseif ($cadastrado) {
-echo '<script>alert("Cadastrado com sucesso!");</script>';
+    echo '<script>alert("Cadastrado com sucesso!");</script>';
+} elseif ($cep_jaCadastrado){
+    echo '<script>alert("Cep já cadastrado no banco");</script>';
 }
 ?>
 <!DOCTYPE html>
@@ -257,11 +281,6 @@ echo '<script>alert("Cadastrado com sucesso!");</script>';
         </div>
     </div>
     <main class="mt-5 d-flex flex-column container">         
-        <!-- <?php if($em_branco): ?>        
-            <div id="mensagem_erro2" class="container_mensagem_erro" style="margin-top: 2em; margin-button: 2em; margin-left:auto; margin-right: auto;">
-                Campos obrigatórios estão em branco. Ou em alguns casos, possuem a quantidade de caracteres abaixo do mínimo.
-            </div>
-        <?php endif; ?>           -->
         <form action="" class="container_formularios" method="post">  
             <!-- DADOS PESSOAIS -->
             <h3 style="text-align: center;" class="mb-3" id="subtitulos_paginas">
@@ -269,35 +288,35 @@ echo '<script>alert("Cadastrado com sucesso!");</script>';
             </h3>
             <div class="d-flex flex-column container">
                 <label class="form-label">Nome Completo:</label>
-                <input type="text" required class="form-control border" name="nome_completoBeneficiario">            
+                <input type="text" required class="form-control border" name="nome_completoBeneficiario" value="<?php if(isset($_POST['nome_completoBeneficiario']) && !$cadastrado) echo $_POST['nome_completoBeneficiario']; ?>">            
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-xl-3">
                     <label for="">CPF</label>
-                    <input type="text" maxlength="14" minlength="14" id="cpf" required class="form-control" name="cpfBeneficiario">
+                    <input type="text" maxlength="14" minlength="14" id="cpf" required class="form-control" name="cpfBeneficiario" value="<?php if(isset($_POST['cpfBeneficiario']) && !$cadastrado) echo $_POST['cpfBeneficiario']; ?>">
                 </span>
                 <span class="col-xl-3">
                     <label for="">Data Nascimento</label>
-                    <input type="date" required class="form-control" name="data_nascimentoBeneficiario">
+                    <input type="date" required class="form-control" name="data_nascimentoBeneficiario" value="<?php if(isset($_POST['data_nascimentoBeneficiario']) && !$cadastrado) echo $_POST['data_nascimentoBeneficiario']; ?>">
                 </span>
                 <span class="col-xl-4">
                     <label for="">Estado Civil</label>
                     <select class="form-select form-select-md" name="estado_civilBeneficiario" required>
                         <option value=""></option>
-                        <option value="S">Solteiro</option>
-                        <option value="C">Casado</option>
-                        <option value="V">Viúvo</option>
+                        <option value="S" <?php echo(isset($_POST['estado_civilBeneficiario']) && $_POST['estado_civilBeneficiario'] == 'S' && !$cadastrado) ? 'selected ': ''; ?>>Solteiro</option>
+                        <option value="C" <?php echo(isset($_POST['estado_civilBeneficiario']) && $_POST['estado_civilBeneficiario'] == 'C' && !$cadastrado) ? 'selected ': ''; ?>>Casado</option>
+                        <option value="V" <?php echo(isset($_POST['estado_civilBeneficiario']) && $_POST['estado_civilBeneficiario'] == 'V' && !$cadastrado) ? 'selected ': ''; ?>>Viúvo</option>
                     </select>
                 </span>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5 col-xs-12">
                     <label>Telefone:</label>
-                    <input type="text" maxlength="15" minlength="15" id="telefone" required class="form-control" name="telefoneBeneficiario">
+                    <input type="text" maxlength="15" minlength="15" id="telefone" required class="form-control" name="telefoneBeneficiario" value="<?php if(isset($_POST['telefoneBeneficiario']) && !$cadastrado) echo $_POST['telefoneBeneficiario']; ?>">
                 </span>
                 <span class="col-lg-6 col-xs-12">
                     <label>Email:</label>
-                    <input type="email" class="form-control form-control-xl" name="emailBeneficiario">
+                    <input type="email" class="form-control form-control-xl" name="emailBeneficiario" value="<?php if(isset($_POST['emailBeneficiario']) && !$cadastrado) echo $_POST['emailBeneficiario']; ?>">
                 </span>
             </div>
                 <!-- ENDEREÇO -->
@@ -307,64 +326,64 @@ echo '<script>alert("Cadastrado com sucesso!");</script>';
             <div class="d-flex justify-content-between container formularios_Beneficiario">
                 <span class="col-lg-7 col-xs-12">
                     <label class="form-label">Endereço Completo:</label>
-                    <input type="text" required class="form-control border" name="endereco_completoBeneficiario">            
+                    <input type="text" required class="form-control border" name="endereco_completoBeneficiario" value="<?php if(isset($_POST['endereco_completoBeneficiario']) && !$cadastrado) echo $_POST['endereco_completoBeneficiario']; ?>">            
                 </span>
                 <span class="col-lg-4 col-xs-12">
                     <label>CEP:</label>
-                    <input type="text" id="cep" maxlength="9" minlength="9" required class="form-control form-control-xl" name="cepBeneficiario">
+                    <input type="text" id="cep" maxlength="9" minlength="9" required class="form-control form-control-xl" name="cepBeneficiario" value="<?php if(isset($_POST['cepBeneficiario']) && !$cadastrado) echo $_POST['cepBeneficiario']; ?>">
                 </span>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-3">
                     <label for="">Cidade</label>
-                    <input type="text" required class="form-control" name="cidadeBeneficiario">
+                    <input type="text" required class="form-control" name="cidadeBeneficiario" value="<?php if(isset($_POST['cidadeBeneficiario']) && !$cadastrado) echo $_POST['cidadeBeneficiario']; ?>">
                 </span>
                 <span class="col-lg-3">
                     <label for="">Estado</label>
                     <select class="form-select form-select-md" name="estadoBeneficiario" required>
                         <option value=""></option>
-                        <option value="AC">AC - Acre</option>
-                        <option value="AL">AL - Alagoas</option>
-                        <option value="AP">AP - Amapá</option>
-                        <option value="AM">AM - Amazonas</option>
-                        <option value="BA">BA - Bahia</option>
-                        <option value="CE">CE - Ceará</option>
-                        <option value="DF">DF - Distrito Federal</option>
-                        <option value="ES">ES - Espírito Santo</option>
-                        <option value="GO">GO - Goiás</option>
-                        <option value="MA">MA - Maranhão</option>
-                        <option value="MT">MT - Mato Grosso</option>
-                        <option value="MS">MS - Mato Grosso do Sul</option>
-                        <option value="MG">MG - Minas Gerais</option>
-                        <option value="PA">PA - Pará</option>
-                        <option value="PB">PB - Paraíba</option>
-                        <option value="PR">PR - Paraná</option>
-                        <option value="PE">PE - Pernambuco</option>
-                        <option value="PI">PI - Piauí</option>
-                        <option value="RJ">RJ - Rio de Janeiro</option>
-                        <option value="RN">RN - Rio Grande do Norte</option>
-                        <option value="RS">RS - Rio Grande do Sul</option>
-                        <option value="RO">RO - Rondônia</option>
-                        <option value="RR">RR - Roraima</option>
-                        <option value="SC">SC - Santa Catarina</option>
-                        <option value="SE">SE - Sergipe</option>
-                        <option value="TO">TO - Tocantis</option>                    
+                        <option value="AC" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'AC' && !$cadastrado) ? 'selected ': ''; ?>>AC - Acre</option>
+                        <option value="AL" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'AL' && !$cadastrado) ? 'selected ': ''; ?>>AL - Alagoas</option>
+                        <option value="AP" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'AP' && !$cadastrado) ? 'selected ': ''; ?>>AP - Amapá</option>
+                        <option value="AM" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'AM' && !$cadastrado) ? 'selected ': ''; ?>>AM - Amazonas</option>
+                        <option value="BA" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'BA' && !$cadastrado) ? 'selected ': ''; ?>>BA - Bahia</option>
+                        <option value="CE" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'CE' && !$cadastrado) ? 'selected ': ''; ?>>CE - Ceará</option>
+                        <option value="DF" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'DF' && !$cadastrado) ? 'selected ': ''; ?>>DF - Distrito Federal</option>
+                        <option value="ES" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'ES' && !$cadastrado) ? 'selected ': ''; ?>>ES - Espírito Santo</option>
+                        <option value="GO" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'GO' && !$cadastrado) ? 'selected ': ''; ?>>GO - Goiás</option>
+                        <option value="MA" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'MA' && !$cadastrado) ? 'selected ': ''; ?>>MA - Maranhão</option>
+                        <option value="MT" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'MT' && !$cadastrado) ? 'selected ': ''; ?>>MT - Mato Grosso</option>
+                        <option value="MS" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'MS' && !$cadastrado) ? 'selected ': ''; ?>>MS - Mato Grosso do Sul</option>
+                        <option value="MG" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'MG' && !$cadastrado) ? 'selected ': ''; ?>>MG - Minas Gerais</option>
+                        <option value="PA" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'PA' && !$cadastrado) ? 'selected ': ''; ?>>PA - Pará</option>
+                        <option value="PB" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'PB' && !$cadastrado) ? 'selected ': ''; ?>>PB - Paraíba</option>
+                        <option value="PR" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'PR' && !$cadastrado) ? 'selected ': ''; ?>>PR - Paraná</option>
+                        <option value="PE" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'PE' && !$cadastrado) ? 'selected ': ''; ?>>PE - Pernambuco</option>
+                        <option value="PI" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'PI' && !$cadastrado) ? 'selected ': ''; ?>>PI - Piauí</option>
+                        <option value="RJ" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'RJ' && !$cadastrado) ? 'selected ': ''; ?>>RJ - Rio de Janeiro</option>
+                        <option value="RN" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'RN' && !$cadastrado) ? 'selected ': ''; ?>>RN - Rio Grande do Norte</option>
+                        <option value="RS" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'RS' && !$cadastrado) ? 'selected ': ''; ?>>RS - Rio Grande do Sul</option>
+                        <option value="RO" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'RO' && !$cadastrado) ? 'selected ': ''; ?>>RO - Rondônia</option>
+                        <option value="RR" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'RR' && !$cadastrado) ? 'selected ': ''; ?>>RR - Roraima</option>
+                        <option value="SC" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'SC' && !$cadastrado) ? 'selected ': ''; ?>>SC - Santa Catarina</option>
+                        <option value="SE" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'SE' && !$cadastrado) ? 'selected ': ''; ?>>SE - Sergipe</option>
+                        <option value="TO" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'TO' && !$cadastrado) ? 'selected ': ''; ?>>TO - Tocantis</option>                    
                     </select>
                 </span>
                 <span class="col-lg-4">
                     <label for="">Situação da moradia</label>
                     <select class="form-select form-select-md" name="situacao_moradiaBeneficiario" required>
                         <option value=""></option>
-                        <option value="C">Comprada</option>
-                        <option value="A">Alugada</option>
-                        <option value="O">Outro</option>
+                        <option value="C" <?php echo(isset($_POST['situacao_moradiaBeneficiario']) && $_POST['situacao_moradiaBeneficiario'] == 'C' && !$cadastrado) ? 'selected ': ''; ?>>Comprada</option>
+                        <option value="A" <?php echo(isset($_POST['situacao_moradiaBeneficiario']) && $_POST['situacao_moradiaBeneficiario'] == 'A' && !$cadastrado) ? 'selected ': ''; ?>>Alugada</option>
+                        <option value="O" <?php echo(isset($_POST['situacao_moradiaBeneficiario']) && $_POST['situacao_moradiaBeneficiario'] == 'O' && !$cadastrado) ? 'selected ': ''; ?>>Outro</option>
                     </select>
                 </span>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-12">
                     <label>Valor do Aluguel + Despesas (Água e luz):</label>
-                    <input type="number" class="form-control" name="valor_despesasBeneficiario">
+                    <input type="number" class="form-control" name="valor_despesasBeneficiario" value="<?php if(isset($_POST['valor_despesasBeneficiario']) && !$cadastrado) echo $_POST['valor_despesasBeneficiario']; ?>">
                 </span>            
             </div>
             <!-- SITUAÇÃO -->
@@ -377,11 +396,11 @@ echo '<script>alert("Cadastrado com sucesso!");</script>';
                         <label for="">Possui Benefício?</label>
                         <div class="d-flex container justify-content-start p-0">
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="S">
+                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="S" <?php echo(isset($_POST['rbPossuiBenf']) && $_POST['rbPossuiBenf'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="N">
+                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="N" <?php echo(isset($_POST['rbPossuiBenf']) && $_POST['rbPossuiBenf'] == 'N' && !$cadastrado) ? 'checked ': ''; ?>>
                                 <label for="">Não</label>
                             </div>               
                         </div>
@@ -390,18 +409,18 @@ echo '<script>alert("Cadastrado com sucesso!");</script>';
                         <label for="">Qual o nome do Benefício?</label>
                         <select name="beneficioBeneficiario" class="form-select form-select-md">
                             <option value=""></option>
-                            <option value="Aposentadoria">Aposentadoria</option>
-                            <option value="Benefício de Prestação Continuada (BPC)">Benefício de Prestação Continuada (BPC)</option>
-                            <option value="Novo Bolsa Família">Bolsa Família</option>
-                            <option value="Vale-gas">Vale Gás</option>
-                            <option value="Outros">Outros</option>                            
+                            <option value="Aposentadoria" <?php echo(isset($_POST['beneficioBeneficiario']) && $_POST['beneficioBeneficiario'] == 'Aposentadoria' && !$cadastrado) ? 'selected ': ''; ?>>Aposentadoria</option>
+                            <option value="Benefício de Prestação Continuada (BPC)" <?php echo(isset($_POST['beneficioBeneficiario']) && $_POST['beneficioBeneficiario'] == 'Benefício de Prestação Continuada (BPC)' && !$cadastrado) ? 'selected ': ''; ?>>Benefício de Prestação Continuada (BPC)</option>
+                            <option value="Novo Bolsa Família" <?php echo(isset($_POST['beneficioBeneficiario']) && $_POST['beneficioBeneficiario'] == 'Novo Bolsa Família' && !$cadastrado) ? 'selected ': ''; ?>>Bolsa Família</option>
+                            <option value="Vale-gas" <?php echo(isset($_POST['beneficioBeneficiario']) && $_POST['beneficioBeneficiario'] == 'Vale-gas' && !$cadastrado) ? 'selected ': ''; ?>>Vale Gás</option>
+                            <option value="Outros" <?php echo(isset($_POST['beneficioBeneficiario']) && $_POST['beneficioBeneficiario'] == 'Outros' && !$cadastrado) ? 'selected ': ''; ?>>Outros</option>                            
 
                         </select>                   
                     </span> 
                 </div>           
                 <span class="col-lg-4 ">
                     <label for="">Valor</label>
-                    <input type="number" class="form-control" name="valor_benecicioBeneficiario">
+                    <input type="number" class="form-control" name="valor_benecicioBeneficiario" value="<?php if(isset($_POST['valor_benecicioBeneficiario']) && !$cadastrado) echo $_POST['valor_benecicioBeneficiario']; ?>">
                 </span> 
             </div>
             <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">
@@ -410,11 +429,11 @@ echo '<script>alert("Cadastrado com sucesso!");</script>';
                         <label for="">PCD?</label>
                         <div class="d-flex container p-0">
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPCD" value="S">
+                                <input type="radio" class="form-check-input" name="rbPCD" value="S" <?php echo(isset($_POST['rbPCD']) && $_POST['rbPCD'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPCD" value="N">
+                                <input type="radio" class="form-check-input" name="rbPCD" value="N" <?php echo(isset($_POST['rbPCD']) && $_POST['rbPCD'] == 'N' && !$cadastrado) ? 'checked ': ''; ?>>
                                 <label for="">Não</label>
                             </div>               
                         </div>
@@ -423,11 +442,11 @@ echo '<script>alert("Cadastrado com sucesso!");</script>';
                         <label for="">Possui Laudo Médico?</label>
                         <div class="d-flex container justify-content-start p-0">
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="S">
+                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="S" <?php echo(isset($_POST['rbPossuiLaudo']) && $_POST['rbPossuiLaudo'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="N">
+                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="N" <?php echo(isset($_POST['rbPossuiLaudo']) && $_POST['rbPossuiLaudo'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
                                 <label for="">Não</label>
                             </div>               
                         </div>
@@ -435,7 +454,7 @@ echo '<script>alert("Cadastrado com sucesso!");</script>';
                 </div>           
                 <span class="col-lg-6">
                     <label for="">Nome da Comorbidade</label>
-                    <input type="text" class="form-control" name="nome_doencaBeneficiario">
+                    <input type="text" class="form-control" name="nome_doencaBeneficiario" value="<?php if(isset($_POST['nome_doencaBeneficiario']) && !$cadastrado) echo $_POST['nome_doencaBeneficiario']; ?>">
                 </span> 
             </div> 
               <div class="d-flex flex-row justify-content-between container formularios_Beneficiario mt-3">        
@@ -443,28 +462,28 @@ echo '<script>alert("Cadastrado com sucesso!");</script>';
                     <label for="">Possui Dependentes?</label>                    
                     <div class="d-flex container justify-content-start p-0">
                         <div class="form-check col-6">
-                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="S" onclick="enviarValorPDependente('sim')">
+                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="S" <?php echo(isset($_POST['rbPossuiDependentes']) && $_POST['rbPossuiDependentes'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
                             <label for="depSim">Sim</label>                        
                         </div>                         
                         <div class="form-check col-6">
-                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="N">
+                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="N" <?php echo(isset($_POST['rbPossuiDependentes']) && $_POST['rbPossuiDependentes'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
                             <label for="depNao">Não</label>
                         </div>               
                     </div>
                 </span> 
                 <span class="col-lg-7  col-sm-6">
                     <label for="">Quantos?</label>
-                    <input type="number" class="form-control" name="quantos_dependentes">
+                    <input type="number" class="form-control" name="quantos_dependentes" value="<?php if(isset($_POST['quantos_dependentes']) && !$cadastrado) echo $_POST['quantos_dependentes']; ?>">
                 </span> 
             </div>                                    
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5  col-xs-12">
                     <label>Quantos trabalham:</label>
-                    <input type="number" class="form-control" name="quantos_trabalhamBeneficiario">
+                    <input type="number" class="form-control" name="quantos_trabalhamBeneficiario" value="<?php if(isset($_POST['quantos_trabalhamBeneficiario']) && !$cadastrado) echo $_POST['quantos_trabalhamBeneficiario']; ?>">
                 </span>
                 <span class="col-lg-6  col-xs-12">
                     <label>Renda Familiar total:</label>
-                    <input type="number" required class="form-control" name="renda_familiarBeneficiario">
+                    <input type="number" required class="form-control" name="renda_familiarBeneficiario" value="<?php if(isset($_POST['renda_familiarBeneficiario']) && !$cadastrado) echo $_POST['renda_familiarBeneficiario']; ?>">
                 </span>
             </div>            
             <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">
