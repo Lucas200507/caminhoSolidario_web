@@ -2,6 +2,7 @@
     $cpf_cadastrado_lista = False;
     $cpf_cadastrado_login = False;
     $cadastrado = False;
+    $pouco_caractere = False;
      if(isset($_POST['submit']) && !empty($_POST['nome']) && !empty($_POST['email']) && !empty($_POST['telefone']) && !empty($_POST['cpf']) && !empty($_POST['estado'])){
          // Conectando com o banco: 
          include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
@@ -14,24 +15,28 @@
          $cpf = str_replace(['.', '-'], '', $cpf);
          $estado = $_POST['estado'];
 
-         
+         if (strlen($cpf) < 11 || strlen($telefone) < 11){
+            $pouco_caractere = True;
+         }
 
          // Precisa verificar se já possui o mesmo cpf na lista: -- Precisa verificar se já está cadastrado na tabela login 
-            $sql1 = "SELECT * FROM espera_voluntario WHERE cpf = '$cpf'";
-            $sql2 = "SELECT * FROM login WHERE cpf = '$cpf'";
-            $result1 = $conexao->query($sql1);
-            $result2 = $conexao->query($sql2);
-            if (mysqli_num_rows($result1) > 0){ // Já possui esse cpf
-                $cpf_cadastrado_lista = True;
-            } else if (mysqli_num_rows($result2) > 0){
-                $cpf_cadastrado_login = True;
-            } else { // Não possui ainda o cpf no banco
-                $sql = "INSERT INTO espera_voluntario(nome_completo, email, telefone, cpf, estado) VALUES('$nome','$email','$telefone','$cpf','$estado')";
-                // Inserindo no banco
-                $result = mysqli_query($conexao, $sql);
-
-                $cadastrado = True;    
-            }
+         if (!$pouco_caractere){
+             $sql1 = "SELECT * FROM espera_voluntario WHERE cpf = '$cpf'";
+             $sql2 = "SELECT * FROM login WHERE cpf = '$cpf'";
+             $result1 = $conexao->query($sql1);
+             $result2 = $conexao->query($sql2);
+             if (mysqli_num_rows($result1) > 0){ // Já possui esse cpf
+                 $cpf_cadastrado_lista = True;
+             } else if (mysqli_num_rows($result2) > 0){
+                 $cpf_cadastrado_login = True;
+             } else { // Não possui ainda o cpf no banco
+                 $sql = "INSERT INTO espera_voluntario(nome_completo, email, telefone, cpf, estado) VALUES('$nome','$email','$telefone','$cpf','$estado')";
+                 // Inserindo no banco
+                 $result = mysqli_query($conexao, $sql);
+ 
+                 $cadastrado = True;    
+             }
+         }
         
      }  else if(isset($POST['submit']) && (empty($POST['nome']) || empty($POST['email']) || empty($POST['telefone']) || empty($POST['cpf']) || empty($POST['estado']))){
         $campo_vazio = True;
@@ -83,6 +88,10 @@
                 <div id="mensagem_campoVazio_esperaVoluntario" class="container_mensagem_erro w-100">
                     Você já está cadastrado no sistema como voluntário.
                 </div>
+            <?php elseif($pouco_caractere): ?>
+                <script>
+                    window.alert("Devem-se ter no mínimo 11 caractéres nos campos: CPF e telefone");
+                </script>
              <?php endif; ?>  
             <a href="login.php">
                 <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
