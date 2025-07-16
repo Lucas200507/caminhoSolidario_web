@@ -2,16 +2,18 @@
 CREATE DATABASE caminho_solidario;
 USE caminho_solidario;
 
-
+-- TABELAS
 SELECT * FROM pessoa;
 SELECT * FROM espera_voluntario;
 SELECT * FROM Beneficiario;
 SELECT * FROM endereco;
 SELECT * FROM filho_dependente;
 
+-- VIEWS
+SELECT * FROM tbUsuarios_web;
+
+-- DELETE
 DELETE FROM pessoa WHERE idPessoa IN (99);
-
-
 -- ---------------------------------------------------------------------------------------------------------------------------
 		-- ADM / VOLUNTARIO / BENEFICIARIO
 -- ---------------------------------------------------------------------------------------------------------------------------
@@ -28,8 +30,13 @@ idPessoa INT,
 FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa) -- RELACIONAMENTO COM PESSOA
 );
 
+-- COM TRIGGER
 INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, 'teste', 'A', 0, 1 FROM pessoa WHERE idPessoa = 1;
 INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, 'teste2', 'V', 0, 2 FROM pessoa WHERE idPessoa = 2;
+
+-- SEM TRIGGER
+INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, '698DC19D489C4E4DB73E28A713EAB07B', 'A', 0, 1 FROM pessoa WHERE idPessoa = 1;
+INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, '38851536D87701D2191990E24A7F8D4E', 'V', 0, 2 FROM pessoa WHERE idPessoa = 2;
 
 SELECT * FROM login;
 DROP TABLE login;
@@ -77,20 +84,6 @@ CREATE TABLE espera_voluntario(
 );
 
 SELECT * FROM espera_voluntario;
-
--- ----------------------------------------
--- SEM NECESSIDADE
-CREATE TABLE endereco_voluntario(
-id_enderecoV INT PRIMARY KEY AUTO_INCREMENT,
-cep VARCHAR(9),
-cidade VARCHAR(45),
-bairro VARCHAR(45),
-endereco VARCHAR(45)
-);
-
-SELECT * FROM endereco_voluntario;
-DROP TABLE endereco_voluntario;
-
 -- -----------------------------------------
 -- LUCAS: Estou usando essa tabela ao invés de voluntario e adm
 CREATE TABLE usuarios_web(
@@ -144,31 +137,40 @@ SELECT * FROM endereco;
 
 Create TABLE BeneficioGov(
 idBeneficioGov INT PRIMARY KEY AUTO_INCREMENT,
-nome_beneficio_gov VARCHAR(20),
+idBeneficios_gov INT NOT NULL,
+FOREIGN KEY (idBeneficios_gov) REFERENCES nomeBeneficiosGov (idBeneficios_gov),
 valor_beneficio FLOAT(10));
 
 SELECT * FROM BeneficioGov;
 
+-- --------------------------------------
+CREATE TABLE nomeBeneficiosGov(
+    idBeneficios_gov INT PRIMARY KEY AUTO_INCREMENT,
+    nome_beneficiogov VARCHAR(75) NOT NULL
+);
+
+INSERT INTO nomeBeneficiosGov (nome_beneficiogov) VALUES ("Novo Bolsa Família"), ("Benefício de Prestação Continuada (BPC)"), ("Aposentadoria"), ("Vale-Gas"), ("Outros");
 -- --------------------------------------------
 
-CREATE TABLE Beneficiario(
-idBeneficiario INT PRIMARY KEY AUTO_INCREMENT,
-data_nascimento DATE NOT NULL,
-estado_civil CHAR(1) NOT NULL,
-PCD CHAR(1) NOT NULL,
-laudo CHAR(1), -- CASO PCD, possui laudo ou não (s/n)
-doenca VARCHAR(50),
-quantos_dependentes INT,
-renda_familiar FLOAT(10),
-idPessoa INT,
-FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa),
-idEndereco INT,
-FOREIGN KEY (idEndereco) REFERENCES endereco (idEndereco),
-idBeneficioGov INT,
-FOREIGN KEY (idBeneficioGov) REFERENCES BeneficioGov (idBeneficioGov));
+CREATE TABLE Beneficiario (
+    idBeneficiario INT PRIMARY KEY AUTO_INCREMENT,
+    data_nascimento DATE NOT NULL,
+    email VARCHAR(50),
+    estado_civil CHAR(1) NOT NULL,
+    PCD CHAR(1) NOT NULL,
+    laudo CHAR(1), -- CASO PCD, possui laudo ou não (s/n)
+    doenca VARCHAR(50),
+    quantos_dependentes INT,
+    renda_familiar FLOAT(10),
+    idPessoa INT,
+    idEndereco INT,
+    idBeneficioGov INT,
+    FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa),
+    FOREIGN KEY (idEndereco) REFERENCES endereco (idEndereco),
+    FOREIGN KEY (idBeneficioGov) REFERENCES BeneficioGov (idBeneficioGov)
+);
 
 SELECT * FROM Beneficiario;
-
 
 -- -------------------------------------------------------------------------------------
 
@@ -180,13 +182,15 @@ p.nome_completo AS nome,
 bfc.estado_civil,
 bfc.PCD,
 bfc.quantos_dependentes,
+nbg.nome_beneficiogov AS beneficioGov,
 e.cep
 FROM Beneficiario bfc
 INNER JOIN endereco e ON e.idEndereco = bfc.idEndereco
-INNER JOIN pessoa p ON p.idPessoa = bfc.idPessoa;
+INNER JOIN pessoa p ON p.idPessoa = bfc.idPessoa
+INNER JOIN BeneficioGov bg ON bg.idBeneficioGov = bfc.idBeneficioGov
+INNER JOIN nomeBeneficiosGov nbg ON nbg.idBeneficios_gov = bg.idBeneficios_gov;
 
 SELECT * FROM tbBeneficiario;
-
 
 -- --------------------------------------------
 

@@ -23,6 +23,7 @@
             $em_branco = True;      
         }
     }
+    
     else if (isset($_GET['submit']) && !empty($_GET['cpf']) && !empty($_GET['senha'])){
         //print_r($_REQUEST); // RECUPERA TODOS OS DADOS ENVIADOS                
         // precisa verificar se existe o usuário e senha no banco
@@ -53,6 +54,7 @@
         // Está vazio
         $em_branco = True;        
     }
+  
 ?> 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -100,9 +102,12 @@
         <?php endif; ?>
     </div>
 
+         
+
     <div id="rodapeI">
 
     </div>
+    
     <script src="../js/mascaras.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

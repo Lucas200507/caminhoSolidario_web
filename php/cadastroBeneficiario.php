@@ -8,265 +8,164 @@
     $ja_cadastrado = False;
     $em_branco = False;
     $possuiDependentes = False;
+    $dependentes_pendentes = 0;
 
-     if (isset($_POST['cadastrar']) 
-     && !empty($_POST['nome_completoBeneficiario']) 
-     && !empty($_POST['cpfBeneficiario']) 
-     && !empty($_POST['data_nascimentoBeneficiario']) 
-     && !empty($_POST['estado_civilBeneficiario']) 
-     && !empty($_POST['telefoneBeneficiario']) 
-     && !empty($_POST['emailBeneficiario']) 
-     && !empty($_POST['endereco_completoBeneficiario'])
-     && !empty($_POST['cepBeneficiario']) 
-     && !empty($_POST['cidadeBeneficiario']) 
-     && !empty($_POST['estadoBeneficiario'])
-     && !empty($_POST['situacao_moradiaBeneficiario'])
-     && !empty($_POST['valor_despesasBeneficiario'])  // SO SE FOR ALUGADA
-     && !empty($_POST['rbPossuiBenf'])     
-     && !empty($_POST['rbPCD'])     
-     && !empty($_POST['rbPossuiDependentes'])       
-     && !empty($_POST['renda_familiarBeneficiario'])){
+    if (
+        isset($_POST['cadastrar'])
+        && !empty($_POST['nome_completoBeneficiario']) 
+        && !empty($_POST['cpfBeneficiario']) 
+        && !empty($_POST['data_nascimentoBeneficiario']) 
+        && !empty($_POST['estado_civilBeneficiario']) 
+        && !empty($_POST['telefoneBeneficiario'])         
+        && !empty($_POST['endereco_completoBeneficiario'])
+        && !empty($_POST['cepBeneficiario']) 
+        && !empty($_POST['cidadeBeneficiario']) 
+        && !empty($_POST['estadoBeneficiario'])
+        && !empty($_POST['situacao_moradiaBeneficiario'])
+        && !empty($_POST['valor_despesasBeneficiario'])  
+        && !empty($_POST['rbPossuiBenf'])     
+        && !empty($_POST['rbPCD'])     
+        && !empty($_POST['rbPossuiDependentes'])  
+        && !empty($_POST['renda_familiarBeneficiario'])
+    ) {
 
-        // PRECISA VERIFICAR SE JÁ POSSUI O CPF CADASTRADO
-        $cpfBeneficiario = $_POST['cpfBeneficiario']; // PESSOA
-        $cpfBeneficiario = str_replace(['-', '.', ' '], '', $cpfBeneficiario); // FORMATANDO
-        
-        $sqlSelect_Pessoa1 = "SELECT idPessoa FROM pessoa WHERE cpf = '$cpfBeneficiario';";
-        $result = $conexao->query($sqlSelect_Pessoa1);
-            if (mysqli_num_rows($result) > 0){
-                while ($pessoa_data1 = mysqli_fetch_assoc($result)){
-                    $idPessoa1 = $pessoa_data1['idPessoa'];
-                }
-                $sqlSelect_beneficiario1 = "SELECT * FROM Beneficiario WHERE idPessoa = '$idPessoa1';";
-                $result9 = $conexao->query($sqlSelect_beneficiario1);
-                if (mysqli_num_rows($result9) > 0){
-                    // Já possui esse cpf cadastrado
-                    $ja_cadastrado = True;
-                    $em_branco = True;
-                    $cpfBeneficiario = NULL;                
-                }
-            }
+// Formatando CPF
+$cpfBeneficiario = str_replace(['-', '.', ' '], '', $_POST['cpfBeneficiario']);
 
+// Verificar se o CPF já existe
+$sql = "SELECT idPessoa FROM pessoa WHERE cpf = '$cpfBeneficiario'";
+$result = mysqli_query($conexao, $sql);
+if (!$result) {
+    die("Erro na consulta de pessoa: " . mysqli_error($conexao));
+}
+if (mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $idPessoa1 = $row['idPessoa'];
 
-        if (!$em_branco){
-            $nome_completoBeneficiario = $_POST['nome_completoBeneficiario']; // PESSOA
-            $data_nascimentoBeneficiario = $_POST['data_nascimentoBeneficiario']; // BENEFICIARIO
-            $estado_civilBeneficiario = $_POST['estado_civilBeneficiario']; // BENEFICIARIO
-            $telefoneBeneficiario = $_POST['telefoneBeneficiario']; // PESSOA
-            $telefoneBeneficiario = str_replace(['(', ')', ' '], '', $telefoneBeneficiario); // FORMATANDO
-            $emailBeneficiario = $_POST['emailBeneficiario']; // PESSOA
-            $endereco_completoBeneficiario = $_POST['endereco_completoBeneficiario']; // ENDERECO
-            $cep = $_POST['cepBeneficiario']; // Endereco
-            $cep = str_replace(['-', '.', ' '], '', $cep); //FORMATANDO
-            $cidadeBeneficiario = $_POST['cidadeBeneficiario']; // ENDERECO
-            $estadoBeneficiario = $_POST['estadoBeneficiario']; // ENDERECO 
-            $situacao_moradiaBeneficiario = $_POST['situacao_moradiaBeneficiario']; // ENDERECO                     
-            $valor_despesasBeneficiario = $_POST['valor_despesasBeneficiario']; // ENDERECO
-            $renda_familiarBeneficiario = $_POST['renda_familiarBeneficiario']; // BENEFICIARIO
-            $rbPossuiBenf = $_POST['rbPossuiBenf']; 
-            $rbPCD = $_POST['rbPCD']; // beneficiario
-            $rbPossuiDependentes = $_POST['rbPossuiDependentes'];  
-            if (!empty($_POST['rbPossuiLaudo']))      {
-                $rbPossuiLaudo = $_POST['rbPossuiLaudo']; // Beneficiario
-            } else {
-                $rbPossuiLaudo = "N";
-            }
-            
+    $sql = "SELECT idBeneficiario FROM Beneficiario WHERE idPessoa = '$idPessoa1'";
+    $result_benef = mysqli_query($conexao, $sql);
+    if (!$result_benef) {
+        die("Erro na consulta de beneficiário: " . mysqli_error($conexao));
+    }
+    if (mysqli_num_rows($result_benef) > 0) {
+        $ja_cadastrado = true;
+        $em_branco = true;
+    }
+}
 
-            if ($rbPossuiBenf == "S"){ // INSERIR NA TABELA beneficio_gov
-                if (!empty($_POST['beneficioBeneficiario']) && !empty($_POST['valor_benecicioBeneficiario'])){
-                    $beneficio = $_POST['beneficioBeneficiario']; 
-                    $valor_beneficio = $_POST['valor_benecicioBeneficiario'];
-                } else {
-                    $em_branco = True;                    
-                }
-            } 
+if (!$em_branco) {
+    $nome_completo = $_POST['nome_completoBeneficiario'];
+    $data_nascimento = $_POST['data_nascimentoBeneficiario'];
+    $estado_civil = $_POST['estado_civilBeneficiario'];
+    $telefone = str_replace(['(', ')', '-', ' '], '', $_POST['telefoneBeneficiario']);
+    $email = $_POST['emailBeneficiario'];
+    $endereco = $_POST['endereco_completoBeneficiario'];
+    $cep = str_replace(['-', '.', ' '], '', $_POST['cepBeneficiario']);
+    $cidade = $_POST['cidadeBeneficiario'];
+    $estado = $_POST['estadoBeneficiario'];
+    $situacao_moradia = $_POST['situacao_moradiaBeneficiario'];
+    $valor_despesas = $_POST['valor_despesasBeneficiario'];
+    $renda_familiar = $_POST['renda_familiarBeneficiario'];
+    $rbPossuiBenf = $_POST['rbPossuiBenf'];
+    $rbPCD = $_POST['rbPCD'];
+    $rbPossuiDependentes = $_POST['rbPossuiDependentes'];
+    $rbPossuiLaudo = $_POST['rbPossuiLaudo'] ?? 'N';
 
-            // TEM QUE SALVAR LOCALMENTE A QUANTIDA PARA INSERIR A QUANTIDADE CERTA DE DEPENDENTES
-            if ($rbPossuiDependentes == "S"){            
-                if (!empty($_POST['quantos_dependentes'])){
-                    $quantos_dependentes = $_POST['quantos_dependentes']; // INSERIR NA TABELA beneficiario
-                } else {
-                    $em_branco = True;                    
-                }
-            } else {
-                $quantos_dependentes = 0;
-                $dependentes_pendentes = 0;
-            }
-            // beneficiario
-            if ($rbPCD == "S"){
-                if (!empty($rbPossuiLaudo) && !empty($_POST['nome_doencaBeneficiario'])){                                 
-                    $nome_doenca = $_POST['nome_doencaBeneficiario'];                                    
-                } else {
-                    $em_branco = True;                    
-                }
-            } else {
-                $rbPossuiLaudo = "N";
-                $nome_doenca = "-";
-            }
-
-            // INSERTS
-            if ($em_branco == False){
-                // INSERT PESSOA
-                $sqlInsert_PESSOA = "INSERT INTO pessoa (nome_completo, cpf, telefone) VALUES ('$nome_completoBeneficiario', '$cpfBeneficiario', '$telefoneBeneficiario')";
-        
-                $result1 = $conexao->query($sqlInsert_PESSOA);
-
-                // ERROS:
-                if(!$result1){
-                    die("Erro ao inserir Pessoa: ". mysqli_error($conexao));
-                }
-        
-                // FAZER UM SELECT DO ID_PESSOA
-                $sqlSelect_PESSOA = "SELECT idPessoa FROM pessoa WHERE cpf = $cpfBeneficiario;";
-        
-                $result2 = $conexao->query($sqlSelect_PESSOA);
-
-                
-                // ERROS:
-                if(!$result2){
-                    die("Erro ao Selecionar Pessoa: ". mysqli_error($conexao));
-                }
-        
-
-                if (mysqli_num_rows($result2) > 0){
-                    while($pessoa_data = mysqli_fetch_assoc($result2)){
-                        $idPessoa = $pessoa_data['idPessoa'];
-                    }
-                }
-        
-                // INSERT ENDERECO
-                $sqlInsert_Endereco = "INSERT INTO endereco (endereco, cidade, estado, cep, situacao_moradia, valor_despesas, idPessoa) VALUES('$endereco_completoBeneficiario', '$cidadeBeneficiario', '$estadoBeneficiario', '$cep', '$situacao_moradiaBeneficiario', '$valor_despesasBeneficiario', '$idPessoa')";
-
-                $result3 = $conexao->query($sqlInsert_Endereco);
-
-                
-                // ERROS:
-                if(!$result3){
-                    die("Erro ao inserir Endereco: ". mysqli_error($conexao));
-                }
-        
-
-                // SELECT ID ENDERECO
-                $sqlSelect_ENDERECO = "SELECT idEndereco FROM endereco WHERE cep = $cep;";
-
-                $result4 = $conexao->query($sqlSelect_ENDERECO);
-
-                // ERROS:
-                if(!$result4){
-                    die("Erro ao Selecionar Endereco: ". mysqli_error($conexao));
-                }
-        
-
-                if (mysqli_num_rows($result4) > 0){
-                    while($endereco_data = mysqli_fetch_assoc($result4)){
-                        $idEndereco = $endereco_data['idEndereco'];
-                    }
-                }
-
-                // INSERT BENEFICIOGOV
-                if (!empty($beneficio) && !empty($valor_beneficio)){
-                    $sqlInsert_beneficioGov = "INSERT INTO BeneficioGov (nome_beneficio_gov, valor_beneficio) VALUES ('$beneficio', '$valor_beneficio')";
-                    $result5 = $conexao->query($sqlInsert_beneficioGov);
-                    
-                    // ERROS:
-                    if(!$result5){
-                        die("Erro ao inserir BeneficioGov: ". mysqli_error($conexao));
-                    }
-            
-                    // SELECT ID BENEFICIOGOV
-                    $sqlSelect_beneficioGov = "SELECT idBeneficioGov FROM BeneficioGov WHERE valor_beneficio = '$valor_beneficio' AND nome_beneficio_gov = '$beneficio';";
-                    $result6 = $conexao->query($sqlSelect_beneficioGov);
-
-                    
-                    // ERROS:
-                    if(!$result6){
-                        die("Erro ao Selecionar BeneficioGov: ". mysqli_error($conexao));
-                    }
-        
-
-                    if (mysqli_num_rows($result6) > 0){
-                        while($beneficio_data = mysqli_fetch_assoc($result6)){
-                            $idBeneficio = $beneficio_data['idBeneficioGov'];
-                        }
-
-                            // INSERT BENEFICIARIO
-                        $sqlInsert_Beneficiario = "INSERT INTO Beneficiario (data_nascimento, estado_civil, PCD, laudo, doenca, quantos_dependentes, renda_familiar, idPessoa, idEndereco, idBeneficioGov) VALUES ('$data_nascimentoBeneficiario', '$estado_civilBeneficiario', '$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes', '$renda_familiarBeneficiario', '$idPessoa', '$idEndereco', '$idBeneficio');";
-            
-                        $result7 = $conexao->query($sqlInsert_Beneficiario);                        
-                        
-                        // ERROS:
-                        if(!$result7){
-                            die("Erro ao inserir Beneficiario c/ BeneficioGov: ". mysqli_error($conexao));
-                        } else {
-                            $cadastrado = True;
-                        }
-        
-                    }
-
-                } else {
-                    // INSERT BENEFICIARIO SEM BENEFICIOGOV
-                    $sqlInsert_Beneficiario = "INSERT INTO Beneficiario (data_nascimento, estado_civil, PCD, laudo, doenca, quantos_dependentes, renda_familiar, idPessoa, idEndereco) VALUES ('$data_nascimentoBeneficiario', '$estado_civilBeneficiario', '$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes', '$renda_familiarBeneficiario', '$idPessoa', '$idEndereco');";
-        
-                    $result7 = $conexao->query($sqlInsert_Beneficiario);
-
-                    // ERROS:
-                    if(!$result7){
-                        die("Erro ao inserir Beneficiario s/ BeneficioGov: ". mysqli_error($conexao));
-                    } else {
-                            $cadastrado = True;
-                    }
-                }
-                // VERIFICA SE O USUÁRIO POSSUI DEPENDENTES
-                $sqlSelect_beneficiario = "SELECT * FROM Beneficiario;";
-                $result8 = $conexao->query($sqlSelect_beneficiario);
-
-                // ERROS:
-                    if(!$result8){
-                        die("Erro ao Selecionar Beneficiario: ". mysqli_error($conexao));
-                    }
-
-                if (mysqli_num_rows($result8) > 0){
-                    while($beneficiario_data = mysqli_fetch_assoc($result8)){
-                        $idBeneficiario = $beneficiario_data['idBeneficiario'];
-                        $dependentes_pendentes = $beneficiario_data['quantos_dependentes'];
-                    }
-                }
-
-                if ($dependentes_pendentes > 0){
-                    header("Location: ../php/cadastroDependente.php?IDbeneficiario=$idBeneficiario&dependentes_pendentes=$dependentes_pendentes");
-                }
-                        
-            }
-            
+    // Benefício
+    $beneficio = '';
+    $valor_beneficio = '';
+    if ($rbPossuiBenf == "S") {
+        if (!empty($_POST['beneficioBeneficiario']) && !empty($_POST['valor_benecicioBeneficiario'])) {
+            $beneficio = $_POST['beneficioBeneficiario'];
+            $valor_beneficio = $_POST['valor_benecicioBeneficiario'];
+        } else {
+            $em_branco = true;
         }
-        // DEPOIS DO INSERT TEM QUE APAGAR TODOS OS DADOS
-        $data_nascimentoBeneficiario = NULL;        
-        $estado_civilBeneficiario = NULL; 
-        $rbPCD = NULL; 
-        $rbPossuiLaudo = NULL; 
-        $nome_doenca = NULL; 
-        $quantos_dependentes = NULL; 
-        $renda_familiarBeneficiario = NULL; 
-        $idPessoa = NULL; 
-        $idEndereco = NULL;
-        $idBeneficio = NULL;
+    }
 
-        
+    // Dependentes
+    $quantos_dependentes = 0;
+    if ($rbPossuiDependentes == "S") {
+        if (!empty($_POST['quantos_dependentes'])) {
+            $quantos_dependentes = $_POST['quantos_dependentes'];
+        } else {
+            $em_branco = true;
+        }
+    }
+
+    // PCD
+    $nome_doenca = "-";
+    if ($rbPCD == "S") {
+        if (!empty($rbPossuiLaudo) && !empty($_POST['nome_doencaBeneficiario'])) {
+            $nome_doenca = $_POST['nome_doencaBeneficiario'];
+        } else {
+            $em_branco = true;
+        }
     } else {
-        $em_branco = True;
-    }
-    
-    if($em_branco && isset(($_POST['cadastrar']))){
-         echo '<script>
-            window.alert("Deu erro");
-        </script>';
-    } else if ($cadastrado){
-        echo'<script>
-            window.alert("Cadastrado com sucesso");
-        </script>';
+        $rbPossuiLaudo = "N";
     }
 
+    if (!$em_branco) {
+        // Inserir pessoa
+        $sql = "INSERT INTO pessoa (nome_completo, cpf, telefone) VALUES ('$nome_completo', '$cpfBeneficiario', '$telefone')";
+        if (!mysqli_query($conexao, $sql)) {
+            die("Erro ao inserir pessoa: " . mysqli_error($conexao));
+        }
+        $idPessoa = mysqli_insert_id($conexao);
+
+        // Inserir endereço
+        $sql = "INSERT INTO endereco (endereco, cidade, estado, cep, situacao_moradia, valor_despesas, idPessoa) VALUES ('$endereco', '$cidade', '$estado', '$cep', '$situacao_moradia', '$valor_despesas', '$idPessoa')";
+        if (!mysqli_query($conexao, $sql)) {
+            die("Erro ao inserir endereço: " . mysqli_error($conexao));
+        }
+        $idEndereco = mysqli_insert_id($conexao);
+
+        // Inserir benefício, se existir
+        $idBeneficio = "NULL";    
+        if (!empty($beneficio) && !empty($valor_beneficio)) {
+            $sql = "SELECT idBeneficios_gov FROM nomeBeneficiosGov WHERE nome_beneficiogov = '$beneficio'";
+            $result = mysqli_query($conexao, $sql);
+            if (!$result) {
+                die("Erro ao buscar benefício: " . mysqli_error($conexao));
+            }
+            if (mysqli_num_rows($result) > 0) {
+                $row = mysqli_fetch_assoc($result);
+                $idBeneficiosGov = $row['idBeneficios_gov'];
+
+                $sql = "INSERT INTO BeneficioGov (idBeneficios_gov, valor_beneficio) VALUES ('$idBeneficiosGov', '$valor_beneficio')";
+                if (!mysqli_query($conexao, $sql)) {
+                    die("Erro ao inserir benefício: " . mysqli_error($conexao));
+                }
+                $idBeneficio = mysqli_insert_id($conexao);
+            }
+        }
+
+        // Inserir beneficiário
+        $sql = "INSERT INTO Beneficiario (data_nascimento, estado_civil, PCD, laudo, doenca, quantos_dependentes, renda_familiar, idPessoa, idEndereco, idBeneficioGov)
+                VALUES ('$data_nascimento', '$estado_civil', '$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes', '$renda_familiar', '$idPessoa', '$idEndereco', $idBeneficio)";
+        if (!mysqli_query($conexao, $sql)) {
+            die("Erro ao inserir beneficiário: " . mysqli_error($conexao));
+        }
+        $idBeneficiario = mysqli_insert_id($conexao);
+
+        $cadastrado = true;
+
+        // Redirecionar se possuir dependentes
+        if ($quantos_dependentes > 0) {
+            header("Location: ../php/cadastroDependente.php?IDbeneficiario=$idBeneficiario&dependentes_pendentes=$quantos_dependentes");
+            exit;
+        }
+    }
+}
+} else {
+$em_branco = true;
+}
+
+if ($em_branco && isset($_POST['cadastrar'])) {
+echo '<script>alert("Existem campos em branco ou CPF já cadastrado.");</script>';
+} elseif ($cadastrado) {
+echo '<script>alert("Cadastrado com sucesso!");</script>';
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -397,7 +296,7 @@
                 </span>
                 <span class="col-lg-6 col-xs-12">
                     <label>Email:</label>
-                    <input type="email" required class="form-control form-control-xl" name="emailBeneficiario">
+                    <input type="email" class="form-control form-control-xl" name="emailBeneficiario">
                 </span>
             </div>
                 <!-- ENDEREÇO -->
@@ -488,7 +387,14 @@
                     </span>
                     <span class="col-8">
                         <label for="">Qual o nome do Benefício?</label>
-                         <input type="text" class="form-control" name="beneficioBeneficiario"> <!-- PODIA SER UM COMBOBOX -->
+                        <select name="beneficioBeneficiario" class="form-select form-select-md">
+                            <option value=""></option>
+                            <option value="Aposentadoria">Aposentadoria</option>
+                            <option value="Benefício de Prestação Continuada (BPC)">Benefício de Prestação Continuada (BPC)</option>
+                            <option value="Novo Bolsa Família">Bolsa Família</option>
+                            <option value="Vale-gas">Vale Gás</option>
+                            <option value="Outros">Outros</option>                            
+                        </select>                   
                     </span> 
                 </div>           
                 <span class="col-lg-4 ">
@@ -565,11 +471,7 @@
                         <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
                     </a>
                     <p>Voltar</p>
-                </span>
-                <span class="align-items-center text-center">
-                    <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>  
-                    <p>Cancelar</p>          
-                </span>
+                </span>                
                 <button type="submit" class="botoes_crud" name="cadastrar" value="1">
                     <span class="align-items-center text-center">
                         <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>

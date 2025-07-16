@@ -266,7 +266,8 @@
                     <label for="">Parentesco</label>
                     <select class="form-select form-select-md" name="rbParentesco" required>
                         <option value=""></option>
-                        <option value="Filho(a)">Filho(a) - de Menor ou PCD</option>
+                        <option value="Filho_M">Filho(a) - Menor</option>
+                        <option value="Filho_Pcd">Filho(a) - PCD</option>
                         <option value="Mae ou pai">Mãe ou pai</option>
                         <option value="Neto(a)">Neto(a)</option>
                         <option value="Irmao(a)">Irmão(ã)</option>

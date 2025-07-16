@@ -300,10 +300,14 @@
                 </a>
                 <p>Voltar</p>
             </span>
-            <span class="align-items-center text-center">
-                <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>  
-                <p>Cancelar</p>          
-            </span>
+            <?php if($funcao === "Administrador"): ?>
+                <button type="submit" class="botoes_crud" name="deletar" value="2">
+                    <span class="align-items-center text-center" onclick="cancelarCadastro()">
+                        <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
+                        <p>Deletar</p>
+                    </span>                        
+                </button>
+            <?php endif?>
             <span class="align-items-center text-center">
                 <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
                 <p>Salvar</p>
