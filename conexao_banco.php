@@ -15,11 +15,15 @@ Port number: 3306 -->
     // $dbUser = 'root';
     // $dbPassword = '';
     // $dbName = 'caminho_solidario';
-    
-    
+
+// BANCO LOCAL
+    $dbHost = 'localhost';
+    $dbUser = 'root';
+    $dbPassword = '';
+    $dbName = 'caminho_solidario';
     
     $conexao = new mysqli($dbHost, $dbUser, $dbPassword, $dbName);
-    
+
     //    if($conexao->connect_errno){
     //        echo "Erro";
     //    } else {
