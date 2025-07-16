@@ -80,6 +80,7 @@ if (!$em_branco) {
             $valor_beneficio = $_POST['valor_benecicioBeneficiario'];
         } else {
             $em_branco = true;
+
         }
     }
 
@@ -394,6 +395,7 @@ echo '<script>alert("Cadastrado com sucesso!");</script>';
                             <option value="Novo Bolsa Família">Bolsa Família</option>
                             <option value="Vale-gas">Vale Gás</option>
                             <option value="Outros">Outros</option>                            
+
                         </select>                   
                     </span> 
                 </div>           

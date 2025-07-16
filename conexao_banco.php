@@ -21,6 +21,7 @@ Port number: 3306 -->
     // $dbUser = 'root';
     // $dbPassword = '';
     // $dbName = 'caminho_solidario';
+
     
     $conexao = new mysqli($dbHost, $dbUser, $dbPassword, $dbName);
 
