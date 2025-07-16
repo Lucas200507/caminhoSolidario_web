@@ -14,6 +14,8 @@
          $cpf = str_replace(['.', '-'], '', $cpf);
          $estado = $_POST['estado'];
 
+         
+
          // Precisa verificar se já possui o mesmo cpf na lista: -- Precisa verificar se já está cadastrado na tabela login 
             $sql1 = "SELECT * FROM espera_voluntario WHERE cpf = '$cpf'";
             $sql2 = "SELECT * FROM login WHERE cpf = '$cpf'";

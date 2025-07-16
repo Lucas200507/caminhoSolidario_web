@@ -2,13 +2,17 @@
 CREATE DATABASE caminho_solidario;
 USE caminho_solidario;
 
-
+-- TABELAS
 SELECT * FROM pessoa;
 SELECT * FROM espera_voluntario;
 SELECT * FROM Beneficiario;
 SELECT * FROM endereco;
 SELECT * FROM filho_dependente;
 
+-- VIEWS
+SELECT * FROM tbUsuarios_web;
+
+-- DELETE
 DELETE FROM pessoa WHERE idPessoa IN (99);
 
 
@@ -28,8 +32,13 @@ idPessoa INT,
 FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa) -- RELACIONAMENTO COM PESSOA
 );
 
+-- COM TRIGGER
 INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, 'teste', 'A', 0, 1 FROM pessoa WHERE idPessoa = 1;
 INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, 'teste2', 'V', 0, 2 FROM pessoa WHERE idPessoa = 2;
+
+-- SEM TRIGGER
+INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, '698DC19D489C4E4DB73E28A713EAB07B', 'A', 0, 1 FROM pessoa WHERE idPessoa = 1;
+INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, '38851536D87701D2191990E24A7F8D4E', 'V', 0, 2 FROM pessoa WHERE idPessoa = 2;
 
 SELECT * FROM login;
 DROP TABLE login;
@@ -78,18 +87,6 @@ CREATE TABLE espera_voluntario(
 
 SELECT * FROM espera_voluntario;
 
--- ----------------------------------------
--- SEM NECESSIDADE
-CREATE TABLE endereco_voluntario(
-id_enderecoV INT PRIMARY KEY AUTO_INCREMENT,
-cep VARCHAR(9),
-cidade VARCHAR(45),
-bairro VARCHAR(45),
-endereco VARCHAR(45)
-);
-
-SELECT * FROM endereco_voluntario;
-DROP TABLE endereco_voluntario;
 
 -- -----------------------------------------
 -- LUCAS: Estou usando essa tabela ao invés de voluntario e adm
@@ -144,11 +141,19 @@ SELECT * FROM endereco;
 
 Create TABLE BeneficioGov(
 idBeneficioGov INT PRIMARY KEY AUTO_INCREMENT,
-nome_beneficio_gov VARCHAR(20),
+idBeneficios_gov INT NOT NULL,
+FOREIGN KEY (idBeneficios_gov) REFERENCES BeneficiosGov (idBeneficios_gov),
 valor_beneficio FLOAT(10));
 
 SELECT * FROM BeneficioGov;
 
+-- --------------------------------------
+CREATE TABLE nomeBeneficiosGov(
+    idBeneficios_gov INT PRIMARY KEY AUTO_INCREMENT,
+    nome_beneficiogov VARCHAR(75) NOT NULL
+)
+
+INSERT INTO nomeBeneficiosGov (nome_beneficiogov) VALUES ("Auxílio Reconstrução"), ("Novo Bolsa Família"), ("Benefício de Prestação Continuada (BPC)"), ("Garantia-Safra"), ("Seguro-Defeso");
 -- --------------------------------------------
 
 CREATE TABLE Beneficiario(

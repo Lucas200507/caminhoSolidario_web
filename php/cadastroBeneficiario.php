@@ -166,7 +166,20 @@
 
                 // INSERT BENEFICIOGOV
                 if (!empty($beneficio) && !empty($valor_beneficio)){
-                    $sqlInsert_beneficioGov = "INSERT INTO BeneficioGov (nome_beneficio_gov, valor_beneficio) VALUES ('$beneficio', '$valor_beneficio')";
+                    $sqlSelect_nomeBeneficioGov = "SELECT * FROM nomeBeneficiosGov WHERE nome_beneficiogov = $beneficio;";
+                    $result10 = $conexao->query($sqlSelect_nomeBeneficioGov);
+
+                    if(!$result10){
+                        die("Erro ao Selecionar nomeBeneficioGov: ". mysqli_error($conexao));
+                    }
+
+                    
+                    if (mysqli_num_rows($result10) > 0){
+                        while($Nomebeneficio_data = mysqli_fetch_assoc($result10)){
+                            $idBeneficiosGov = $Nomebeneficio_data['idBeneficios_gov'];
+                    }
+
+                    $sqlInsert_beneficioGov = "INSERT INTO BeneficioGov (idBeneficios_gov, valor_beneficio) VALUES ('$idBeneficiosGov', '$valor_beneficio')";
                     $result5 = $conexao->query($sqlInsert_beneficioGov);
                     
                     // ERROS:
@@ -488,7 +501,14 @@
                     </span>
                     <span class="col-8">
                         <label for="">Qual o nome do Benefício?</label>
-                         <input type="text" class="form-control" name="beneficioBeneficiario"> <!-- PODIA SER UM COMBOBOX -->
+                        <select name="beneficioBeneficiario" class="form-select form-select-md">
+                            <option value=""></option>
+                            <option value="Auxílio Reconstrução">Auxílio Reconstrução</option>
+                            <option value="Novo Bolsa Família">Novo Bolsa Família</option>
+                            <option value="Benefício de Prestação Continuada (BPC)">Benefício de Prestação Continuada (BPC)</option>
+                            <option value="Garantia-Safra">Garantia-Safra</option>
+                            <option value="Seguro-Defeso">Seguro-Defeso</option>
+                        </select>                   
                     </span> 
                 </div>           
                 <span class="col-lg-4 ">
@@ -566,10 +586,14 @@
                     </a>
                     <p>Voltar</p>
                 </span>
-                <span class="align-items-center text-center">
-                    <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>  
-                    <p>Cancelar</p>          
-                </span>
+                <?php if($funcao === "Administrador"): ?>
+                    <button type="submit" class="botoes_crud" name="deletar" value="2">
+                        <span class="align-items-center text-center" onclick="cancelarCadastro()">
+                            <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
+                            <p>Deletar</p>
+                        </span>                        
+                    </button>
+                <?php endif?>
                 <button type="submit" class="botoes_crud" name="cadastrar" value="1">
                     <span class="align-items-center text-center">
                         <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
