@@ -213,7 +213,7 @@
                 </span>
                 <span class="align-items-center text-center">
                     <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
-                    <p>Cancelar</p>
+                    <p>Deletar</p>
                 </span>
                <button type="submit" class="botoes_crud" name="atualizar" value="1">
                     <span class="align-items-center text-center">

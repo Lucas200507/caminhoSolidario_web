@@ -52,8 +52,7 @@ if (mysqli_num_rows($result) > 0) {
         die("Erro na consulta de beneficiário: " . mysqli_error($conexao));
     }
     if (mysqli_num_rows($result_benef) > 0) {
-        $ja_cadastrado = true;
-        $em_branco = true;
+        $ja_cadastrado = true;        
     }
 }
 
@@ -68,14 +67,13 @@ if (!$result) {
 
 if (mysqli_num_rows($result) > 0) {
     // Já possui alguém com o mesmo cep
-    $cep_jaCadastrado = True;
-    $em_branco = True;
+    $cep_jaCadastrado = True;    
 } else {
     $cep_jaCadastrado = False;
 }
 
 
-if (!$em_branco) {
+if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado) {
     $nome_completo = $_POST['nome_completoBeneficiario'];
     $data_nascimento = $_POST['data_nascimentoBeneficiario'];
     $estado_civil = $_POST['estado_civilBeneficiario'];

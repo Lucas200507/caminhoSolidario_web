@@ -1,132 +1,141 @@
 <?php
-    include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
-    include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
-    // Acessando o dados_usuario_logado para receber seus dados 
-    include_once("../routes/dados_usuarioLogado.php");
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-    
+include_once('../conexao_banco.php'); 
+include_once('../routes/verificacao_logado.php'); 
+include_once("../routes/dados_usuarioLogado.php");
 
-    // PRECISA VERIFICAR SE O USUÁRIO VEIO DO CADASTRO BENEFICIARIO
-    if (isset($_GET['IDbeneficiario']) && isset($_GET['dependentes_pendentes'])){
-        $idBeneficiarioPendente = $_GET['IDbeneficiario'];
-        //$dependentes_pendentes = $_GET['dependentes_pendentes'];
-        $sqlSelect_beneficiarioP = "SELECT cpf FROM tbBeneficiario WHERE ID = $idBeneficiarioPendente;";
-        $result2 = $conexao->query($sqlSelect_beneficiarioP);    
+// Se vier pela URL
+if (isset($_GET['IDbeneficiario']) && isset($_GET['dependentes_pendentes'])) {
+    $_SESSION['IDBeneficiario'] = $_GET['IDbeneficiario'];
+}
+
+// Recuperar o ID armazenado
+$idBeneficiarioPendente = $_SESSION['IDBeneficiario'] ?? null;
+$cpfBeneficiarioSelecionado = "";
+
+// Buscar CPF se houver ID
+if (!empty($idBeneficiarioPendente)) {
+    $sqlSelect_beneficiarioP = "SELECT cpf FROM tbBeneficiario WHERE ID = '$idBeneficiarioPendente'";
+    $resultCPF = $conexao->query($sqlSelect_beneficiarioP);
+    if ($resultCPF->num_rows > 0) {
+        $beneficiario_data = $resultCPF->fetch_assoc();
+        $cpfBeneficiarioSelecionado = $beneficiario_data['cpf'];
+        $_SESSION['cpfBeneficiario'] = $cpfBeneficiarioSelecionado;
     }
+}
 
-    // SE VIER DO CADASTRO BENEFICIARIO, PRECISA TRAVAR O CPF DO BENEFICIARIO E NÃO PODE SAIR DA TELA ATÉ CADASTRAR TODOS OS DEPENDENTES
-    // SELECT BENEFICIÁRIO - PREENCHER O SELECT cpf BENEFICIÁRIO
-    $sqlSelect_tbBeneficiario = "SELECT cpf FROM tbBeneficiario WHERE quantos_dependentes > 0;";
-    $result1 = $conexao->query($sqlSelect_tbBeneficiario); 
-    
-    $em_branco = False;
-    $MAX_dep = False;
-    $jaCadastrado = False;
-    $cadastrado_dependente = False;
+// SELECT geral para popular caso não venha de outra página
+$sqlSelect_tbBeneficiario = "SELECT cpf FROM tbBeneficiario WHERE quantos_dependentes > 0";
+$result1 = $conexao->query($sqlSelect_tbBeneficiario);
 
-    if (isset($_POST['cadastrar']) 
-     && !empty($_POST['nome_completo']) 
-     && !empty($_POST['cpfDependente']) 
-     && !empty($_POST['data_nascimento']) 
-     && !empty($_POST['rbParentesco'])     
-     && !empty($_POST['rbPCD'])     
-     && !empty($_POST['rbPossuiBenf'])
-     ){
-        if ($em_branco == False){        
-            // SELECT ID_BENEFICIARIO
-            if (!empty($_POST['cpfBeneficiario'])){
-                $cpfBeneficiario = $_POST['cpfBeneficiario'];
-                $sqlSelect_beneficiario = "SELECT * FROM tbBeneficiario WHERE cpf = $cpfBeneficiario";
-                $result3 = $conexao->query($sqlSelect_beneficiario);
-                    if (mysqli_num_rows($result3) > 0){
-                        while($benefiario_data = mysqli_fetch_assoc($result3)){
-                            $idBeneficiario = $benefiario_data['ID']; 
-                            $qnts_dependentes = $benefiario_data['quantos_dependentes'];
+// Flags de controle
+$em_branco = false;
+$MAX_dep = false;
+$jaCadastrado = false;
+$cadastrado_dependente = false;
+$incoerencia = false;
 
-                            // PRECISA VERIFICAR QUANTOS DEPENTES ESTÃO PENDENTES PARA CADASTRO
-                            $sqlSelect_dependentes = "SELECT * FROM filho_dependente WHERE idBeneficiario = $idBeneficiario;";
+// Lógica de cadastro
+if (isset($_POST['cadastrar']) 
+    && !empty($_POST['nome_completo']) 
+    && !empty($_POST['cpfDependente']) 
+    && !empty($_POST['data_nascimento']) 
+    && !empty($_POST['rbParentesco'])     
+    && !empty($_POST['rbPCD'])     
+    && !empty($_POST['rbPossuiBenf'])
+) {
+    if (!$em_branco && !$jaCadastrado && !$cadastrado_dependente && !$MAX_dep && !$incoerencia) {
 
-                            $result5 = $conexao->query($sqlSelect_dependentes);
-                            $qtd_dep_cadastrados = mysqli_num_rows($result5);
+        $cpfBeneficiario = $_POST['cpfBeneficiario'] ?? ($_SESSION['cpfBeneficiario'] ?? null);
 
-                            $qtd_dep_pendentes = $qnts_dependentes - $qtd_dep_cadastrados;
-                            if ($qtd_dep_pendentes <= 0){
-                                $MAX_dep = True;
-                                $em_branco = True;                                
+        if (!empty($cpfBeneficiario)) {
+            $sqlSelect_beneficiario = "SELECT * FROM tbBeneficiario WHERE cpf = '$cpfBeneficiario'";
+            $resultBenef = $conexao->query($sqlSelect_beneficiario);
 
-                            }
-                        }
+            if ($resultBenef->num_rows > 0) {
+                while ($benefiario_data = $resultBenef->fetch_assoc()) {
+                    $idBeneficiario = $benefiario_data['ID'];
+                    $qnts_dependentes = $benefiario_data['quantos_dependentes'];
+
+                    $sqlSelect_dependentes = "SELECT * FROM filho_dependente WHERE idBeneficiario = '$idBeneficiario'";
+                    $resultDep = $conexao->query($sqlSelect_dependentes);
+                    $qtd_dep_cadastrados = $resultDep->num_rows;
+
+                    if ($qnts_dependentes - $qtd_dep_cadastrados <= 0) {
+                        $MAX_dep = true;
                     }
-            
-            } else {
-                $em_branco = True;                
-            }
-            // PRECISA VERIFICAR SE JÁ POSSUI UM CPF IGUAL NA TABELA DEPENDENTE
-            $cpf = $_POST['cpfDependente'];// filho_dependente
-            $cpf = str_replace(['-', '.', ' '], '', $cpf);
-
-            $sqlSelect_dependentes2 = "SELECT * FROM filho_dependente WHERE cpf = $cpf;";
-            $result6 = $conexao->query($sqlSelect_dependentes2);
-            // VERIFICA SE JÁ POSSUI O DEPENDENTE CADASTRADO
-            if (mysqli_num_rows($result6) > 1){
-                $jaCadastrado = True;
-                $em_branco = True;                
-            }
-
-
-            $nome = $_POST['nome_completo']; // filho_dependente
-            $data_nascimento = $_POST['data_nascimento']; // filho_dependente
-            $parentesco = $_POST['rbParentesco']; // filho_dependente
-            $pcd = $_POST['rbPCD']; // filho_dependente
-            $possuiBenf = $_POST['rbPossuiBenf']; // filho_dependente
-
-            if (!empty($_POST['rbPossuiLaudo']))      {
-                $rbPossuiLaudo = $_POST['rbPossuiLaudo']; // filho_dependente
-            } else {
-                $rbPossuiLaudo = "N";
-            }
-
-            if ($possuiBenf == "S"){ // INSERIR NA TABELA beneficio_gov
-                if (!empty($_POST['beneficioBeneficiario']) && !empty($_POST['valor_benecicioBeneficiario'])){
-                    $beneficio = $_POST['beneficioBeneficiario']; 
-                    $valor_beneficio = $_POST['valor_benecicioBeneficiario'];
-                } else {
-                    $em_branco = True;                    
                 }
             }
-            
-            if ($pcd== "S"){
-                if (!empty($rbPossuiLaudo) && !empty($_POST['nome_doencaBeneficiario'])){                                 
-                    $nome_doenca = $_POST['nome_doencaBeneficiario'];                                    
-                } else {
-                    $em_branco = True;                    
-                }
-            } else {
-                $rbPossuiLaudo = "N";
-                $nome_doenca = "-";
-            }                        
-            
-            
-            if ($em_branco == False){
-                $sqlInsert_Dependente = "INSERT INTO filho_dependente (nome_filho_dependente, cpf, data_nascimento_filho_dep, parentesco, PCD, laudo, doenca, idBeneficiario) VALUES ('$nome', '$cpf', '$data_nascimento', '$parentesco', '$pcd', '$rbPossuiLaudo', '$nome_doenca', '$idBeneficiario');";
+        } else {
+            echo "<script>alert('CPF do beneficiário não encontrado.');</script>";
+            $em_branco = true;
+        }
 
-                $result4 = $conexao->query($sqlInsert_Dependente);   
-                $cadastrado_dependente = True;                              
+        $cpfDependente = str_replace(['-', '.', ' '], '', $_POST['cpfDependente']);
+        $sqlCheckDep = "SELECT * FROM filho_dependente WHERE cpf = '$cpfDependente'";
+        $resultCheckDep = $conexao->query($sqlCheckDep);
+        if ($resultCheckDep->num_rows > 0) {
+            $jaCadastrado = true;
+        }
+
+        $nome = $_POST['nome_completo'];
+        $data_nascimento = $_POST['data_nascimento'];
+        $parentesco = $_POST['rbParentesco'];
+        $pcd = $_POST['rbPCD'];
+        $possuiBenf = $_POST['rbPossuiBenf'];
+
+        if ($parentesco == "Filho_M") {
+            $idade = (new DateTime($data_nascimento))->diff(new DateTime())->y;
+            if ($idade >= 18) {
+                $incoerencia = true;
+            }
+        } elseif ($parentesco == "Parente_Pcd" && $pcd == "N") {
+            $incoerencia = true;
+        } elseif ($parentesco != "Parente_Pcd" && $pcd == "S") {
+            $incoerencia = true;
+        }
+
+        if ($possuiBenf == "S") {
+            if (!empty($_POST['beneficioDependente']) && !empty($_POST['valor_benecicioDependente'])) {
+                $beneficio = $_POST['beneficioDependente'];
+                $valor_beneficio = $_POST['valor_benecicioDependente'];
+            } else {
+                $em_branco = true;
             }
         }
 
-        $nome = NULL;
-        $cpf = NULL;
-        $data_nascimento = NULL;
-        $parentesco = NULL;
-        $pcd = NULL;
-        $rbPossuiLaudo = NULL;
-        $nome_doenca = NULL;
-        $idBeneficiario = NULL;
-     }      
+        if ($pcd == "S") {
+            if (!empty($_POST['rbPossuiLaudo']) && !empty($_POST['nome_doenca'])) {
+                $rbPossuiLaudo = $_POST['rbPossuiLaudo'];
+                $nome_doenca = $_POST['nome_doenca'];
+            } else {
+                $em_branco = true;
+            }
+        } else {
+            $rbPossuiLaudo = "N";
+            $nome_doenca = "-";
+        }
 
+        if (empty($idBeneficiario)) {
+            $em_branco = true;
+        }
 
+        if (!$em_branco && !$MAX_dep && !$jaCadastrado && !$incoerencia) {
+            $sqlInsert = "INSERT INTO filho_dependente 
+            (nome_filho_dependente, cpf, data_nascimento_filho_dep, parentesco, PCD, laudo, doenca, idBeneficiario)
+            VALUES ('$nome', '$cpfDependente', '$data_nascimento', '$parentesco', '$pcd', '$rbPossuiLaudo', '$nome_doenca', '$idBeneficiario')";
 
+            if ($conexao->query($sqlInsert)) {
+                $cadastrado_dependente = true;
+                unset($_SESSION['IDBeneficiario'], $_SESSION['cpfBeneficiario']);
+                $idBeneficiarioPendente = null;
+            } else {
+                echo "<script>alert('Erro ao inserir: {$conexao->error}');</script>";
+            }
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -215,37 +224,41 @@
     </div>
     <main class="mt-5 d-flex flex-column container">
         <form action="" class="container_formularios" method="post">   
-            <?php if($MAX_dep): ?>
+            <?php if($MAX_dep): ?>        
                 <script>window.alert("A quantidade de dependentes relacionados ao beneficiário excedeu.");</script>
+            <?php elseif($incoerencia): ?>
+                <script>window.alert("Há uma incoêrencia em relação ao parentesco do(a) dependente");</script>
+            <?php elseif($em_branco): ?>
+                <script>window.alert("Há campos em branco.");</script>                
             <?php elseif($jaCadastrado): ?>
                 <script>window.alert("Dependente já cadastrado.");</script>
+            <?php elseif ($cadastrado_dependente): ?>
+                <script>window.alert("Cadastrado com sucesso");</script>
             <?php endif; ?>
 
             <div class="d-flex justify-content-around w-100 input-group mb-4">
-                <?php if (!empty($idBeneficiarioPendente)): ?>
-                    <select class="form-select form-select-md w-50" disabled name="cpfBeneficiario">
+                <?php if (!empty($idBeneficiarioPendente) && !empty($cpfBeneficiarioSelecionado)): ?>
+                    <!-- Caso venha pela URL, exibe bloqueado e envia via hidden -->
+                    <select class="form-select form-select-md w-50" disabled>
+                        <option value="<?= $cpfBeneficiarioSelecionado ?>" selected><?= $cpfBeneficiarioSelecionado ?></option>
+                    </select>
+                    <!-- Hidden para enviar o CPF corretamente no POST -->
+                    <input type="hidden" name="cpfBeneficiario" value="<?= $cpfBeneficiarioSelecionado ?>">
                 <?php else: ?>
-                    <select class="form-select form-select-md w-50" name="cpfBeneficiario">
-                <?php endif; ?>
-                    <option value="">CPF do(a) Beneficiário(a)</option>
-                    <?php if (!empty($idBeneficiarioPendente)): ?>
-                        <?php if (mysqli_num_rows($result2) > 0): ?>
-                            <?php while ($beneficiario_data = mysqli_fetch_assoc($result2)): ?>                                    
-                                <option value="<?= $beneficiario_data['cpf'] ?>" selected><?= $beneficiario_data['cpf'] ?></option>                                    
-                            <?php endwhile; ?>                                
-                        <?php endif; ?>
-                    <?php else: ?>
-                        <?php if ((mysqli_num_rows($result1) > 0)): ?>
-                            <?php while ($beneficiario_data = mysqli_fetch_assoc($result1)): ?>
-                                <option value="<?= $beneficiario_data['cpf'] ?>" 
-                                    <?php echo (isset($_POST['cpfBeneficiario']) && $_POST['cpfBeneficiario'] == $beneficiario_data['cpf'] && !$cadastrado_dependente) ? 'selected' : ''; ?>>
-                                    <?= $beneficiario_data['cpf'] ?>
+                    <!-- Caso fluxo normal, exibe select liberado -->
+                    <select class="form-select form-select-md w-50" name="cpfBeneficiario" required>
+                        <option value="">Selecione o CPF do(a) Beneficiário(a)</option>
+                        <?php if ($result1->num_rows > 0): ?>
+                            <?php while ($beneficiario = $result1->fetch_assoc()): ?>
+                                <option value="<?= $beneficiario['cpf'] ?>"
+                                    <?= (isset($_POST['cpfBeneficiario']) && $_POST['cpfBeneficiario'] == $beneficiario['cpf']) ? 'selected' : '' ?>>
+                                    <?= $beneficiario['cpf'] ?>
                                 </option>
-                            <?php endwhile; ?>  
-                        <?php endif; ?>                                                              
-                    <?php endif; ?>
-                </select>                        
-                <button id="buttonPesquisarCPF">Pesquisar</button>
+                            <?php endwhile; ?>
+                        <?php endif; ?>
+                    </select>
+                <?php endif; ?>
+                <button id="buttonPesquisarCPF" class="btn btn-primary" type="submit" name="pesquisarCPF">Pesquisar</button>
             </div>
 
             <!-- DADOS PESSOAIS -->
@@ -271,19 +284,19 @@
                     <select class="form-select form-select-md" name="rbParentesco" required>
                         <option value=""></option>
                         <option value="Filho_M" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Filho_M' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Filho(a) - Menor</option>
-                        <option value="Filho_Pcd" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Filho_Pcd' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Filho(a) - PCD</option>
+                        <option value="Parente_Pcd" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Parente_Pcd' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Parente - PCD</option>
                         <option value="Mae ou pai" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Mae ou pai' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Mãe ou pai</option>
                         <option value="Neto(a)" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Neto(a)' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Neto(a)</option>
                         <option value="Irmao(a)" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Irmao(a)' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Irmão(ã)</option>
                         <option value="Outro" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Outro' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Outro</option>
                     </select>
                 </span>
-            </div>
+            </div>                    
 
             <!-- SITUAÇÃO -->
             <h3 style="text-align: center;" class="mb-3 mt-5" id="subtitulos_paginas">Situação</h3>
             <div class="d-flex justify-content-between formularios_Beneficiario mt-3 container">
-                <div class="d-flex flex-row col-lg-8 col-sm-12 container justify-content-between">
+                <div class="d-flex flex-row col-lg-8 col-sm-12 container justify-content-between" id="form_beneficiario_beneficio">
                     <span class="col-4 container p-0">
                         <label for="">Possui Benefício?</label>
                         <div class="d-flex container justify-content-start p-0">
@@ -301,8 +314,14 @@
                     </span>
                     <span class="col-8">
                         <label for="">Qual o nome do Benefício?</label>
-                        <input type="text" class="form-control" name="beneficioDependente"
-                            value="<?php if(isset($_POST['beneficioDependente']) && !$cadastrado_dependente) echo $_POST['beneficioDependente']; ?>">
+                        <select name="beneficioDependente" class="form-select form-select-md">
+                            <option value=""></option>
+                            <option value="Aposentadoria" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Aposentadoria' && !$cadastrado) ? 'selected ': ''; ?>>Aposentadoria</option>
+                            <option value="Benefício de Prestação Continuada (BPC)" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Benefício de Prestação Continuada (BPC)' && !$cadastrado) ? 'selected ': ''; ?>>Benefício de Prestação Continuada (BPC)</option>
+                            <option value="Novo Bolsa Família" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Novo Bolsa Família' && !$cadastrado) ? 'selected ': ''; ?>>Bolsa Família</option>
+                            <option value="Vale-gas" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Vale-gas' && !$cadastrado) ? 'selected ': ''; ?>>Vale Gás</option>
+                            <option value="Outros" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Outros' && !$cadastrado) ? 'selected ': ''; ?>>Outros</option>                            
+                        </select>                
                     </span> 
                 </div>           
                 <span class="col-lg-4">
@@ -358,11 +377,7 @@
                         <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
                     </a>
                     <p>Voltar</p>
-                </span>
-                <span class="align-items-center text-center">
-                    <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
-                    <p>Cancelar</p>
-                </span>
+                </span>               
                 <button type="submit" class="botoes_crud" name="cadastrar" value="1">
                     <span class="align-items-center text-center">
                         <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>

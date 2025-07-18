@@ -5,16 +5,16 @@ Database password: jiifSn3xIm
 Port number: 3306 -->
 <?php
 // BANCO EM NUVEM
-    // $dbHost = 'sql10.freesqldatabase.com';
-    // $dbUser = 'sql10786757';
-    // $dbPassword = 'jiifSn3xIm';
-    // $dbName = 'sql10786757';
+    $dbHost = 'sql10.freesqldatabase.com';
+    $dbUser = 'sql10786757';
+    $dbPassword = 'jiifSn3xIm';
+    $dbName = 'sql10786757';
 
     // BANCO LUCAS
-    $dbHost = '127.0.0.1';
-    $dbUser = 'root';
-    $dbPassword = 'flamengo';
-    $dbName = 'caminho_solidario';
+    // $dbHost = '127.0.0.1';
+    // $dbUser = 'root';
+    // $dbPassword = 'flamengo';
+    // $dbName = 'caminho_solidario';
 
     // BANCO LOCAL
     // $dbHost = 'localhost';

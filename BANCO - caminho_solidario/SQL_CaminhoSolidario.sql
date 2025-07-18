@@ -190,12 +190,50 @@ e.cep
 FROM Beneficiario bfc
 INNER JOIN endereco e ON e.idEndereco = bfc.idEndereco
 INNER JOIN pessoa p ON p.idPessoa = bfc.idPessoa
-INNER JOIN BeneficioGov bg ON bg.idBeneficioGov = bfc.idBeneficioGov
-INNER JOIN nomeBeneficiosGov nbg ON nbg.idBeneficios_gov = bg.idBeneficios_gov;
+LEFT JOIN BeneficioGov bg ON bg.idBeneficioGov = bfc.idBeneficioGov
+LEFT JOIN nomeBeneficiosGov nbg ON nbg.idBeneficios_gov = bg.idBeneficios_gov;
 
 SELECT * FROM tbBeneficiario;
 
 -- --------------------------------------------
+-- -------------------------------------------------
+
+CREATE TABLE filho_dependente(
+idFilho_Dependente INT PRIMARY KEY AUTO_INCREMENT,
+nome_filho_dependente VARCHAR(50),
+cpf VARCHAR(12) NOT NULL,
+data_nascimento_filho_dep DATE,
+parentesco VARCHAR(10),
+PCD CHAR(1) NOT NULL,
+laudo CHAR(1), -- CASO PCD, possui laudo ou não (s/n)
+doenca VARCHAR(50),
+idBeneficiario INT NOT NULL,
+FOREIGN KEY (idBeneficiario) references Beneficiario (idBeneficiario));
+
+SELECT * FROM filho_dependente;
+
+DELETE FROM filho_dependente WHERE idFilho_Dependente IN (3, 4, 5, 6);
+
+
+-- --------------------------------------------
+		-- TEM QUE FAZER A TABELA DE RELACIONAMENTO dependente e beneficiario
+-- --------------------------------------------
+-- VIEWS 
+
+CREATE VIEW filho_dependente_beneficiario AS
+SELECT 
+	fd.idFilho_Dependente,
+    fd.nome_filho_dependente AS nome,
+    fd.data_nascimento_filho_dep AS data_nascimento,
+    fd.parentesco,
+    fd.pcd,
+    p.nome_completo AS beneficiario
+FROM filho_dependente fd
+INNER JOIN beneficiario b ON fd.idBeneficiario = b.idBeneficiario
+INNER JOIN pessoa p ON p.idPessoa = b.idPessoa;
+
+-- ------------------------------------------
+
 
 CREATE TABLE beneficio(
 idBeneficio INT PRIMARY KEY AUTO_INCREMENT,
@@ -237,46 +275,11 @@ FOREIGN KEY (idFrequencia) REFERENCES frequencia (idFrequencia)
 
 SELECT * FROM relatorio;
 DROP TABLE relatorio;
--- -------------------------------------------------
-
-CREATE TABLE filho_dependente(
-idFilho_Dependente INT PRIMARY KEY AUTO_INCREMENT,
-nome_filho_dependente VARCHAR(50),
-cpf VARCHAR(12) NOT NULL,
-data_nascimento_filho_dep DATE,
-parentesco VARCHAR(10),
-PCD CHAR(1) NOT NULL,
-laudo CHAR(1), -- CASO PCD, possui laudo ou não (s/n)
-doenca VARCHAR(50),
-idBeneficiario INT NOT NULL,
-FOREIGN KEY (idBeneficiario) references Beneficiario (idBeneficiario));
-
-SELECT * FROM filho_dependente;
-
-DELETE FROM filho_dependente WHERE idFilho_Dependente IN (3, 4, 5, 6);
-
-
--- --------------------------------------------
-		-- TEM QUE FAZER A TABELA DE RELACIONAMENTO dependente e beneficiario
--- --------------------------------------------
--- VIEWS 
-
-CREATE VIEW filho_dependente_beneficiario AS
-SELECT 
-	fd.idFilho_Dependente,
-    fd.nome_filho_dependente AS nome,
-    fd.data_nascimento_filho_dep AS data_nascimento,
-    fd.parentesco,
-    fd.pcd,
-    p.nome_completo AS beneficiario
-FROM filho_dependente fd
-INNER JOIN beneficiario b ON fd.idBeneficiario = b.idBeneficiario
-INNER JOIN pessoa p ON p.idPessoa = b.idPessoa;
-
--- ------------------------------------------
+ 
+ -- --------------------------------------------
 
 -- Isso evita que o banco envie valores repetidos --
- 
+
 SELECT DISTINCT tipo FROM funcao;
 SELECT DISTINCT nome_completo FROM pessoa;
 
