@@ -1,8 +1,10 @@
 <?php
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
+
 // PRECISA VERIFICAR A QUANTIDADE DE CARACTERES EM cpf
 
+ a66e330cd76069321fe805d501d7366c45e49223
 include_once('../conexao_banco.php'); 
 include_once('../routes/verificacao_logado.php'); 
 include_once("../routes/dados_usuarioLogado.php");

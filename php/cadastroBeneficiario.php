@@ -4,7 +4,9 @@
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");   
 
+
     // PRECISA VERIFICAR A QUANTIDADE DE CARACTERES EM cep e cpf
+
 
     // tem que pegar o dado do email
     $cadastrado = False;
@@ -476,7 +478,7 @@ if ($em_branco && isset($_POST['cadastrar'])) {
             </div>                                    
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5  col-xs-12">
-                    <label>Quantos trabalham em casa:</label>
+                    <label>Quantos trabalham em casa:</label>    
                     <input type="number" class="form-control" name="quantos_trabalhamBeneficiario" value="<?php if(isset($_POST['quantos_trabalhamBeneficiario']) && !$cadastrado) echo $_POST['quantos_trabalhamBeneficiario']; ?>">
                 </span>
                 <span class="col-lg-6  col-xs-12">
