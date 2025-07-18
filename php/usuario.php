@@ -7,10 +7,13 @@
     include_once("../routes/dados_usuarioLogado.php");
 
     $cpf_logado = substr($cpf_logado, 0, 3) . "." . substr($cpf_logado, "3");
-
     $cpf_logado = substr($cpf_logado, 0, 7) . "." . substr($cpf_logado, "7");
-
     $cpf_logado = substr($cpf_logado, 0, 11) . "-" . substr($cpf_logado, "11");
+
+    $telefone = substr($telefone, 0, 0) . "(" . substr($telefone, "0");
+    $telefone = substr($telefone, 0, 3) . ")" . substr($telefone, "3");
+    $telefone = substr($telefone, 0, 4) . " " . substr($telefone, "5");
+    
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
