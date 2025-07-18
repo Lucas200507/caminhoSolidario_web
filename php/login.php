@@ -4,6 +4,23 @@
     $em_branco = False;
     $login_errado = False;
     // Método GET
+
+    // if(isset($_GET['cadastrar'])){
+    //     $sql = "INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES ('suporte caminhoSolidario', '11111111111', '6198000-0406');";
+    //     $result = $conexao->query($sql);
+    //     if ($result){
+    //         $sql2 = "INSERT INTO usuarios_web(email,idPessoa) VALUES('suportecaminhosolidario.df@gmail.com',8);";
+    //         $result2 = $conexao->query($sql2);
+    //         if ($result2){
+    //             $sql3 = "INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, UPPER(MD5('1')), 'A', 0, 8 FROM pessoa WHERE idPessoa = 8;";
+    //             $result3 = $conexao->query($sql3);
+    //             if (!$result3){
+    //                 echo "Error";
+    //             }
+    //         }
+    //     }
+    // }
+
     // MÉTODO GET PARA CASO O USUÁRIO TENHA SELECIONADO LEMBRAR SENHA ANTEIRIORMENTE
     if (isset($_GET['submit']) && !empty($_GET['cpf']) && empty($_GET['senha'])){        
         $usuario = $_GET['cpf'];
@@ -23,6 +40,7 @@
             $em_branco = True;      
         }
     }
+    
     else if (isset($_GET['submit']) && !empty($_GET['cpf']) && !empty($_GET['senha'])){
         //print_r($_REQUEST); // RECUPERA TODOS OS DADOS ENVIADOS                
         // precisa verificar se existe o usuário e senha no banco
@@ -53,6 +71,7 @@
         // Está vazio
         $em_branco = True;        
     }
+  
 ?> 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -87,7 +106,7 @@
             <input type="submit" class="btn btn-block btn-light btn-outline-primary btn-lg" name="submit" value="Entrar">                         
                 <div class="text-center mt-3 mb-2 border-bottom border-dark pb-3">
                     <a href="tela_esperaVoluntario.php" class="h6 text-decoration-none">Cadastrar como voluntário</a> 
-                </div>
+                </div>                
         </form>       
         <?php if($em_branco): ?>        
                 <div id="mensagem_erro2" class="container_mensagem_erro">
@@ -99,10 +118,11 @@
                 </div>
         <?php endif; ?>
     </div>
-
+      
     <div id="rodapeI">
 
     </div>
+    
     <script src="../js/mascaras.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

@@ -727,10 +727,6 @@ label{
     z-index: 2;
 }
 
-#IconUsuarioU:hover{
-    opacity: 0.2; 
-    z-index: 0;     
-}
 
 .iconImg ion-icon{
     display: flex;

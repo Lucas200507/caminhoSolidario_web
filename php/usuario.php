@@ -1,8 +1,16 @@
 <?php
+    // PRECIAS COLOCAR AS MÁSCARAS MANUALMENTE COM PHP
+
     include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
     include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");
+
+    $cpf_logado = substr($cpf_logado, 0, 3) . "." . substr($cpf_logado, "3");
+
+    $cpf_logado = substr($cpf_logado, 0, 7) . "." . substr($cpf_logado, "7");
+
+    $cpf_logado = substr($cpf_logado, 0, 11) . "-" . substr($cpf_logado, "11");
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -77,10 +85,9 @@
     <main class="main_usuario w-100">
         <div class="containerIcon mb-5">                 
             <span id="editIcon">
-                <a href="#" id="imgFotoU" onmouseover="iconHoverIn()" onmouseout="iconHoverOut()" class="iconImg"
-                onclick="alterarIcon()"><ion-icon name="image-outline"></ion-icon></a>                              
+                <a href="#" id="imgFotoU"  class="iconImg"><ion-icon name="image-outline"></ion-icon></a>                              
             </span>
-            <span id="IconUsuarioU" onmouseover="iconHoverIn()" onmouseout="iconHoverOut()" class="mb-4" style="background-image: url('<?php echo $icone ?>');"></span>           
+            <span id="IconUsuarioU" class="mb-4" style="background-image: url('<?php echo $icone ?>');"></span>           
             <h2 id="nomeUsuario"><?php echo $primeiro_nome ?></h2>
         </div>
         <!-- DADOS DO USUÁRIO -->
@@ -93,13 +100,13 @@
                 <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                     <span class="col-12">
                         <label for="">CPF</label>
-                        <input type="text" disabled class="form-control" value="<?php echo $cpf_logado ?>">
+                        <input type="text" disabled class="form-control" value="<?php echo $cpf_logado ?>" id="cpf">
                     </span>
                 </div>
                 <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                     <span class="col-lg-5  col-xs-12">
                         <label>Telefone:</label>
-                        <input type="tel" required class="form-control" value="<?php echo $telefone?>">
+                        <input type="tel" required class="form-control" value="<?php echo $telefone?>" id="telefone">
                     </span>
                     <span class="col-lg-6  col-xs-12">
                         <label>Email:</label>
@@ -113,11 +120,7 @@
                             <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
                         </a>
                         <p>Voltar</p>
-                    </span>
-                    <span class="align-items-center text-center">
-                        <ion-icon name="close-circle-outline" id="btCancelar" onclick="Cancelar_tUsuario()"></ion-icon>
-                        <p>Cancelar</p>
-                    </span>
+                    </span>                   
                     <span class="align-items-center text-center" onclick="Salvar_user()">
                         <ion-icon name="cloud-done-outline" id="btSalvar" id="btSalvar_user"></ion-icon>
                         <p>Salvar</p>
@@ -125,7 +128,7 @@
                 </div>
             </form>
             <div class="d-flex flex-column align-items-center">
-                <button class="btn mb-3" id="resetarSenha_usuario" onclick="resetarSenhaU()">Resetar
+                <button class="btn mb-3" id="resetarSenha_usuario">Resetar
                     Senha
                 </button>
                 <div id="formResetarSenha">
@@ -144,8 +147,7 @@
                 <a href="../routes/deslogar.php" class="btn mt-3" id="logout_usuario" onclick="logout()">Logout</a>
             </div>
 
-    </main>
-
+    </main>    
     <!-- Conexão com Bootstrap  -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

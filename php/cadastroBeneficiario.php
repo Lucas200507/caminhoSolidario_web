@@ -4,269 +4,191 @@
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");   
 
+    // PRECISA VERIFICAR A QUANTIDADE DE CARACTERES EM cep e cpf
+
+    // tem que pegar o dado do email
     $cadastrado = False;
+    $cep_jaCadastrado = False;
     $ja_cadastrado = False;
     $em_branco = False;
     $possuiDependentes = False;
+    $dependentes_pendentes = 0;
 
-     if (isset($_POST['cadastrar']) 
-     && !empty($_POST['nome_completoBeneficiario']) 
-     && !empty($_POST['cpfBeneficiario']) 
-     && !empty($_POST['data_nascimentoBeneficiario']) 
-     && !empty($_POST['estado_civilBeneficiario']) 
-     && !empty($_POST['telefoneBeneficiario']) 
-     && !empty($_POST['emailBeneficiario']) 
-     && !empty($_POST['endereco_completoBeneficiario'])
-     && !empty($_POST['cepBeneficiario']) 
-     && !empty($_POST['cidadeBeneficiario']) 
-     && !empty($_POST['estadoBeneficiario'])
-     && !empty($_POST['situacao_moradiaBeneficiario'])
-     && !empty($_POST['valor_despesasBeneficiario'])  // SO SE FOR ALUGADA
-     && !empty($_POST['rbPossuiBenf'])     
-     && !empty($_POST['rbPCD'])     
-     && !empty($_POST['rbPossuiDependentes'])       
-     && !empty($_POST['renda_familiarBeneficiario'])){
+    if (
+        isset($_POST['cadastrar'])
+        && !empty($_POST['nome_completoBeneficiario']) 
+        && !empty($_POST['cpfBeneficiario']) 
+        && !empty($_POST['data_nascimentoBeneficiario']) 
+        && !empty($_POST['estado_civilBeneficiario']) 
+        && !empty($_POST['telefoneBeneficiario'])         
+        && !empty($_POST['endereco_completoBeneficiario'])
+        && !empty($_POST['cepBeneficiario']) 
+        && !empty($_POST['cidadeBeneficiario']) 
+        && !empty($_POST['estadoBeneficiario'])
+        && !empty($_POST['situacao_moradiaBeneficiario'])
+        && !empty($_POST['valor_despesasBeneficiario'])  
+        && !empty($_POST['rbPossuiBenf'])     
+        && !empty($_POST['rbPCD'])     
+        && !empty($_POST['rbPossuiDependentes'])  
+        && !empty($_POST['renda_familiarBeneficiario'])
+    ) {
 
-        // PRECISA VERIFICAR SE JÁ POSSUI O CPF CADASTRADO
-        $cpfBeneficiario = $_POST['cpfBeneficiario']; // PESSOA
-        $cpfBeneficiario = str_replace(['-', '.', ' '], '', $cpfBeneficiario); // FORMATANDO
-        
-        $sqlSelect_Pessoa1 = "SELECT idPessoa FROM pessoa WHERE cpf = '$cpfBeneficiario';";
-        $result = $conexao->query($sqlSelect_Pessoa1);
-            if (mysqli_num_rows($result) > 0){
-                while ($pessoa_data1 = mysqli_fetch_assoc($result)){
-                    $idPessoa1 = $pessoa_data1['idPessoa'];
-                }
-                $sqlSelect_beneficiario1 = "SELECT * FROM Beneficiario WHERE idPessoa = '$idPessoa1';";
-                $result9 = $conexao->query($sqlSelect_beneficiario1);
-                if (mysqli_num_rows($result9) > 0){
-                    // Já possui esse cpf cadastrado
-                    $ja_cadastrado = True;
-                    $em_branco = True;
-                    $cpfBeneficiario = NULL;                
-                }
-            }
+// Formatando CPF
+$cpfBeneficiario = str_replace(['-', '.', ' '], '', $_POST['cpfBeneficiario']);
+
+// Verificar se o CPF já existe
+$sql = "SELECT idPessoa FROM pessoa WHERE cpf = '$cpfBeneficiario'";
+$result = mysqli_query($conexao, $sql);
+if (!$result) {
+    die("Erro na consulta de pessoa: " . mysqli_error($conexao));
+}
+if (mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $idPessoa1 = $row['idPessoa'];
+
+    $sql = "SELECT idBeneficiario FROM Beneficiario WHERE idPessoa = '$idPessoa1'";
+    $result_benef = mysqli_query($conexao, $sql);
+    if (!$result_benef) {
+        die("Erro na consulta de beneficiário: " . mysqli_error($conexao));
+    }
+    if (mysqli_num_rows($result_benef) > 0) {
+        $ja_cadastrado = true;        
+    }
+}
+
+//verificar se já possui o cep
+$cep = str_replace(['-', '.', ' '], '', $_POST['cepBeneficiario']);
+$sql = "SELECT cep FROM endereco WHERE cep = '$cep';";
+$result = mysqli_query($conexao, $sql);
+
+if (!$result) {
+    die("Erro na consulta de endereco: " . mysqli_error($conexao));    
+}
+
+if (mysqli_num_rows($result) > 0) {
+    // Já possui alguém com o mesmo cep
+    $cep_jaCadastrado = True;    
+} else {
+    $cep_jaCadastrado = False;
+}
 
 
-        if (!$em_branco){
-            $nome_completoBeneficiario = $_POST['nome_completoBeneficiario']; // PESSOA
-            $data_nascimentoBeneficiario = $_POST['data_nascimentoBeneficiario']; // BENEFICIARIO
-            $estado_civilBeneficiario = $_POST['estado_civilBeneficiario']; // BENEFICIARIO
-            $telefoneBeneficiario = $_POST['telefoneBeneficiario']; // PESSOA
-            $telefoneBeneficiario = str_replace(['(', ')', ' '], '', $telefoneBeneficiario); // FORMATANDO
-            $emailBeneficiario = $_POST['emailBeneficiario']; // PESSOA
-            $endereco_completoBeneficiario = $_POST['endereco_completoBeneficiario']; // ENDERECO
-            $cep = $_POST['cepBeneficiario']; // Endereco
-            $cep = str_replace(['-', '.', ' '], '', $cep); //FORMATANDO
-            $cidadeBeneficiario = $_POST['cidadeBeneficiario']; // ENDERECO
-            $estadoBeneficiario = $_POST['estadoBeneficiario']; // ENDERECO 
-            $situacao_moradiaBeneficiario = $_POST['situacao_moradiaBeneficiario']; // ENDERECO                     
-            $valor_despesasBeneficiario = $_POST['valor_despesasBeneficiario']; // ENDERECO
-            $renda_familiarBeneficiario = $_POST['renda_familiarBeneficiario']; // BENEFICIARIO
-            $rbPossuiBenf = $_POST['rbPossuiBenf']; 
-            $rbPCD = $_POST['rbPCD']; // beneficiario
-            $rbPossuiDependentes = $_POST['rbPossuiDependentes'];  
-            if (!empty($_POST['rbPossuiLaudo']))      {
-                $rbPossuiLaudo = $_POST['rbPossuiLaudo']; // Beneficiario
-            } else {
-                $rbPossuiLaudo = "N";
-            }
-            
+if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado) {
+    $nome_completo = $_POST['nome_completoBeneficiario'];
+    $data_nascimento = $_POST['data_nascimentoBeneficiario'];
+    $estado_civil = $_POST['estado_civilBeneficiario'];
+    $telefone = str_replace(['(', ')', '-', ' '], '', $_POST['telefoneBeneficiario']);
+    $email = $_POST['emailBeneficiario'];
+    $endereco = $_POST['endereco_completoBeneficiario'];    
+    $cidade = $_POST['cidadeBeneficiario'];
+    $estado = $_POST['estadoBeneficiario'];
+    $situacao_moradia = $_POST['situacao_moradiaBeneficiario'];
+    $valor_despesas = $_POST['valor_despesasBeneficiario'];
+    $renda_familiar = $_POST['renda_familiarBeneficiario'];
+    $rbPossuiBenf = $_POST['rbPossuiBenf'];
+    $rbPCD = $_POST['rbPCD'];
+    $rbPossuiDependentes = $_POST['rbPossuiDependentes'];
+    $rbPossuiLaudo = $_POST['rbPossuiLaudo'] ?? 'N';
 
-            if ($rbPossuiBenf == "S"){ // INSERIR NA TABELA beneficio_gov
-                if (!empty($_POST['beneficioBeneficiario']) && !empty($_POST['valor_benecicioBeneficiario'])){
-                    $beneficio = $_POST['beneficioBeneficiario']; 
-                    $valor_beneficio = $_POST['valor_benecicioBeneficiario'];
-                } else {
-                    $em_branco = True;                    
-                }
-            } 
+    // Benefício
+    $beneficio = '';
+    $valor_beneficio = '';
+    if ($rbPossuiBenf == "S") {
+        if (!empty($_POST['beneficioBeneficiario']) && !empty($_POST['valor_benecicioBeneficiario'])) {
+            $beneficio = $_POST['beneficioBeneficiario'];
+            $valor_beneficio = $_POST['valor_benecicioBeneficiario'];
+        } else {
+            $em_branco = true;
 
-            // TEM QUE SALVAR LOCALMENTE A QUANTIDA PARA INSERIR A QUANTIDADE CERTA DE DEPENDENTES
-            if ($rbPossuiDependentes == "S"){            
-                if (!empty($_POST['quantos_dependentes'])){
-                    $quantos_dependentes = $_POST['quantos_dependentes']; // INSERIR NA TABELA beneficiario
-                } else {
-                    $em_branco = True;                    
-                }
-            } else {
-                $quantos_dependentes = 0;
-                $dependentes_pendentes = 0;
-            }
-            // beneficiario
-            if ($rbPCD == "S"){
-                if (!empty($rbPossuiLaudo) && !empty($_POST['nome_doencaBeneficiario'])){                                 
-                    $nome_doenca = $_POST['nome_doencaBeneficiario'];                                    
-                } else {
-                    $em_branco = True;                    
-                }
-            } else {
-                $rbPossuiLaudo = "N";
-                $nome_doenca = "-";
-            }
-
-            // INSERTS
-            if ($em_branco == False){
-                // INSERT PESSOA
-                $sqlInsert_PESSOA = "INSERT INTO pessoa (nome_completo, cpf, telefone) VALUES ('$nome_completoBeneficiario', '$cpfBeneficiario', '$telefoneBeneficiario')";
-        
-                $result1 = $conexao->query($sqlInsert_PESSOA);
-
-                // ERROS:
-                if(!$result1){
-                    die("Erro ao inserir Pessoa: ". mysqli_error($conexao));
-                }
-        
-                // FAZER UM SELECT DO ID_PESSOA
-                $sqlSelect_PESSOA = "SELECT idPessoa FROM pessoa WHERE cpf = $cpfBeneficiario;";
-        
-                $result2 = $conexao->query($sqlSelect_PESSOA);
-
-                
-                // ERROS:
-                if(!$result2){
-                    die("Erro ao Selecionar Pessoa: ". mysqli_error($conexao));
-                }
-        
-
-                if (mysqli_num_rows($result2) > 0){
-                    while($pessoa_data = mysqli_fetch_assoc($result2)){
-                        $idPessoa = $pessoa_data['idPessoa'];
-                    }
-                }
-        
-                // INSERT ENDERECO
-                $sqlInsert_Endereco = "INSERT INTO endereco (endereco, cidade, estado, cep, situacao_moradia, valor_despesas, idPessoa) VALUES('$endereco_completoBeneficiario', '$cidadeBeneficiario', '$estadoBeneficiario', '$cep', '$situacao_moradiaBeneficiario', '$valor_despesasBeneficiario', '$idPessoa')";
-
-                $result3 = $conexao->query($sqlInsert_Endereco);
-
-                
-                // ERROS:
-                if(!$result3){
-                    die("Erro ao inserir Endereco: ". mysqli_error($conexao));
-                }
-        
-
-                // SELECT ID ENDERECO
-                $sqlSelect_ENDERECO = "SELECT idEndereco FROM endereco WHERE cep = $cep;";
-
-                $result4 = $conexao->query($sqlSelect_ENDERECO);
-
-                // ERROS:
-                if(!$result4){
-                    die("Erro ao Selecionar Endereco: ". mysqli_error($conexao));
-                }
-        
-
-                if (mysqli_num_rows($result4) > 0){
-                    while($endereco_data = mysqli_fetch_assoc($result4)){
-                        $idEndereco = $endereco_data['idEndereco'];
-                    }
-                }
-
-                // INSERT BENEFICIOGOV
-                if (!empty($beneficio) && !empty($valor_beneficio)){
-                    $sqlInsert_beneficioGov = "INSERT INTO BeneficioGov (nome_beneficio_gov, valor_beneficio) VALUES ('$beneficio', '$valor_beneficio')";
-                    $result5 = $conexao->query($sqlInsert_beneficioGov);
-                    
-                    // ERROS:
-                    if(!$result5){
-                        die("Erro ao inserir BeneficioGov: ". mysqli_error($conexao));
-                    }
-            
-                    // SELECT ID BENEFICIOGOV
-                    $sqlSelect_beneficioGov = "SELECT idBeneficioGov FROM BeneficioGov WHERE valor_beneficio = '$valor_beneficio' AND nome_beneficio_gov = '$beneficio';";
-                    $result6 = $conexao->query($sqlSelect_beneficioGov);
-
-                    
-                    // ERROS:
-                    if(!$result6){
-                        die("Erro ao Selecionar BeneficioGov: ". mysqli_error($conexao));
-                    }
-        
-
-                    if (mysqli_num_rows($result6) > 0){
-                        while($beneficio_data = mysqli_fetch_assoc($result6)){
-                            $idBeneficio = $beneficio_data['idBeneficioGov'];
-                        }
-
-                            // INSERT BENEFICIARIO
-                        $sqlInsert_Beneficiario = "INSERT INTO Beneficiario (data_nascimento, estado_civil, PCD, laudo, doenca, quantos_dependentes, renda_familiar, idPessoa, idEndereco, idBeneficioGov) VALUES ('$data_nascimentoBeneficiario', '$estado_civilBeneficiario', '$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes', '$renda_familiarBeneficiario', '$idPessoa', '$idEndereco', '$idBeneficio');";
-            
-                        $result7 = $conexao->query($sqlInsert_Beneficiario);                        
-                        
-                        // ERROS:
-                        if(!$result7){
-                            die("Erro ao inserir Beneficiario c/ BeneficioGov: ". mysqli_error($conexao));
-                        } else {
-                            $cadastrado = True;
-                        }
-        
-                    }
-
-                } else {
-                    // INSERT BENEFICIARIO SEM BENEFICIOGOV
-                    $sqlInsert_Beneficiario = "INSERT INTO Beneficiario (data_nascimento, estado_civil, PCD, laudo, doenca, quantos_dependentes, renda_familiar, idPessoa, idEndereco) VALUES ('$data_nascimentoBeneficiario', '$estado_civilBeneficiario', '$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes', '$renda_familiarBeneficiario', '$idPessoa', '$idEndereco');";
-        
-                    $result7 = $conexao->query($sqlInsert_Beneficiario);
-
-                    // ERROS:
-                    if(!$result7){
-                        die("Erro ao inserir Beneficiario s/ BeneficioGov: ". mysqli_error($conexao));
-                    } else {
-                            $cadastrado = True;
-                    }
-                }
-                // VERIFICA SE O USUÁRIO POSSUI DEPENDENTES
-                $sqlSelect_beneficiario = "SELECT * FROM Beneficiario;";
-                $result8 = $conexao->query($sqlSelect_beneficiario);
-
-                // ERROS:
-                    if(!$result8){
-                        die("Erro ao Selecionar Beneficiario: ". mysqli_error($conexao));
-                    }
-
-                if (mysqli_num_rows($result8) > 0){
-                    while($beneficiario_data = mysqli_fetch_assoc($result8)){
-                        $idBeneficiario = $beneficiario_data['idBeneficiario'];
-                        $dependentes_pendentes = $beneficiario_data['quantos_dependentes'];
-                    }
-                }
-
-                if ($dependentes_pendentes > 0){
-                    header("Location: ../php/cadastroDependente.php?IDbeneficiario=$idBeneficiario&dependentes_pendentes=$dependentes_pendentes");
-                }
-                        
-            }
-            
         }
-        // DEPOIS DO INSERT TEM QUE APAGAR TODOS OS DADOS
-        $data_nascimentoBeneficiario = NULL;        
-        $estado_civilBeneficiario = NULL; 
-        $rbPCD = NULL; 
-        $rbPossuiLaudo = NULL; 
-        $nome_doenca = NULL; 
-        $quantos_dependentes = NULL; 
-        $renda_familiarBeneficiario = NULL; 
-        $idPessoa = NULL; 
-        $idEndereco = NULL;
-        $idBeneficio = NULL;
+    }
 
-        
+    // Dependentes
+    $quantos_dependentes = 0;
+    if ($rbPossuiDependentes == "S") {
+        if (!empty($_POST['quantos_dependentes'])) {
+            $quantos_dependentes = $_POST['quantos_dependentes'];
+        } else {
+            $em_branco = true;
+        }
+    }
+
+    // PCD
+    $nome_doenca = "-";
+    if ($rbPCD == "S") {
+        if (!empty($rbPossuiLaudo) && !empty($_POST['nome_doencaBeneficiario'])) {
+            $nome_doenca = $_POST['nome_doencaBeneficiario'];
+        } else {
+            $em_branco = true;
+        }
     } else {
-        $em_branco = True;
-    }
-    
-    if($em_branco && isset(($_POST['cadastrar']))){
-         echo '<script>
-            window.alert("Deu erro");
-        </script>';
-    } else if ($cadastrado){
-        echo'<script>
-            window.alert("Cadastrado com sucesso");
-        </script>';
+        $rbPossuiLaudo = "N";
     }
 
+    if (!$em_branco) {
+        // Inserir pessoa
+        $sql = "INSERT INTO pessoa (nome_completo, cpf, telefone) VALUES ('$nome_completo', '$cpfBeneficiario', '$telefone')";
+        if (!mysqli_query($conexao, $sql)) {
+            die("Erro ao inserir pessoa: " . mysqli_error($conexao));
+        }
+        $idPessoa = mysqli_insert_id($conexao);
+
+        // Inserir endereço
+        $sql = "INSERT INTO endereco (endereco, cidade, estado, cep, situacao_moradia, valor_despesas, idPessoa) VALUES ('$endereco', '$cidade', '$estado', '$cep', '$situacao_moradia', '$valor_despesas', '$idPessoa')";
+        if (!mysqli_query($conexao, $sql)) {
+            die("Erro ao inserir endereço: " . mysqli_error($conexao));
+        }
+        $idEndereco = mysqli_insert_id($conexao);
+
+        // Inserir benefício, se existir
+        $idBeneficio = "NULL";    
+        if (!empty($beneficio) && !empty($valor_beneficio)) {
+            $sql = "SELECT idBeneficios_gov FROM nomeBeneficiosGov WHERE nome_beneficiogov = '$beneficio'";
+            $result = mysqli_query($conexao, $sql);
+            if (!$result) {
+                die("Erro ao buscar benefício: " . mysqli_error($conexao));
+            }
+            if (mysqli_num_rows($result) > 0) {
+                $row = mysqli_fetch_assoc($result);
+                $idBeneficiosGov = $row['idBeneficios_gov'];
+
+                $sql = "INSERT INTO BeneficioGov (idBeneficios_gov, valor_beneficio) VALUES ('$idBeneficiosGov', '$valor_beneficio')";
+                if (!mysqli_query($conexao, $sql)) {
+                    die("Erro ao inserir benefício: " . mysqli_error($conexao));
+                }
+                $idBeneficio = mysqli_insert_id($conexao);
+            }
+        }
+
+        // Inserir beneficiário
+        $sql = "INSERT INTO Beneficiario (data_nascimento, estado_civil, email, PCD, laudo, doenca, quantos_dependentes, renda_familiar, idPessoa, idEndereco, idBeneficioGov)
+                VALUES ('$data_nascimento', '$estado_civil', '$email','$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes', '$renda_familiar', '$idPessoa', '$idEndereco', $idBeneficio)";
+        if (!mysqli_query($conexao, $sql)) {
+            die("Erro ao inserir beneficiário: " . mysqli_error($conexao));
+        }
+        $idBeneficiario = mysqli_insert_id($conexao);
+
+        $cadastrado = true;
+        $cpfBeneficiario = NULL; // Para não cadastrar novamente
+
+        // Redirecionar se possuir dependentes
+        if ($quantos_dependentes > 0) {
+            header("Location: ../php/cadastroDependente.php?IDbeneficiario=$idBeneficiario&dependentes_pendentes=$quantos_dependentes");
+            exit;
+        }
+    }
+}
+} else {
+$em_branco = true;
+}
+
+if ($em_branco && isset($_POST['cadastrar'])) {
+    echo '<script>alert("Existem campos em branco.");</script>';
+} elseif ($cadastrado) {
+    echo '<script>alert("Cadastrado com sucesso!");</script>';
+} elseif ($cep_jaCadastrado){
+    echo '<script>alert("Cep já cadastrado no banco");</script>';
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -357,11 +279,6 @@
         </div>
     </div>
     <main class="mt-5 d-flex flex-column container">         
-        <!-- <?php if($em_branco): ?>        
-            <div id="mensagem_erro2" class="container_mensagem_erro" style="margin-top: 2em; margin-button: 2em; margin-left:auto; margin-right: auto;">
-                Campos obrigatórios estão em branco. Ou em alguns casos, possuem a quantidade de caracteres abaixo do mínimo.
-            </div>
-        <?php endif; ?>           -->
         <form action="" class="container_formularios" method="post">  
             <!-- DADOS PESSOAIS -->
             <h3 style="text-align: center;" class="mb-3" id="subtitulos_paginas">
@@ -369,35 +286,35 @@
             </h3>
             <div class="d-flex flex-column container">
                 <label class="form-label">Nome Completo:</label>
-                <input type="text" required class="form-control border" name="nome_completoBeneficiario">            
+                <input type="text" required class="form-control border" name="nome_completoBeneficiario" value="<?php if(isset($_POST['nome_completoBeneficiario']) && !$cadastrado) echo $_POST['nome_completoBeneficiario']; ?>">            
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-xl-3">
                     <label for="">CPF</label>
-                    <input type="text" maxlength="14" minlength="14" id="cpf" required class="form-control" name="cpfBeneficiario">
+                    <input type="text" maxlength="14" minlength="14" id="cpf" required class="form-control" name="cpfBeneficiario" value="<?php if(isset($_POST['cpfBeneficiario']) && !$cadastrado) echo $_POST['cpfBeneficiario']; ?>">
                 </span>
                 <span class="col-xl-3">
                     <label for="">Data Nascimento</label>
-                    <input type="date" required class="form-control" name="data_nascimentoBeneficiario">
+                    <input type="date" required class="form-control" name="data_nascimentoBeneficiario" value="<?php if(isset($_POST['data_nascimentoBeneficiario']) && !$cadastrado) echo $_POST['data_nascimentoBeneficiario']; ?>">
                 </span>
                 <span class="col-xl-4">
                     <label for="">Estado Civil</label>
                     <select class="form-select form-select-md" name="estado_civilBeneficiario" required>
                         <option value=""></option>
-                        <option value="S">Solteiro</option>
-                        <option value="C">Casado</option>
-                        <option value="V">Viúvo</option>
+                        <option value="S" <?php echo(isset($_POST['estado_civilBeneficiario']) && $_POST['estado_civilBeneficiario'] == 'S' && !$cadastrado) ? 'selected ': ''; ?>>Solteiro</option>
+                        <option value="C" <?php echo(isset($_POST['estado_civilBeneficiario']) && $_POST['estado_civilBeneficiario'] == 'C' && !$cadastrado) ? 'selected ': ''; ?>>Casado</option>
+                        <option value="V" <?php echo(isset($_POST['estado_civilBeneficiario']) && $_POST['estado_civilBeneficiario'] == 'V' && !$cadastrado) ? 'selected ': ''; ?>>Viúvo</option>
                     </select>
                 </span>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5 col-xs-12">
                     <label>Telefone:</label>
-                    <input type="text" maxlength="15" minlength="15" id="telefone" required class="form-control" name="telefoneBeneficiario">
+                    <input type="text" maxlength="15" minlength="15" id="telefone" required class="form-control" name="telefoneBeneficiario" value="<?php if(isset($_POST['telefoneBeneficiario']) && !$cadastrado) echo $_POST['telefoneBeneficiario']; ?>">
                 </span>
                 <span class="col-lg-6 col-xs-12">
                     <label>Email:</label>
-                    <input type="email" required class="form-control form-control-xl" name="emailBeneficiario">
+                    <input type="email" class="form-control form-control-xl" name="emailBeneficiario" value="<?php if(isset($_POST['emailBeneficiario']) && !$cadastrado) echo $_POST['emailBeneficiario']; ?>">
                 </span>
             </div>
                 <!-- ENDEREÇO -->
@@ -407,64 +324,64 @@
             <div class="d-flex justify-content-between container formularios_Beneficiario">
                 <span class="col-lg-7 col-xs-12">
                     <label class="form-label">Endereço Completo:</label>
-                    <input type="text" required class="form-control border" name="endereco_completoBeneficiario">            
+                    <input type="text" required class="form-control border" name="endereco_completoBeneficiario" value="<?php if(isset($_POST['endereco_completoBeneficiario']) && !$cadastrado) echo $_POST['endereco_completoBeneficiario']; ?>">            
                 </span>
                 <span class="col-lg-4 col-xs-12">
                     <label>CEP:</label>
-                    <input type="text" id="cep" maxlength="9" minlength="9" required class="form-control form-control-xl" name="cepBeneficiario">
+                    <input type="text" id="cep" maxlength="9" minlength="9" required class="form-control form-control-xl" name="cepBeneficiario" value="<?php if(isset($_POST['cepBeneficiario']) && !$cadastrado) echo $_POST['cepBeneficiario']; ?>">
                 </span>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-3">
                     <label for="">Cidade</label>
-                    <input type="text" required class="form-control" name="cidadeBeneficiario">
+                    <input type="text" required class="form-control" name="cidadeBeneficiario" value="<?php if(isset($_POST['cidadeBeneficiario']) && !$cadastrado) echo $_POST['cidadeBeneficiario']; ?>">
                 </span>
                 <span class="col-lg-3">
                     <label for="">Estado</label>
                     <select class="form-select form-select-md" name="estadoBeneficiario" required>
                         <option value=""></option>
-                        <option value="AC">AC - Acre</option>
-                        <option value="AL">AL - Alagoas</option>
-                        <option value="AP">AP - Amapá</option>
-                        <option value="AM">AM - Amazonas</option>
-                        <option value="BA">BA - Bahia</option>
-                        <option value="CE">CE - Ceará</option>
-                        <option value="DF">DF - Distrito Federal</option>
-                        <option value="ES">ES - Espírito Santo</option>
-                        <option value="GO">GO - Goiás</option>
-                        <option value="MA">MA - Maranhão</option>
-                        <option value="MT">MT - Mato Grosso</option>
-                        <option value="MS">MS - Mato Grosso do Sul</option>
-                        <option value="MG">MG - Minas Gerais</option>
-                        <option value="PA">PA - Pará</option>
-                        <option value="PB">PB - Paraíba</option>
-                        <option value="PR">PR - Paraná</option>
-                        <option value="PE">PE - Pernambuco</option>
-                        <option value="PI">PI - Piauí</option>
-                        <option value="RJ">RJ - Rio de Janeiro</option>
-                        <option value="RN">RN - Rio Grande do Norte</option>
-                        <option value="RS">RS - Rio Grande do Sul</option>
-                        <option value="RO">RO - Rondônia</option>
-                        <option value="RR">RR - Roraima</option>
-                        <option value="SC">SC - Santa Catarina</option>
-                        <option value="SE">SE - Sergipe</option>
-                        <option value="TO">TO - Tocantis</option>                    
+                        <option value="AC" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'AC' && !$cadastrado) ? 'selected ': ''; ?>>AC - Acre</option>
+                        <option value="AL" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'AL' && !$cadastrado) ? 'selected ': ''; ?>>AL - Alagoas</option>
+                        <option value="AP" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'AP' && !$cadastrado) ? 'selected ': ''; ?>>AP - Amapá</option>
+                        <option value="AM" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'AM' && !$cadastrado) ? 'selected ': ''; ?>>AM - Amazonas</option>
+                        <option value="BA" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'BA' && !$cadastrado) ? 'selected ': ''; ?>>BA - Bahia</option>
+                        <option value="CE" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'CE' && !$cadastrado) ? 'selected ': ''; ?>>CE - Ceará</option>
+                        <option value="DF" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'DF' && !$cadastrado) ? 'selected ': ''; ?>>DF - Distrito Federal</option>
+                        <option value="ES" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'ES' && !$cadastrado) ? 'selected ': ''; ?>>ES - Espírito Santo</option>
+                        <option value="GO" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'GO' && !$cadastrado) ? 'selected ': ''; ?>>GO - Goiás</option>
+                        <option value="MA" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'MA' && !$cadastrado) ? 'selected ': ''; ?>>MA - Maranhão</option>
+                        <option value="MT" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'MT' && !$cadastrado) ? 'selected ': ''; ?>>MT - Mato Grosso</option>
+                        <option value="MS" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'MS' && !$cadastrado) ? 'selected ': ''; ?>>MS - Mato Grosso do Sul</option>
+                        <option value="MG" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'MG' && !$cadastrado) ? 'selected ': ''; ?>>MG - Minas Gerais</option>
+                        <option value="PA" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'PA' && !$cadastrado) ? 'selected ': ''; ?>>PA - Pará</option>
+                        <option value="PB" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'PB' && !$cadastrado) ? 'selected ': ''; ?>>PB - Paraíba</option>
+                        <option value="PR" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'PR' && !$cadastrado) ? 'selected ': ''; ?>>PR - Paraná</option>
+                        <option value="PE" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'PE' && !$cadastrado) ? 'selected ': ''; ?>>PE - Pernambuco</option>
+                        <option value="PI" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'PI' && !$cadastrado) ? 'selected ': ''; ?>>PI - Piauí</option>
+                        <option value="RJ" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'RJ' && !$cadastrado) ? 'selected ': ''; ?>>RJ - Rio de Janeiro</option>
+                        <option value="RN" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'RN' && !$cadastrado) ? 'selected ': ''; ?>>RN - Rio Grande do Norte</option>
+                        <option value="RS" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'RS' && !$cadastrado) ? 'selected ': ''; ?>>RS - Rio Grande do Sul</option>
+                        <option value="RO" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'RO' && !$cadastrado) ? 'selected ': ''; ?>>RO - Rondônia</option>
+                        <option value="RR" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'RR' && !$cadastrado) ? 'selected ': ''; ?>>RR - Roraima</option>
+                        <option value="SC" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'SC' && !$cadastrado) ? 'selected ': ''; ?>>SC - Santa Catarina</option>
+                        <option value="SE" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'SE' && !$cadastrado) ? 'selected ': ''; ?>>SE - Sergipe</option>
+                        <option value="TO" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'TO' && !$cadastrado) ? 'selected ': ''; ?>>TO - Tocantis</option>                    
                     </select>
                 </span>
                 <span class="col-lg-4">
                     <label for="">Situação da moradia</label>
                     <select class="form-select form-select-md" name="situacao_moradiaBeneficiario" required>
                         <option value=""></option>
-                        <option value="C">Comprada</option>
-                        <option value="A">Alugada</option>
-                        <option value="O">Outro</option>
+                        <option value="C" <?php echo(isset($_POST['situacao_moradiaBeneficiario']) && $_POST['situacao_moradiaBeneficiario'] == 'C' && !$cadastrado) ? 'selected ': ''; ?>>Comprada</option>
+                        <option value="A" <?php echo(isset($_POST['situacao_moradiaBeneficiario']) && $_POST['situacao_moradiaBeneficiario'] == 'A' && !$cadastrado) ? 'selected ': ''; ?>>Alugada</option>
+                        <option value="O" <?php echo(isset($_POST['situacao_moradiaBeneficiario']) && $_POST['situacao_moradiaBeneficiario'] == 'O' && !$cadastrado) ? 'selected ': ''; ?>>Outro</option>
                     </select>
                 </span>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-12">
                     <label>Valor do Aluguel + Despesas (Água e luz):</label>
-                    <input type="number" class="form-control" name="valor_despesasBeneficiario">
+                    <input type="number" class="form-control" name="valor_despesasBeneficiario" value="<?php if(isset($_POST['valor_despesasBeneficiario']) && !$cadastrado) echo $_POST['valor_despesasBeneficiario']; ?>">
                 </span>            
             </div>
             <!-- SITUAÇÃO -->
@@ -477,23 +394,31 @@
                         <label for="">Possui Benefício?</label>
                         <div class="d-flex container justify-content-start p-0">
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="S">
+                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="S" <?php echo(isset($_POST['rbPossuiBenf']) && $_POST['rbPossuiBenf'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="N">
+                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="N" <?php echo(isset($_POST['rbPossuiBenf']) && $_POST['rbPossuiBenf'] == 'N' && !$cadastrado) ? 'checked ': ''; ?>>
                                 <label for="">Não</label>
                             </div>               
                         </div>
                     </span>
                     <span class="col-8">
                         <label for="">Qual o nome do Benefício?</label>
-                         <input type="text" class="form-control" name="beneficioBeneficiario"> <!-- PODIA SER UM COMBOBOX -->
+                        <select name="beneficioBeneficiario" class="form-select form-select-md">
+                            <option value=""></option>
+                            <option value="Aposentadoria" <?php echo(isset($_POST['beneficioBeneficiario']) && $_POST['beneficioBeneficiario'] == 'Aposentadoria' && !$cadastrado) ? 'selected ': ''; ?>>Aposentadoria</option>
+                            <option value="Benefício de Prestação Continuada (BPC)" <?php echo(isset($_POST['beneficioBeneficiario']) && $_POST['beneficioBeneficiario'] == 'Benefício de Prestação Continuada (BPC)' && !$cadastrado) ? 'selected ': ''; ?>>Benefício de Prestação Continuada (BPC)</option>
+                            <option value="Novo Bolsa Família" <?php echo(isset($_POST['beneficioBeneficiario']) && $_POST['beneficioBeneficiario'] == 'Novo Bolsa Família' && !$cadastrado) ? 'selected ': ''; ?>>Bolsa Família</option>
+                            <option value="Vale-gas" <?php echo(isset($_POST['beneficioBeneficiario']) && $_POST['beneficioBeneficiario'] == 'Vale-gas' && !$cadastrado) ? 'selected ': ''; ?>>Vale Gás</option>
+                            <option value="Outros" <?php echo(isset($_POST['beneficioBeneficiario']) && $_POST['beneficioBeneficiario'] == 'Outros' && !$cadastrado) ? 'selected ': ''; ?>>Outros</option>                            
+
+                        </select>                   
                     </span> 
                 </div>           
                 <span class="col-lg-4 ">
                     <label for="">Valor</label>
-                    <input type="number" class="form-control" name="valor_benecicioBeneficiario">
+                    <input type="number" class="form-control" name="valor_benecicioBeneficiario" value="<?php if(isset($_POST['valor_benecicioBeneficiario']) && !$cadastrado) echo $_POST['valor_benecicioBeneficiario']; ?>">
                 </span> 
             </div>
             <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">
@@ -502,11 +427,11 @@
                         <label for="">PCD?</label>
                         <div class="d-flex container p-0">
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPCD" value="S">
+                                <input type="radio" class="form-check-input" name="rbPCD" value="S" <?php echo(isset($_POST['rbPCD']) && $_POST['rbPCD'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPCD" value="N">
+                                <input type="radio" class="form-check-input" name="rbPCD" value="N" <?php echo(isset($_POST['rbPCD']) && $_POST['rbPCD'] == 'N' && !$cadastrado) ? 'checked ': ''; ?>>
                                 <label for="">Não</label>
                             </div>               
                         </div>
@@ -515,11 +440,11 @@
                         <label for="">Possui Laudo Médico?</label>
                         <div class="d-flex container justify-content-start p-0">
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="S">
+                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="S" <?php echo(isset($_POST['rbPossuiLaudo']) && $_POST['rbPossuiLaudo'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="N">
+                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="N" <?php echo(isset($_POST['rbPossuiLaudo']) && $_POST['rbPossuiLaudo'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
                                 <label for="">Não</label>
                             </div>               
                         </div>
@@ -527,7 +452,7 @@
                 </div>           
                 <span class="col-lg-6">
                     <label for="">Nome da Comorbidade</label>
-                    <input type="text" class="form-control" name="nome_doencaBeneficiario">
+                    <input type="text" class="form-control" name="nome_doencaBeneficiario" value="<?php if(isset($_POST['nome_doencaBeneficiario']) && !$cadastrado) echo $_POST['nome_doencaBeneficiario']; ?>">
                 </span> 
             </div> 
               <div class="d-flex flex-row justify-content-between container formularios_Beneficiario mt-3">        
@@ -535,28 +460,28 @@
                     <label for="">Possui Dependentes?</label>                    
                     <div class="d-flex container justify-content-start p-0">
                         <div class="form-check col-6">
-                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="S" onclick="enviarValorPDependente('sim')">
+                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="S" <?php echo(isset($_POST['rbPossuiDependentes']) && $_POST['rbPossuiDependentes'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
                             <label for="depSim">Sim</label>                        
                         </div>                         
                         <div class="form-check col-6">
-                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="N">
+                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="N" <?php echo(isset($_POST['rbPossuiDependentes']) && $_POST['rbPossuiDependentes'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
                             <label for="depNao">Não</label>
                         </div>               
                     </div>
                 </span> 
                 <span class="col-lg-7  col-sm-6">
                     <label for="">Quantos?</label>
-                    <input type="number" class="form-control" name="quantos_dependentes">
+                    <input type="number" class="form-control" name="quantos_dependentes" value="<?php if(isset($_POST['quantos_dependentes']) && !$cadastrado) echo $_POST['quantos_dependentes']; ?>">
                 </span> 
             </div>                                    
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5  col-xs-12">
-                    <label>Quantos trabalham:</label>
-                    <input type="number" class="form-control" name="quantos_trabalhamBeneficiario">
+                    <label>Quantos trabalham em casa:</label>
+                    <input type="number" class="form-control" name="quantos_trabalhamBeneficiario" value="<?php if(isset($_POST['quantos_trabalhamBeneficiario']) && !$cadastrado) echo $_POST['quantos_trabalhamBeneficiario']; ?>">
                 </span>
                 <span class="col-lg-6  col-xs-12">
                     <label>Renda Familiar total:</label>
-                    <input type="number" required class="form-control" name="renda_familiarBeneficiario">
+                    <input type="number" required class="form-control" name="renda_familiarBeneficiario" value="<?php if(isset($_POST['renda_familiarBeneficiario']) && !$cadastrado) echo $_POST['renda_familiarBeneficiario']; ?>">
                 </span>
             </div>            
             <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">
@@ -565,11 +490,7 @@
                         <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
                     </a>
                     <p>Voltar</p>
-                </span>
-                <span class="align-items-center text-center">
-                    <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>  
-                    <p>Cancelar</p>          
-                </span>
+                </span>                
                 <button type="submit" class="botoes_crud" name="cadastrar" value="1">
                     <span class="align-items-center text-center">
                         <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>

@@ -131,12 +131,8 @@
                             <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
                         </a>
                         <p>Voltar</p>
-                    </span>
-                    <span class="align-items-center text-center" onclick="cancelarCadastro()">
-                        <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
-                        <p>Cancelar</p>
-                    </span>
-                    <span class="align-items-center text-center" onclick="Cadastrar_Voluntario()">
+                    </span>                   
+                    <span class="align-items-center text-center">
                         <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
                         <p>Salvar</p>
                     </span>

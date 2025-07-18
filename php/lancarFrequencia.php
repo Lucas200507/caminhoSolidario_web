@@ -312,9 +312,9 @@
                 </a>
                 <p>Voltar</p>
             </span>
-            <span class="align-items-center text-center" onclick="cancelarCadastro()">
+            <span class="align-items-center text-center">
                 <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
-                <p>Cancelar</p>
+                <p>Deletar</p>
             </span>
             <span class="align-items-center text-center">
                 <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
