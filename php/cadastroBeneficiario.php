@@ -4,9 +4,7 @@
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");   
 
-
     // PRECISA VERIFICAR A QUANTIDADE DE CARACTERES EM cep e cpf
-
 
     // tem que pegar o dado do email
     $cadastrado = False;
@@ -15,6 +13,7 @@
     $em_branco = False;
     $possuiDependentes = False;
     $dependentes_pendentes = 0;
+    $qnt_caractes_erro = False;
 
     if (
         isset($_POST['cadastrar'])
@@ -37,6 +36,11 @@
 
 // Formatando CPF
 $cpfBeneficiario = str_replace(['-', '.', ' '], '', $_POST['cpfBeneficiario']);
+
+// verificar a qunatidade de caracteres
+if (strlen($cpfBeneficiario) < 11 || strlen($cep) < 8){
+    $qnt_caractes_erro = True;
+}
 
 // Verificar se o CPF já existe
 $sql = "SELECT idPessoa FROM pessoa WHERE cpf = '$cpfBeneficiario'";
@@ -75,11 +79,14 @@ if (mysqli_num_rows($result) > 0) {
 }
 
 
-if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado) {
+if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro) {
     $nome_completo = $_POST['nome_completoBeneficiario'];
     $data_nascimento = $_POST['data_nascimentoBeneficiario'];
     $estado_civil = $_POST['estado_civilBeneficiario'];
     $telefone = str_replace(['(', ')', '-', ' '], '', $_POST['telefoneBeneficiario']);
+    if (strlen($telefone) < 11){
+        $qnt_caractes_erro = True;
+    }
     $email = $_POST['emailBeneficiario'];
     $endereco = $_POST['endereco_completoBeneficiario'];    
     $cidade = $_POST['cidadeBeneficiario'];
@@ -190,6 +197,8 @@ if ($em_branco && isset($_POST['cadastrar'])) {
     echo '<script>alert("Cadastrado com sucesso!");</script>';
 } elseif ($cep_jaCadastrado){
     echo '<script>alert("Cep já cadastrado no banco");</script>';
+} elseif ($qnt_caractes_erro){
+    echo '<script>alert("A quantidade de caracteres em telefone, cep ou cpf estão abaixo do mínimo");</script>';
 }
 ?>
 <!DOCTYPE html>
@@ -478,7 +487,7 @@ if ($em_branco && isset($_POST['cadastrar'])) {
             </div>                                    
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5  col-xs-12">
-                    <label>Quantos trabalham em casa:</label>    
+                    <label>Quantos trabalham em casa:</label>
                     <input type="number" class="form-control" name="quantos_trabalhamBeneficiario" value="<?php if(isset($_POST['quantos_trabalhamBeneficiario']) && !$cadastrado) echo $_POST['quantos_trabalhamBeneficiario']; ?>">
                 </span>
                 <span class="col-lg-6  col-xs-12">
