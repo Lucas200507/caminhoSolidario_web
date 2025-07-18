@@ -37,11 +37,6 @@
 // Formatando CPF
 $cpfBeneficiario = str_replace(['-', '.', ' '], '', $_POST['cpfBeneficiario']);
 
-// verificar a qunatidade de caracteres
-if (strlen($cpfBeneficiario) < 11 || strlen($cep) < 8){
-    $qnt_caractes_erro = True;
-}
-
 // Verificar se o CPF já existe
 $sql = "SELECT idPessoa FROM pessoa WHERE cpf = '$cpfBeneficiario'";
 $result = mysqli_query($conexao, $sql);
@@ -78,6 +73,10 @@ if (mysqli_num_rows($result) > 0) {
     $cep_jaCadastrado = False;
 }
 
+// verificar a qunatidade de caracteres
+if (strlen($cpfBeneficiario) < 11 || strlen($cep) < 8){
+    $qnt_caractes_erro = True;
+}
 
 if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro) {
     $nome_completo = $_POST['nome_completoBeneficiario'];
