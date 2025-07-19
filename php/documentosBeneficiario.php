@@ -3,6 +3,11 @@
     include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");
+
+    // SELECIONANDO O CPF DO BENEFICIARIO
+    $sql = "SELECT cpf FROM tbBeneficiario;";
+    $result = $conexao->query($sql);    
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -94,8 +99,16 @@
                 Verifique aqui os Documentos dos Beneficiários
            </h3>
            <div class="d-flex justify-content-between w-75 input-group">            
-               <select class="form-select form-select-md">
-                <option value="">CPF do(a) Beneficiário(a)</option>        
+               <select class="form-select form-select-md" name="cpfBeneficiario">
+                <option value="">CPF do(a) Beneficiário(a)</option> 
+                <?php if(mysqli_num_rows($result) > 0): ?>
+                    <?php while($data_beneficiario = mysqli_fetch_assoc($result)): ?>
+                        <option value="<?= $data_beneficiario['cpf'] ?>"
+                            <?= (isset($_POST['cpfBeneficiario']) && $_POST['cpfBeneficiario'] == $data_beneficiario['cpf']) ? 'selected' : '' ?>>
+                            <?= $data_beneficiario['cpf'] ?>
+                        </option>
+                    <?php endwhile; ?>
+                <?php endif; ?>
                </select>
                <button id="buttonPesquisarCPF">
                     Pesquisar

@@ -10,6 +10,12 @@ Port number: 3306 -->
     $dbPassword = 'jiifSn3xIm';
     $dbName = 'sql10786757';
 
+    // BANCO MARCOS
+    // $dbHost = 'localhost';
+    // $dbUser = 'root';
+    // $dbPassword = '0044';
+    // $dbName = 'caminho_solidario';
+
     // BANCO LUCAS
     // $dbHost = '127.0.0.1';
     // $dbUser = 'root';
