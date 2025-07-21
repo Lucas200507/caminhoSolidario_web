@@ -4,7 +4,17 @@
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");   
 
-    // PRECISA VERIFICAR A QUANTIDADE DE CARACTERES EM cep e cpf
+    function get_endereco($cep){
+
+
+    // formatar o cep removendo caracteres nao numericos    
+    $url = "http://viacep.com.br/ws/$cep/xml/";
+
+    $xml = simplexml_load_file($url);
+    return $xml;
+    }
+
+    // $endereco = get_endereco("37500405");
 
     // tem que pegar o dado do email
     $cadastrado = False;

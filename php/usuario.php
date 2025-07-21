@@ -11,8 +11,7 @@
     $cpf_logado = substr($cpf_logado, 0, 11) . "-" . substr($cpf_logado, "11");
 
     $telefone = substr($telefone, 0, 0) . "(" . substr($telefone, "0");
-    $telefone = substr($telefone, 0, 3) . ")" . substr($telefone, "3");
-    $telefone = substr($telefone, 0, 4) . " " . substr($telefone, "5");
+    $telefone = substr($telefone, 0, 3) . ")" . substr($telefone, "3");    
     
 ?>
 <!DOCTYPE html>

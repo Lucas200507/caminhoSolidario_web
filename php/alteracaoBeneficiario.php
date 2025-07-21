@@ -1,72 +1,192 @@
 <?php
-    // PARA ALTERAR A QUANTIDADE DE DEPENDENTES, PRECISA VERIFICAR SE JÁ POSSUI CADASTRADOS DEPENDENTES NO NOME DESTE BENEFICIÁRIO
-    include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
-    include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
-    // Acessando o dados_usuario_logado para receber seus dados 
-    include_once("../routes/dados_usuarioLogado.php");
+// session_start();
+include_once('../conexao_banco.php');
+include_once('../routes/verificacao_logado.php');
+include_once("../routes/dados_usuarioLogado.php");
 
-    // PEGANDO O CPF DO BNEFICIARIO
-    $sql = "SELECT cpf FROM tbBeneficiario;";
-    $result = mysqli_query($conexao, $sql);
+// Função para buscar endereço pelo CEP
+function get_endereco($cep){
+    $url = "http://viacep.com.br/ws/$cep/xml/";
+    return simplexml_load_file($url);
+}
 
-    if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
-        $cpfBeneficiario = $_POST['cpfBeneficiario'];
-        //  TEM QUE SELECIONAR PRIMEIRO O ID
-        $sql = "SELECT ID FROM tbBeneficiario WHERE cpf = '$cpfBeneficiario';";
-        $result0 = mysqli_query($conexao, $sql);
-        if(mysqli_num_rows($result0) > 0){
-            while ($dados_tbBeneficiario = mysqli_fetch_assoc($result0)){            
-                $idBeneficiario = $dados_tbBeneficiario['ID'];
+// Flags de erro
+$qnt_caracteres_erro = false;
+$em_branco = false;
+$incoerencia_Beneficio = false;
+$incoerencia_PCD = false;
+$incoerencia_Dependentes = false;
+$qtd_dependentes_incoerente = false;
+
+// Consulta CPF
+$sql = "SELECT cpf FROM tbBeneficiario;";
+$result = mysqli_query($conexao, $sql);
+
+// PESQUISA
+if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
+    $cpfBeneficiario = $_POST['cpfBeneficiario'];
+    $sql = "SELECT ID FROM tbBeneficiario WHERE cpf = '$cpfBeneficiario';";
+    $result0 = mysqli_query($conexao, $sql);
+
+    if(mysqli_num_rows($result0) > 0){
+        $dados_tbBeneficiario = mysqli_fetch_assoc($result0);
+        $idBeneficiario = $dados_tbBeneficiario['ID'];
+        $_SESSION['idBeneficiario'] = $idBeneficiario;
+        $_SESSION['cpf'] = $cpfBeneficiario;
+
+        $sql2 = "SELECT * FROM Beneficiario WHERE idBeneficiario = '$idBeneficiario';";
+        $result2 = mysqli_query($conexao, $sql2);
+
+        if(mysqli_num_rows($result2) > 0){
+            $dadosBeneficiario = mysqli_fetch_assoc($result2);
+
+            $data_nascimento = $dadosBeneficiario['data_nascimento'];
+            $email = $dadosBeneficiario['email'];
+            $estado_civil = $dadosBeneficiario['estado_civil'];
+            $pcd = $dadosBeneficiario['PCD'];
+            $laudo = $dadosBeneficiario['laudo'];
+            $comorbidade = $dadosBeneficiario['doenca'];
+            $quantos_dependentes = $dadosBeneficiario['quantos_dependentes'];
+            $renda_familiar = $dadosBeneficiario['renda_familiar'];
+            $idPessoa = $dadosBeneficiario['idPessoa'];
+            $_SESSION['idPessoa'] = $idPessoa;
+            $idEndereco = $dadosBeneficiario['idEndereco'];
+            $idBeneficioGov = $dadosBeneficiario['idBeneficioGov'];
+            $_SESSION['idbeneficioGov'] = $idBeneficioGov;
+
+            $sql3 = "SELECT * FROM pessoa WHERE idPessoa = '$idPessoa';";
+            $result3 = mysqli_query($conexao, $sql3);
+            if ($dados_pessoa = mysqli_fetch_assoc($result3)) {
+                $nome_Beneficiario = $dados_pessoa['nome_completo'];
+                $telefone = preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $dados_pessoa['telefone']);
             }
 
-            // AGORA LISTAMOS A TABELA BENEFICIARIO PELO ID            
-                $sql2 = "SELECT * FROM Beneficiario WHERE idBeneficiario = '$idBeneficiario';";
-                $result2 = mysqli_query($conexao, $sql2);
-                    if(mysqli_num_rows($result2) > 0){
-                        while ($dadosBeneficiario = mysqli_fetch_assoc($result2)){                            
-                           
-                            $data_nascimento = $dadosBeneficiario['data_nascimento'];
-                            $email = $dadosBeneficiario['email'];
-                            $estado_civil = $dadosBeneficiario['estado_civil'];
-                            $pcd = $dadosBeneficiario['PCD'];
-                            $laudo = $dadosBeneficiario['laudo'];
-                            $comorbidade = $dadosBeneficiario['doenca'];
-                            $quantos_dependentes = $dadosBeneficiario['quantos_dependentes'];
-                            $renda_familiar = $dadosBeneficiario['renda_familiar'];
-                            $idPessoa = $dadosBeneficiario['idPessoa'];
-                            $idEndereco = $dadosBeneficiario['idEndereco'];                            
-                        }
-
-                        // AGORA PRECISAMOS LISTAR OS DADOS DE pessoa, endereco e Beneficio Gov
-                        $sql3 = "SELECT * FROM pessoa WHERE idPessoa = '$idPessoa';";
-                        $result3 = mysqli_query($conexao, $sql3);
-                        if (mysqli_num_rows($result3) > 0){
-                            while ($dados_pessoa = mysqli_fetch_assoc($result3)){
-                                $nome_Beneficiario = $dados_pessoa['nome_completo'];
-                                $telefone = $dados_pessoa['telefone'];
-                            }
-                        }
-                        $sql4 = "SELECT * FROM endereco WHERE idEndereco = '$idEndereco';";
-                        $result4 = mysqli_query($conexao, $sql4);
-                        if (mysqli_num_rows($result4) > 0){
-                            while($dados_endereco = mysqli_fetch_assoc($result4)){
-                                $endereco = $dados_endereco['endereco'];
-                                $cidade = $dados_endereco['cidade'];
-                                $estado = $dados_endereco['estado'];
-                                $cep = $dados_endereco['cep'];
-                                $situacao_moradia = $dados_endereco['situacao_moradia'];
-                                $valor_despesas = $dados_endereco['valor_despesas'];
-                            }
-                        }                        
-
-                    }
-            
+            $sql4 = "SELECT * FROM endereco WHERE idEndereco = '$idEndereco';";
+            $result4 = mysqli_query($conexao, $sql4);
+            if ($dados_endereco = mysqli_fetch_assoc($result4)) {
+                $endereco = $dados_endereco['endereco'];
+                $cidade = $dados_endereco['cidade'];
+                $estado = $dados_endereco['estado'];
+                $situacao_moradia = $dados_endereco['situacao_moradia'];
+                $valor_despesas = $dados_endereco['valor_despesas'];
+                $cep = substr($dados_endereco['cep'], 0, 5) . "-" . substr($dados_endereco['cep'], 5);
+            }
         }
     }
-    // tem que pegar todos os dados deste cpf
-    
+}
 
+// ALTERAÇÃO
+if (isset($_POST['alterar'])) {
+    if (!empty($_POST['data_nascimentoBeneficiario']) && !empty($_POST['estado_civilBeneficiario']) && !empty($_POST['telefoneBeneficiario']) &&
+        !empty($_POST['endereco_completoBeneficiario']) && !empty($_POST['cepBeneficiario']) && !empty($_POST['cidadeBeneficiario']) &&
+        !empty($_POST['estadoBeneficiario']) && !empty($_POST['situacao_moradiaBeneficiario']) && !empty($_POST['valor_despesasBeneficiario']) &&
+        !empty($_POST['renda_familiarBeneficiario'])) {
+
+        $telefone = preg_replace('/[^0-9]/', '', $_POST['telefoneBeneficiario']);
+        $cep = preg_replace('/[^0-9]/', '', $_POST['cepBeneficiario']);
+
+        if (strlen($telefone) < 11 || strlen($cep) < 8) {
+            $qnt_caracteres_erro = true;
+        }
+
+        $data_nascimento = $_POST['data_nascimentoBeneficiario'];
+        $estado_civil = $_POST['estado_civilBeneficiario'];
+        $endereco = $_POST['endereco_completoBeneficiario'];
+        $cidade = $_POST['cidadeBeneficiario'];
+        $estado = $_POST['estadoBeneficiario'];
+        $situacao_moradia = $_POST['situacao_moradiaBeneficiario'];
+        $beneficioGov = $_POST['beneficioBeneficiario'];
+        $valor_despesas = $_POST['valor_benecicioBeneficiario'];
+        $comorbidade = $_POST['doenca'];
+        $renda_familiar = $_POST['renda_familiarBeneficiario'];
+        $quantos_dependentes = $_POST['quantos_dependentes'];
+        $email = $_POST['emailBeneficiario'] ?? $email; // ou outro campo do formulário
+        $pcd = $_POST['rbPCD'] ?? 'N';
+        $laudo = $_POST['rbPossuiLaudo'] ?? 'N';
+
+        $id = $_SESSION['idBeneficiario'];
+
+        $sqlSelect_Dependente = "SELECT COUNT(*) AS total FROM filho_dependente WHERE idBeneficiario = '$id';";
+        $resDep = mysqli_query($conexao, $sqlSelect_Dependente);
+        $total_dependentes = mysqli_fetch_assoc($resDep)['total'];
+
+        if ($total_dependentes > $quantos_dependentes) {
+            $qtd_dependentes_incoerente = true;
+        }
+
+        // Validações de coerência
+        if ($_POST['rbPossuiBenf'] == 'S' && (empty($beneficioGov) || empty($valor_despesas))) {
+            $incoerencia_Beneficio = true;
+        }
+
+        if ($_POST['rbPCD'] == 'S' && (empty($comorbidade) || $_POST['rbPossuiLaudo'] == 'N')) {
+            $incoerencia_PCD = true;
+        }
+
+        if ($_POST['rbPossuiDependentes'] == 'S' && empty($quantos_dependentes)) {
+            $incoerencia_Dependentes = true;
+        }
+
+        if (!$qnt_caracteres_erro && !$em_branco && !$incoerencia_Beneficio && !$incoerencia_PCD && !$incoerencia_Dependentes && !$qtd_dependentes_incoerente) {
+            $idPessoa = $_SESSION['idPessoa'];
+            $idEndereco = $idEndereco; // já definido
+            $idBeneficioGov = $_SESSION['idbeneficioGov'];
+
+            $sqlUpdate_endereco = "UPDATE endereco SET endereco = '$endereco', cidade = '$cidade', estado = '$estado', cep = '$cep', situacao_moradia = '$situacao_moradia', valor_despesas = '$valor_despesas' WHERE idEndereco = '$idEndereco';";
+            $sqlUpdate_pessoa = "UPDATE pessoa SET telefone = '$telefone' WHERE idPessoa = '$idPessoa';";
+
+            $resultUpdate_endereco = mysqli_query($conexao, $sqlUpdate_endereco);
+            $resultUpdate_pessoa = mysqli_query($conexao, $sqlUpdate_pessoa);
+
+            if (!empty($beneficioGov) && !empty($valor_despesas)) {
+                switch ($beneficioGov) {
+                    case "Novo Bolsa Família": $idBeneficio = 1; break;
+                    case "Benefício de Prestação Continuada (BPC)": $idBeneficio = 2; break;
+                    case "Aposentadoria": $idBeneficio = 3; break;
+                    case "Vale-Gas": $idBeneficio = 4; break;
+                    case "Outros": $idBeneficio = 5; break;
+                    default: $idBeneficio = NULL; break;
+                }
+
+                $sqlUpdate_BeneficioGov = "UPDATE BeneficioGov SET idBeneficiosGov = '$idBeneficio', valor_beneficio = '$valor_despesas' WHERE idBeneficioGov = '$idBeneficioGov';";
+                $resultUpdate_Beneficio = mysqli_query($conexao, $sqlUpdate_BeneficioGov);
+            } else {
+                $resultUpdate_Beneficio = true;
+            }
+
+            $sqlUpdate_Beneficiario = "UPDATE Beneficiario SET data_nascimento = '$data_nascimento', email = '$email', estado_civil = '$estado_civil', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade', quantos_dependentes = '$quantos_dependentes', renda_familiar = '$renda_familiar' WHERE idBeneficiario = '$id';";
+            $resultUpdate_Beneficiario = mysqli_query($conexao, $sqlUpdate_Beneficiario);
+
+            if ($resultUpdate_endereco && $resultUpdate_pessoa && $resultUpdate_Beneficio && $resultUpdate_Beneficiario) {
+                echo "<script>alert('Beneficiário alterado com sucesso');</script>";
+            }
+        }
+    } else {
+        $em_branco = true;
+    }
+}
+    // LIBERAR AS SESSÕES
+    unset($_SESSION['idBeneficiario']);
+    unset($_SESSION['idbeneficioGov']);
+    unset($_SESSION['cpf']);
+    unset($_SESSION['idPessoa']);
+
+// Alertas
+if ($em_branco) {
+    echo "<script>alert('Há campos em branco');</script>";
+} else if ($incoerencia_Beneficio) {
+    echo "<script>alert('Há uma incoerência em relação ao Benefício do Beneficiário');</script>";
+} else if ($incoerencia_Dependentes) {
+    echo "<script>alert('Há uma incoerência em relação aos Dependentes');</script>";
+} else if ($incoerencia_PCD) {
+    echo "<script>alert('Há uma incoerência em relação à PCD');</script>";
+} else if ($qtd_dependentes_incoerente) {
+    echo "<script>alert('Quantidade de dependentes cadastrados é maior que a informada');</script>";
+} else if ($qnt_caracteres_erro) {
+    echo "<script>alert('Telefone ou CEP possuem caracteres insuficientes');</script>";
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -336,7 +456,7 @@
                 </div>           
                 <span class="col-lg-6">
                     <label for="">Nome da Comorbidade</label>
-                    <input type="text" class="form-control" name="nome_doencaBeneficiario" value="<?= !empty($comorbidade) ? $comorbidade : ''; ?>">
+                    <input type="text" class="form-control" name="doenca" value="<?= !empty($comorbidade) ? $comorbidade : ''; ?>">
                 </span> 
             </div> 
                 <div class="d-flex flex-row justify-content-between container formularios_Beneficiario mt-3">        
