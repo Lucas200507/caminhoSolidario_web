@@ -1,4 +1,6 @@
 <?php
+    // DEVE MUDAR O COMBO_BOX do cpf para um input, para o usuário pesquisar o cpf e filtrar
+
 // session_start();
 include_once('../conexao_banco.php');
 include_once('../routes/verificacao_logado.php');
@@ -8,6 +10,11 @@ include_once("../routes/dados_usuarioLogado.php");
 function get_endereco($cep){
     $url = "http://viacep.com.br/ws/$cep/xml/";
     return simplexml_load_file($url);
+}
+
+// PARA EVITAR MÚLTIPLAS ALTERAÇÕES
+if(!isset($_SESSION['beneficiario_alterado'])){
+    $_SESSION['beneficiario_alterado'] = False;
 }
 
 // Flags de erro
@@ -25,14 +32,17 @@ $result = mysqli_query($conexao, $sql);
 // PESQUISA
 if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
     $cpfBeneficiario = $_POST['cpfBeneficiario'];
+    $_SESSION['cpf'] = $cpfBeneficiario;
     $sql = "SELECT ID FROM tbBeneficiario WHERE cpf = '$cpfBeneficiario';";
     $result0 = mysqli_query($conexao, $sql);
 
     if(mysqli_num_rows($result0) > 0){
-        $dados_tbBeneficiario = mysqli_fetch_assoc($result0);
-        $idBeneficiario = $dados_tbBeneficiario['ID'];
-        $_SESSION['idBeneficiario'] = $idBeneficiario;
-        $_SESSION['cpf'] = $cpfBeneficiario;
+        while ($dados_tbBeneficiario = mysqli_fetch_assoc($result0)){
+            $idBeneficiario = $dados_tbBeneficiario['ID'];
+            $_SESSION['idBeneficiario'] = $idBeneficiario;                
+        }
+        
+        
 
         $sql2 = "SELECT * FROM Beneficiario WHERE idBeneficiario = '$idBeneficiario';";
         $result2 = mysqli_query($conexao, $sql2);
@@ -51,6 +61,7 @@ if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
             $idPessoa = $dadosBeneficiario['idPessoa'];
             $_SESSION['idPessoa'] = $idPessoa;
             $idEndereco = $dadosBeneficiario['idEndereco'];
+            $_SESSION['idEndereco'] = $idEndereco;
             $idBeneficioGov = $dadosBeneficiario['idBeneficioGov'];
             $_SESSION['idbeneficioGov'] = $idBeneficioGov;
 
@@ -76,7 +87,7 @@ if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
 }
 
 // ALTERAÇÃO
-if (isset($_POST['alterar'])) {
+if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False) {
     if (!empty($_POST['data_nascimentoBeneficiario']) && !empty($_POST['estado_civilBeneficiario']) && !empty($_POST['telefoneBeneficiario']) &&
         !empty($_POST['endereco_completoBeneficiario']) && !empty($_POST['cepBeneficiario']) && !empty($_POST['cidadeBeneficiario']) &&
         !empty($_POST['estadoBeneficiario']) && !empty($_POST['situacao_moradiaBeneficiario']) && !empty($_POST['valor_despesasBeneficiario']) &&
@@ -96,7 +107,7 @@ if (isset($_POST['alterar'])) {
         $estado = $_POST['estadoBeneficiario'];
         $situacao_moradia = $_POST['situacao_moradiaBeneficiario'];
         $beneficioGov = $_POST['beneficioBeneficiario'];
-        $valor_despesas = $_POST['valor_benecicioBeneficiario'];
+        $valor_despesas = $_POST['valor_despesasBeneficiario'];
         $comorbidade = $_POST['doenca'];
         $renda_familiar = $_POST['renda_familiarBeneficiario'];
         $quantos_dependentes = $_POST['quantos_dependentes'];
@@ -129,7 +140,7 @@ if (isset($_POST['alterar'])) {
 
         if (!$qnt_caracteres_erro && !$em_branco && !$incoerencia_Beneficio && !$incoerencia_PCD && !$incoerencia_Dependentes && !$qtd_dependentes_incoerente) {
             $idPessoa = $_SESSION['idPessoa'];
-            $idEndereco = $idEndereco; // já definido
+            $idEndereco = $_SESSION['idEndereco']; // já definido
             $idBeneficioGov = $_SESSION['idbeneficioGov'];
 
             $sqlUpdate_endereco = "UPDATE endereco SET endereco = '$endereco', cidade = '$cidade', estado = '$estado', cep = '$cep', situacao_moradia = '$situacao_moradia', valor_despesas = '$valor_despesas' WHERE idEndereco = '$idEndereco';";
@@ -157,19 +168,45 @@ if (isset($_POST['alterar'])) {
             $sqlUpdate_Beneficiario = "UPDATE Beneficiario SET data_nascimento = '$data_nascimento', email = '$email', estado_civil = '$estado_civil', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade', quantos_dependentes = '$quantos_dependentes', renda_familiar = '$renda_familiar' WHERE idBeneficiario = '$id';";
             $resultUpdate_Beneficiario = mysqli_query($conexao, $sqlUpdate_Beneficiario);
 
-            if ($resultUpdate_endereco && $resultUpdate_pessoa && $resultUpdate_Beneficio && $resultUpdate_Beneficiario) {
-                echo "<script>alert('Beneficiário alterado com sucesso');</script>";
+            if ($resultUpdate_endereco && $resultUpdate_pessoa && $resultUpdate_Beneficio && $resultUpdate_Beneficiario) {               
+                // LIBERAR AS SESSÕES
+                unset($_SESSION['idBeneficiario']);
+                unset($_SESSION['idbeneficioGov']);
+                unset($_SESSION['cpf']);
+                unset($_SESSION['idPessoa']);
+                unset($_SESSION['idEndereco']);
+                // Limpa variáveis em memória
+                $telefone = "";
+                $BeneficioGov = "";
+                $quantos_dependentes = "";
+                $data_nascimento = "";
+                $email = "";
+                $estado_civil = "";
+                $pcd = "";
+                $laudo = "";
+                $comorbidade = "";
+                $renda_familiar = "";
+                $endereco = "";
+                $cidade = "";
+                $estado = "";
+                $situacao_moradia = "";
+                $valor_despesas = "";
+                $cep = "";
+                $nome_Beneficiario = "";
+                $_SESSION['beneficiario_alterado'] = true;
+                 echo "<script>
+                        alert('Beneficiário alterado com sucesso');
+                        window.location.href = window.location.href;
+                       </script>";
+
+            }   else {
+                echo "<script>alert('Erro ao alterar o beneficiário. Verifique os dados e tente novamente.');</script>";
             }
         }
     } else {
         $em_branco = true;
     }
-}
-    // LIBERAR AS SESSÕES
-    unset($_SESSION['idBeneficiario']);
-    unset($_SESSION['idbeneficioGov']);
-    unset($_SESSION['cpf']);
-    unset($_SESSION['idPessoa']);
+}    
 
 // Alertas
 if ($em_branco) {
@@ -296,20 +333,19 @@ if ($em_branco) {
                 <input type="text" class="form-control border" disabled value="<?= !empty($nome_Beneficiario) ? $nome_Beneficiario : ''; ?>">
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">            
-                <span class="col-md-5 col-sm-12">
-                        <label for="">Data Nascimento</label>
-                        <input type="date" class="form-control" name="data_nascimentoBeneficiario" value="<?= !empty($data_nascimento) ? $data_nascimento : ''; ?>">
-                    </span>
-                    <span class="col-md-6 col-sm-12">
-                        <label for="">Estado Civil</label>
-                        <select class="form-select form-select-md" name="estado_civilBeneficiario">
-                            <option value=""></option>
-                            <option value="S" <?= (!empty($estado_civil) && $estado_civil == 'S') ? 'selected' : ''; ?>>Solteiro</option>
-                            <option value="C" <?= (!empty($estado_civil) && $estado_civil == 'C') ? 'selected' : ''; ?>>Casado</option>
-                            <option value="V" <?= (!empty($estado_civil) && $estado_civil == 'V') ? 'selected' : ''; ?>>Viúvo</option>
-
-                        </select>
-                    </span>
+                <span class="col-xl-3">
+                    <label for="">Data Nascimento</label>
+                    <input type="date" class="form-control" name="data_nascimentoBeneficiario" value="<?= !empty($data_nascimento) ? $data_nascimento : ''; ?>">
+                </span>
+                <span class="col-xl-4">
+                    <label for="">Estado Civil</label>
+                    <select class="form-select form-select-md" name="estado_civilBeneficiario">
+                        <option value=""></option>
+                        <option value="S" <?= (!empty($estado_civil) && $estado_civil == 'S') ? 'selected' : ''; ?>>Solteiro</option>
+                        <option value="C" <?= (!empty($estado_civil) && $estado_civil == 'C') ? 'selected' : ''; ?>>Casado</option>
+                        <option value="V" <?= (!empty($estado_civil) && $estado_civil == 'V') ? 'selected' : ''; ?>>Viúvo</option>
+                    </select>
+                </span>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5 col-xs-12">
@@ -376,9 +412,9 @@ if ($em_branco) {
                     <label for="">Situação da moradia</label>
                     <select class="form-select form-select-md" name="situacao_moradiaBeneficiario">
                         <option value=""></option>
-                        <option value="C" <?= (!empty($estado_civil) && $estado_civil == 'C') ? 'selected' : ''; ?>>Comprada</option>
-                        <option value="A" <?= (!empty($estado_civil) && $estado_civil == 'A') ? 'selected' : ''; ?>>Alugada</option>
-                        <option value="O" <?= (!empty($estado_civil) && $estado_civil == 'O') ? 'selected' : ''; ?>>Outro</option>
+                        <option value="C" <?= (!empty($situacao_moradia) && $situacao_moradia == 'C') ? 'selected' : ''; ?>>Comprada</option>
+                        <option value="A" <?= (!empty($situacao_moradia) && $situacao_moradia == 'A') ? 'selected' : ''; ?>>Alugada</option>
+                        <option value="O" <?= (!empty($situacao_moradia) && $situacao_moradia == 'O') ? 'selected' : ''; ?>>Outro</option>
                     </select>
                 </span>
             </div>
@@ -468,7 +504,7 @@ if ($em_branco) {
                             <label for="depSim">Sim</label>                        
                         </div>                         
                         <div class="form-check col-6">
-                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="N" <?= !empty($quantos_dependentes) && $quantos_dependentes <= 0 ? 'checked' : ''; ?>>
+                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="N" <?= empty($quantos_dependentes) || $quantos_dependentes <= 0 ? 'checked' : ''; ?>>
                             <label for="depNao">Não</label>
                         </div>               
                     </div>
