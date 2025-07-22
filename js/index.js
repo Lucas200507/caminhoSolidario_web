@@ -54,7 +54,8 @@ function navegar_cadastrarBeneficiario(){
 }
 
 function navegar_cadastrarVoluntario(){
-    window.location.href = "cadastroVoluntario.php";
+    // window.location.href = "cadastroVoluntario.php";
+     window.location.href = "em_manutencao.html";
     
 }
 
@@ -68,11 +69,13 @@ function navegar_alterarBeneficiario(){
 }
 
 function navegar_alterarVoluntario(){
-    window.location.href = "alteracaoVoluntario.php";
+    // window.location.href = "alteracaoVoluntario.php";
+    window.location.href = "em_manutencao.html";
 }
 
 function navegar_alterarDependente(){
-    window.location.href = "alteracaoDependente.php";
+   // window.location.href = "alteracaoDependente.php";
+   window.location.href = "em_manutencao.html";
 }
 
 function navegar_lancarFrequencia(){
@@ -84,30 +87,23 @@ function navegar_verificarFrequencia(){
 }
 
 function navegar_documentos(){
-    window.location.href = "documentos.php";
+    // window.location.href = "documentos.php";
+    window.location.href = "em_manutencao.html";
 }
 
 function navegar_documentosDependente(){
-    window.location.href = "documentosDependente.php";
+   //  window.location.href = "documentosDependente.php";
+   window.location.href = "em_manutencao.html";
 }
 
 function navegar_documentosBeneficiario(){
-    window.location.href = "documentosBeneficiario.php";
+   // window.location.href = "documentosBeneficiario.php";
+   window.location.href = "em_manutencao.html";
 }
 
 function navegar_usuario(){        
     window.location.href = "usuario.php#resetarSenha";
 }
-
-function cancelarCadastro(){
-    window.alert("Cancelou");
-}
-
-function Cancelar_tUsuario(){
-    //RECARREGAR A PÁGINA
-    // window.location.href = "usuario.php";
-}
-
 
  /************************************************ */
 // Usuário

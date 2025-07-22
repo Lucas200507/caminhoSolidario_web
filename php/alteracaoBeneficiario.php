@@ -1,5 +1,5 @@
 <?php
-    // DEVE MUDAR O COMBO_BOX do cpf para um input, para o usuário pesquisar o cpf e filtrar
+// DEVE MUDAR O COMBO_BOX do cpf para um input, para o usuário pesquisar o cpf e filtrar
 
 // session_start();
 include_once('../conexao_banco.php');
@@ -208,7 +208,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False) {
     }
 }    
 
-// Alertas
+// Alertas - ALTERAÇÃO
 if ($em_branco) {
     echo "<script>alert('Há campos em branco');</script>";
 } else if ($incoerencia_Beneficio) {
@@ -222,6 +222,17 @@ if ($em_branco) {
 } else if ($qnt_caracteres_erro) {
     echo "<script>alert('Telefone ou CEP possuem caracteres insuficientes');</script>";
 }
+
+// DELETAR
+if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
+    // VERIFICA SE O USUÁRIO QUER DELETAR
+    echo "<script>window.confirm('Tem certeza que deseja excluir este Beneficiário ?');</script>";
+    if (isset($_POST['conf_delete'])){
+        // PRECISA VERIFICAR SE ESTE BENEFICIÁRIO TEM RELACIONAMENTO COM ALGUM DEPENDENTE
+
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -308,6 +319,8 @@ if ($em_branco) {
     </div>
     <main class="mt-5 d-flex flex-column container">
         <form action="" method="post">
+            <!-- PRECISA CRIAR UMA CAIXA QUANDO O USUÁRIO FOR DELETAR UM DADO PARA CONFIRMAR
+            CASO O ID_BENEFICIÁRIO ESTEJA RELACIONADO COM ALGUM DEPENDENTE, PRECISA EXCLUIR TODOS OS DEPENDENTES PRIMEIRO E PEDIR PAR CONFIRMAR AO USUÁRIO -->
             <div class="d-flex justify-content-around w-100 input-group mb-4">
                 <select class="form-select form-select-md w-50" name="cpfBeneficiario">
                     <option value="">CPF do(a) Beneficiário(a)</option>
@@ -341,16 +354,16 @@ if ($em_branco) {
                     <label for="">Estado Civil</label>
                     <select class="form-select form-select-md" name="estado_civilBeneficiario">
                         <option value=""></option>
-                        <option value="S" <?= (!empty($estado_civil) && $estado_civil == 'S') ? 'selected' : ''; ?>>Solteiro</option>
-                        <option value="C" <?= (!empty($estado_civil) && $estado_civil == 'C') ? 'selected' : ''; ?>>Casado</option>
-                        <option value="V" <?= (!empty($estado_civil) && $estado_civil == 'V') ? 'selected' : ''; ?>>Viúvo</option>
+                        <option value="S" <?= !empty($estado_civil) && $estado_civil == 'S' ? 'selected' : ''; ?>>Solteiro</option>
+                        <option value="C" <?= !empty($estado_civil) && $estado_civil == 'C' ? 'selected' : ''; ?>>Casado</option>
+                        <option value="V" <?= !empty($estado_civil) && $estado_civil == 'V' ? 'selected' : ''; ?>>Viúvo</option>
                     </select>
                 </span>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5 col-xs-12">
                     <label>Telefone:</label>
-                    <input type="text" maxlength="15" minlength="15" id="telefone" class="form-control" name="telefoneBeneficiario" value="<?= !empty($telefone) ? $telefone : ''; ?>">                    
+                    <input type="text" maxlength="15" minlength="15" id="telefone" class="form-control" name="telefoneBeneficiario" value="<?= isset($_POST['pesquisar']) && !empty($telefone) ? $telefone : ''; ?>">                    
                 </span>
                 <span class="col-lg-6 col-xs-12">
                     <label>Email:</label>
@@ -434,11 +447,11 @@ if ($em_branco) {
                         <label for="">Possui Benefício?</label>                        
                         <div class="d-flex container justify-content-start p-0">
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="S" <?= !empty($BeneficioGov) ? 'checked' : ''; ?>>
+                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="S" <?= isset($_POST['pesquisar']) && !empty($BeneficioGov) ? 'checked' : ''; ?>>
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="N" <?= empty($BeneficioGov) ? 'checked' : ''; ?>>
+                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="N" <?= isset($_POST['pesquisar']) && empty($BeneficioGov) ? 'checked' : ''; ?>>
                                 <label for="">Não</label>
                             </div>               
                         </div>
@@ -500,11 +513,11 @@ if ($em_branco) {
                     <label for="">Possui Dependentes?</label>                    
                     <div class="d-flex container justify-content-start p-0">
                         <div class="form-check col-6">
-                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="S" <?= !empty($quantos_dependentes) && $quantos_dependentes > 0 ? 'checked' : ''; ?>>
+                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="S" <?= isset($_POST['pesquisar']) && (!empty($quantos_dependentes) && $quantos_dependentes > 0) ? 'checked' : ''; ?>>
                             <label for="depSim">Sim</label>                        
                         </div>                         
                         <div class="form-check col-6">
-                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="N" <?= empty($quantos_dependentes) || $quantos_dependentes <= 0 ? 'checked' : ''; ?>>
+                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="N" <?= isset($_POST['pesquisar']) && (empty($quantos_dependentes) || $quantos_dependentes <= 0) ? 'checked' : ''; ?>>
                             <label for="depNao">Não</label>
                         </div>               
                     </div>
