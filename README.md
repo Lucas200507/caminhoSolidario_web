@@ -11,8 +11,8 @@
   Abra em um navegador: http://localhost:8081/caminhoSolidario_web/splash.html<br>
 
   ## USUÁRIO TESTE
-  CPF - ADM: 00123456789 / VOLUNTÁRIO: 10123456789<br>
-  SENHA - ADM: teste / VOLUNTÁRIO: teste2<br>
+  CPF - VOLUNTÁRIO: 10123456789<br>
+  SENHA - VOLUNTÁRIO: teste2<br>
 
 # Revisão de Código e Protótipo - WEB ✍️
   O objetivo desse conteúdo é revisar todos os códigos desenvolvidos no projeto web. 

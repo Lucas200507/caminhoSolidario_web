@@ -10,11 +10,40 @@
 
     // LISTAR TODAS AS FREQUÊNCIAS
     if (isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
+        $anosF = ['2023', '2024', '2025'];
+        $mesesF = [
+            'jan' => 'JAN', 'fev' => 'FEV', 'mar' => 'MAR', 'abr' => 'ABR',
+            'mai' => 'MAI', 'jun' => 'JUN', 'jul' => 'JUL', 'ago' => 'AGO',
+            'set' => 'SET', 'out' => 'OUT', 'nov' => 'NOV', 'dez' => 'DEZ'
+        ];
         $cpfBeneficiario = $_POST['cpfBeneficiario'];
         $_SESSION['cpf'] = $cpfBeneficiario;
+
+        $sqlSelect_frequencia = "SELECT * FROM tbRelatorio WHERE cpf = '$cpfBeneficiario' AND ANO BETWEEN '2023' AND '2025';";
+        $result2 = mysqli_query($conexao, $sqlSelect_frequencia);
+        
+            if (mysqli_num_rows > 0){
+                $campo = []; // Zera o array antes para evitar sujeira anterior
+
+            while ($dados_frequencia = mysqli_fetch_assoc($result2)){
+                $ano = $dados_frequencia['ANO'];       // ex: '2023'
+                $mes_bd = $dados_frequencia['MES'];    // ex: 'JAN'
+
+                // Descobre a chave correta do input:
+                $mes_pt = array_search($mes_bd, $mesesF); // ex: 'jan'
+
+                if ($mes_pt !== false) { // Garante que o mês exista no mapeamento
+                    $campo["{$mes_pt}_{$ano}"] = $dados_frequencia['REGISTRO'];
+                    }
+                }
+            }
+
+
+    } else if (isset($_POST['pesquisar']) && empty($_POST['cpfBeneficiario'])){
+        echo "<script>window.alert('Você deve primeiro selecionar um cpf');</script>";
     }
 
-    if (isset($_POST['lancar']) && !empty($_POST['cpfBeneficiario'])){
+    if (isset($_POST['lancar']) && !empty($_SESSION['cpf'])){
         // SELECT DO ID BENEFICIÁRIO
         $cpf = $_SESSION['cpf'];
         $sql = "SELECT ID FROM tbBeneficiario WHERE cpf = '$cpf';";
@@ -157,7 +186,7 @@
                             <?php endwhile; ?>
                         <?php endif; ?>
                     </select>
-                    <button id="buttonPesquisarCPF">
+                    <button id="buttonPesquisarCPF" name="pesquisar" type="submit" value="1">
                         Pesquisar
                     </button>
                 </div>
