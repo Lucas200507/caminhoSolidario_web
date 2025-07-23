@@ -57,6 +57,7 @@ if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
             $laudo = $dadosBeneficiario['laudo'];
             $comorbidade = $dadosBeneficiario['doenca'];
             $quantos_dependentes = $dadosBeneficiario['quantos_dependentes'];
+            $quantos_trabalham = $dadosBeneficiario['qnt_trabalham'];
             $renda_familiar = $dadosBeneficiario['renda_familiar'];
             $idPessoa = $dadosBeneficiario['idPessoa'];
             $_SESSION['idPessoa'] = $idPessoa;
@@ -88,10 +89,18 @@ if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
 
 // ALTERAÇÃO
 if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False) {
-    if (!empty($_POST['data_nascimentoBeneficiario']) && !empty($_POST['estado_civilBeneficiario']) && !empty($_POST['telefoneBeneficiario']) &&
-        !empty($_POST['endereco_completoBeneficiario']) && !empty($_POST['cepBeneficiario']) && !empty($_POST['cidadeBeneficiario']) &&
-        !empty($_POST['estadoBeneficiario']) && !empty($_POST['situacao_moradiaBeneficiario']) && !empty($_POST['valor_despesasBeneficiario']) &&
-        !empty($_POST['renda_familiarBeneficiario'])) {
+    if (!empty($_POST['data_nascimentoBeneficiario']) 
+        && !empty($_POST['estado_civilBeneficiario']) 
+        && !empty($_POST['telefoneBeneficiario']) 
+        && !empty($_POST['endereco_completoBeneficiario']) 
+        && !empty($_POST['cepBeneficiario']) 
+        && !empty($_POST['cidadeBeneficiario']) 
+        && !empty($_POST['estadoBeneficiario']) 
+        && !empty($_POST['situacao_moradiaBeneficiario']) 
+        && !empty($_POST['valor_despesasBeneficiario']) 
+        && !empty($_POST['renda_familiarBeneficiario'])
+        && !empty($_POST['quantos_trabalhamBeneficiario'])
+    ) {
 
         $telefone = preg_replace('/[^0-9]/', '', $_POST['telefoneBeneficiario']);
         $cep = preg_replace('/[^0-9]/', '', $_POST['cepBeneficiario']);
@@ -111,6 +120,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False) {
         $comorbidade = $_POST['doenca'];
         $renda_familiar = $_POST['renda_familiarBeneficiario'];
         $quantos_dependentes = $_POST['quantos_dependentes'];
+        $quantos_trabalham = $_POST['quantos_trabalhamBeneficiario'];
         $email = $_POST['emailBeneficiario'] ?? $email; // ou outro campo do formulário
         $pcd = $_POST['rbPCD'] ?? 'N';
         $laudo = $_POST['rbPossuiLaudo'] ?? 'N';
@@ -165,7 +175,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False) {
                 $resultUpdate_Beneficio = true;
             }
 
-            $sqlUpdate_Beneficiario = "UPDATE Beneficiario SET data_nascimento = '$data_nascimento', email = '$email', estado_civil = '$estado_civil', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade', quantos_dependentes = '$quantos_dependentes', renda_familiar = '$renda_familiar' WHERE idBeneficiario = '$id';";
+            $sqlUpdate_Beneficiario = "UPDATE Beneficiario SET data_nascimento = '$data_nascimento', email = '$email', estado_civil = '$estado_civil', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade', quantos_dependentes = '$quantos_dependentes', renda_familiar = '$renda_familiar', qnt_trabalham = '$quantos_trabalham' WHERE idBeneficiario = '$id';";
             $resultUpdate_Beneficiario = mysqli_query($conexao, $sqlUpdate_Beneficiario);
 
             if ($resultUpdate_endereco && $resultUpdate_pessoa && $resultUpdate_Beneficio && $resultUpdate_Beneficiario) {               
@@ -531,7 +541,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                 <span class="col-lg-5  col-xs-12">
                     <!-- ?????????????????????????????????????????????????????????????????????????????????????????????? -->
                     <label>Quantos trabalham em casa:</label>
-                    <input type="number" class="form-control" name="quantos_trabalhamBeneficiario" value="<?php if(isset($_POST['quantos_trabalhamBeneficiario']) && !$cadastrado) echo $_POST['quantos_trabalhamBeneficiario']; ?>">
+                    <input type="number" class="form-control" name="quantos_trabalhamBeneficiario" value="<?= !empty($quantos_trabalham) ? $quantos_trabalham : '';?>">
                 </span>
                 <span class="col-lg-6  col-xs-12">
                     <label>Renda Familiar total:</label>

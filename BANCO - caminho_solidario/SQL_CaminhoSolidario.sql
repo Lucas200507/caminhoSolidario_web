@@ -11,16 +11,27 @@ SELECT * FROM filho_dependente;
 
 -- VIEWS
 SELECT * FROM tbUsuarios_web;
+SELECT * FROM tbBeneficiario;
 
 -- DELETE
 DELETE FROM pessoa WHERE idPessoa IN (99);
 
+
 -- ---------------------------------------------------------------------------------------------------------------------------
 		-- ADM / VOLUNTARIO / BENEFICIARIO
 -- ---------------------------------------------------------------------------------------------------------------------------
-
 -- TABELAS
--- EU COLOCARIA A SITUAÇÃO: VOLUNTÁRIO, ADMINISTRADOR OU BENEFICIARIO
+-- -------------------------------------------
+CREATE TABLE pessoa(
+idPessoa INT PRIMARY KEY AUTO_INCREMENT,
+nome_completo VARCHAR(100) NOT NULL,
+cpf VARCHAR(12) NOT NULL,
+telefone VARCHAR(12) NOT NULL);
+
+INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste', '01234567890', '6190000-0000');
+INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste2 de tal', '01234567891', '6190000-0000');
+
+-- -------------------------------------------
 CREATE TABLE login(
 id_user INT PRIMARY KEY auto_increment,
 cpf VARCHAR(11) NOT NULL,
@@ -31,17 +42,8 @@ idPessoa INT,
 FOREIGN KEY (idPessoa) REFERENCES pessoa (idPessoa) -- RELACIONAMENTO COM PESSOA
 );
 
--- COM TRIGGER
-INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, 'teste', 'A', 0, 1 FROM pessoa WHERE idPessoa = 1;
-INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, 'teste2', 'V', 0, 2 FROM pessoa WHERE idPessoa = 2;
-
--- SEM TRIGGER
-INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, '698DC19D489C4E4DB73E28A713EAB07B', 'A', 0, 1 FROM pessoa WHERE idPessoa = 1;
-INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, '38851536D87701D2191990E24A7F8D4E', 'V', 0, 2 FROM pessoa WHERE idPessoa = 2;
-
 SELECT * FROM login;
-DROP TABLE login;
-SELECT * FROM tbUsuarios_web;
+
 -- ---------------------------------------------
 
 -- DELIMITER
@@ -60,15 +62,14 @@ DELIMITER ;
 SELECT * FROM login;
 DROP TABLE login;
 
--- -------------------------------------------
-CREATE TABLE pessoa(
-idPessoa INT PRIMARY KEY AUTO_INCREMENT,
-nome_completo VARCHAR(100) NOT NULL,
-cpf VARCHAR(12) NOT NULL,
-telefone VARCHAR(12) NOT NULL);
+-- COM TRIGGER
+INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, 'teste', 'A', 0, 1 FROM pessoa WHERE idPessoa = 1;
+INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, 'teste2', 'V', 0, 2 FROM pessoa WHERE idPessoa = 2;
 
-INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste', '01234567890', '6190000-0000');
-INSERT INTO pessoa(nome_completo, cpf, telefone) VALUES('teste2 de tal', '01234567891', '6190000-0000');
+-- SEM TRIGGER
+INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, '698DC19D489C4E4DB73E28A713EAB07B', 'A', 0, 1 FROM pessoa WHERE idPessoa = 1;
+INSERT INTO login (cpf, senha, situacao, lembrar_senha, idPessoa) SELECT cpf, '38851536D87701D2191990E24A7F8D4E', 'V', 0, 2 FROM pessoa WHERE idPessoa = 2;
+
 
 -- ---------------------------------------------------------------------------------------------------------------------------
 		-- ADM / VOLUNTARIO 
@@ -136,6 +137,13 @@ foreign key (idPessoa) references pessoa (idPessoa));
 
 SELECT * FROM endereco;
 
+-- --------------------------------------
+CREATE TABLE nomeBeneficiosGov(
+    idBeneficios_gov INT PRIMARY KEY AUTO_INCREMENT,
+    nome_beneficiogov VARCHAR(75) NOT NULL
+);
+
+INSERT INTO nomeBeneficiosGov (nome_beneficiogov) VALUES ("Novo Bolsa Família"), ("Benefício de Prestação Continuada (BPC)"), ("Aposentadoria"), ("Vale-Gas"), ("Outros");
 -- --------------------------------------------
 
 Create TABLE BeneficioGov(
@@ -145,14 +153,6 @@ FOREIGN KEY (idBeneficios_gov) REFERENCES nomeBeneficiosGov (idBeneficios_gov),
 valor_beneficio FLOAT(10));
 
 SELECT * FROM BeneficioGov;
-
--- --------------------------------------
-CREATE TABLE nomeBeneficiosGov(
-    idBeneficios_gov INT PRIMARY KEY AUTO_INCREMENT,
-    nome_beneficiogov VARCHAR(75) NOT NULL
-);
-
-INSERT INTO nomeBeneficiosGov (nome_beneficiogov) VALUES ("Novo Bolsa Família"), ("Benefício de Prestação Continuada (BPC)"), ("Aposentadoria"), ("Vale-Gas"), ("Outros");
 -- --------------------------------------------
 
 CREATE TABLE Beneficiario (
@@ -164,6 +164,7 @@ CREATE TABLE Beneficiario (
     laudo CHAR(1), -- CASO PCD, possui laudo ou não (s/n)
     doenca VARCHAR(50),
     quantos_dependentes INT,
+    qnt_trabalham INT NOT NULL,
     renda_familiar FLOAT(10),
     idPessoa INT,
     idEndereco INT,
@@ -172,6 +173,7 @@ CREATE TABLE Beneficiario (
     FOREIGN KEY (idEndereco) REFERENCES endereco (idEndereco),
     FOREIGN KEY (idBeneficioGov) REFERENCES BeneficioGov (idBeneficioGov)
 );
+
 
 SELECT * FROM Beneficiario;
 
@@ -190,12 +192,54 @@ e.cep
 FROM Beneficiario bfc
 INNER JOIN endereco e ON e.idEndereco = bfc.idEndereco
 INNER JOIN pessoa p ON p.idPessoa = bfc.idPessoa
-LEFT JOIN BeneficioGov bg ON bg.idBeneficioGov = bfc.idBeneficioGov
+LEFT JOIN BeneficioGov bg ON bg.idBeneficioGov = bfc.idBeneficioGov -- O LEFT JOIN retorna todas as linhas da tabela Beneficiario mesmo que não haja correspondência na tabela BeneficioGov.
 LEFT JOIN nomeBeneficiosGov nbg ON nbg.idBeneficios_gov = bg.idBeneficios_gov;
 
 SELECT * FROM tbBeneficiario;
 
+
 -- --------------------------------------------
+
+CREATE TABLE beneficio(
+idBeneficio INT PRIMARY KEY AUTO_INCREMENT,
+data_cadastro DATE not null,
+data_entrada DATE,
+data_saida DATE,
+prorrogacao CHAR(1),
+duracao VARCHAR(10),
+situacao_beneficio CHAR(1) NOT NULL,
+idUsuario INT, -- Melhor fazer o contrário, o usuario ter o idBeneficio
+FOREIGN KEY (idUsuario) REFERENCES Usuario (idUsuario));
+
+SELECT * FROM beneficio;
+DROP TABLE endereco;
+
+-- -------------------------------------------
+
+CREATE TABLE frequencia (
+idFrequencia int primary key auto_increment,
+ANO CHAR (5),
+MES VARCHAR (15),
+REGISTRO CHAR(1), -- Presente / Falta
+idBeneficiario INT NOT NULL,
+FOREIGN KEY (idBeneficiario) references Beneficiario (idBeneficiario));
+
+SELECT * FROM frequencia;
+
+DROP TABLE frequencia;
+-- -------------------------------------------
+
+CREATE TABLE relatorio(
+idRelatorio int primary key auto_increment,
+CPF VARCHAR (15),
+ANO CHAR (5),
+REGISTRO CHAR(1),
+idFrequencia INT, 
+FOREIGN KEY (idFrequencia) REFERENCES frequencia (idFrequencia)
+);
+
+SELECT * FROM relatorio;
+DROP TABLE relatorio;
 -- -------------------------------------------------
 
 CREATE TABLE filho_dependente(
@@ -211,9 +255,6 @@ idBeneficiario INT NOT NULL,
 FOREIGN KEY (idBeneficiario) references Beneficiario (idBeneficiario));
 
 SELECT * FROM filho_dependente;
-
-DELETE FROM filho_dependente WHERE idFilho_Dependente IN (3, 4, 5, 6);
-
 
 -- --------------------------------------------
 		-- TEM QUE FAZER A TABELA DE RELACIONAMENTO dependente e beneficiario
@@ -234,52 +275,8 @@ INNER JOIN pessoa p ON p.idPessoa = b.idPessoa;
 
 -- ------------------------------------------
 
-
-CREATE TABLE beneficio(
-idBeneficio INT PRIMARY KEY AUTO_INCREMENT,
-data_cadastro DATE not null,
-data_entrada DATE,
-data_saida DATE,
-prorrogacao CHAR(1),
-duracao VARCHAR(10),
-situacao_beneficio CHAR(1) NOT NULL,
-idUsuario INT, -- Melhor fazer o contrário, o usuario ter o idBeneficio
-FOREIGN KEY (idUsuario) REFERENCES Usuario (idUsuario));
-
-SELECT * FROM beneficio;
-DROP TABLE endereco;
-
--- -------------------------------------------
-
-CREATE TABLE frequencia (
-idFrequencia int primary key auto_increment,
-CPF VARCHAR (15),
-ANO CHAR (5),
-MES VARCHAR (15),
-REGISTRO CHAR(1)
-);
-
-SELECT * FROM frequencia;
-DROP TABLE frequencia;
-
--- -------------------------------------------
-
-CREATE TABLE relatorio(
-idRelatorio int primary key auto_increment,
-CPF VARCHAR (15),
-ANO CHAR (5),
-REGISTRO CHAR(1),
-idFrequencia INT, 
-FOREIGN KEY (idFrequencia) REFERENCES frequencia (idFrequencia)
-);
-
-SELECT * FROM relatorio;
-DROP TABLE relatorio;
- 
- -- --------------------------------------------
-
 -- Isso evita que o banco envie valores repetidos --
-
+ 
 SELECT DISTINCT tipo FROM funcao;
 SELECT DISTINCT nome_completo FROM pessoa;
 

@@ -4,10 +4,56 @@
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");
 
-    // SELECT OS CPFS Beneficiarios
-    // SELECT geral para popular caso não venha de outra página
+    // SELECT OS CPFS Beneficiarios    
     $sqlSelect_tbBeneficiario = "SELECT cpf FROM tbBeneficiario";
     $result1 = $conexao->query($sqlSelect_tbBeneficiario);
+
+    // LISTAR TODAS AS FREQUÊNCIAS
+    if (isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
+        $cpfBeneficiario = $_POST['cpfBeneficiario'];
+        $_SESSION['cpf'] = $cpfBeneficiario;
+    }
+
+    if (isset($_POST['lancar']) && !empty($_POST['cpfBeneficiario'])){
+        // SELECT DO ID BENEFICIÁRIO
+        $cpf = $_SESSION['cpf'];
+        $sql = "SELECT ID FROM tbBeneficiario WHERE cpf = '$cpf';";
+        $result0 = mysqli_query($conexao, $sql);
+
+        if(mysqli_num_rows($result0) > 0){
+            while ($dados_tbBeneficiario = mysqli_fetch_assoc($result0)){
+                $idBeneficiario = $dados_tbBeneficiario['ID'];
+                $_SESSION['idBeneficiario'] = $idBeneficiario;                
+            }
+
+            $anos = ['2023', '2024', '2025'];
+            $meses = [
+                'jan' => 'JAN', 'fev' => 'FEV', 'mar' => 'MAR', 'abr' => 'ABR',
+                'mai' => 'MAI', 'jun' => 'JUN', 'jul' => 'JUL', 'ago' => 'AGO',
+                'set' => 'SET', 'out' => 'OUT', 'nov' => 'NOV', 'dez' => 'DEZ'
+            ];
+
+            // foreach - percorre cada elemento de uma array, executa um boloco de código para cada elemento, tipo for
+            foreach ($anos as $ano) {
+                // mes_pt - mes_minusculo | mes_bd - mes_maiusculo
+                foreach ($meses as $mes_pt => $mes_bd) {
+                    $campo = "{$mes_pt}_{$ano}";
+                    if (!empty($_POST[$campo])) {
+                        $sql = "UPDATE frequencia SET REGISTRO = 'P'
+                                WHERE ANO = '$ano' AND MES = '$mes_bd' AND idBeneficiario = '$idBeneficiario'";
+                        $result = mysqli_query($conexao, $sql);
+                        if (!$result) {
+                            die("Erro ao atualizar frequência para $mes_bd/$ano: " . mysqli_error($conexao));
+                        }
+                    }
+                }
+            }
+
+            echo "<script>window.alert('Frequência salva com sucesso');</script>";
+        }
+    }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -41,7 +87,7 @@
             </span><!-- Aparece quado você diminui o tamanho da tela para o tamanho definido em "nav>navbar-expand-(md)" -->
         </button>
         <!-- navegação -->
-        <div class="collapse navbar-collapse justify-content-end" id="navegacaoHome">
+         <div class="collapse navbar-collapse justify-content-end" id="navegacaoHome">
             <ul class="navbar-nav ml-1 justify-content-around" id="navegadores_links">
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="person-add-outline" class="icones_nav"></ion-icon>
@@ -57,8 +103,7 @@
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="checkbox-outline" class="icones_nav" id="linksNavegacaoSelecionado"></ion-icon>
-                    <a href="frequenciaBeneficiario.php" class="nav-link"
-                        id="linksNavegacaoSelecionado">Frequência</a>
+                    <a href="frequenciaBeneficiario.php" class="nav-link" id="linksNavegacaoSelecionado">Frequência</a>
                 </li>
                 <li class="nav-item itens_navegadores">
                     <ion-icon name="list-outline" class="icones_nav"></ion-icon>
@@ -95,251 +140,254 @@
     </div>
 
     <main class="mt-5 d-flex flex-column container">
-        <div class="mb-4">
+        <form action="" method="post">
+            <div class="mb-4">
+                <h3 style="text-align: center;" class="mb-4" id="subtitulos_paginas">
+                    Aqui você consegue saber informações sobre seu beneficiário
+                </h3>
+                <div class="d-flex justify-content-around w-100 input-group">
+                    <select class="form-select form-select-md w-50" name="cpfBeneficiario" required>
+                        <option value="">Selecione o CPF do(a) Beneficiário(a)</option>
+                        <?php if ($result1->num_rows > 0): ?>
+                            <?php while ($beneficiario = $result1->fetch_assoc()): ?>
+                                <option value="<?= $beneficiario['cpf'] ?>"
+                                    <?= (isset($_POST['cpfBeneficiario']) && $_POST['cpfBeneficiario'] == $beneficiario['cpf']) ? 'selected' : '' ?>>
+                                    <?= $beneficiario['cpf'] ?>
+                                </option>
+                            <?php endwhile; ?>
+                        <?php endif; ?>
+                    </select>
+                    <button id="buttonPesquisarCPF">
+                        Pesquisar
+                    </button>
+                </div>
+            </div>
+            <!-- CAROUSEL -->
             <h3 style="text-align: center;" class="mb-4" id="subtitulos_paginas">
-                Aqui você consegue saber informações sobre seu beneficiário
+                Ano
             </h3>
-            <div class="d-flex justify-content-around w-100 input-group">
-                <select class="form-select form-select-md w-50" name="cpfBeneficiario" required>
-                    <option value="">Selecione o CPF do(a) Beneficiário(a)</option>
-                    <?php if ($result1->num_rows > 0): ?>
-                        <?php while ($beneficiario = $result1->fetch_assoc()): ?>
-                            <option value="<?= $beneficiario['cpf'] ?>"
-                                <?= (isset($_POST['cpfBeneficiario']) && $_POST['cpfBeneficiario'] == $beneficiario['cpf']) ? 'selected' : '' ?>>
-                                <?= $beneficiario['cpf'] ?>
-                            </option>
-                        <?php endwhile; ?>
-                    <?php endif; ?>
-                </select>
-                <button id="buttonPesquisarCPF">
-                    Pesquisar
+            <div class="mb-4 carousel carousel-dark slide" id="carouselFrequencia">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <h4 class="text-center" id="subtitulos_paginas">
+                            2023
+                        </h4>
+                        <div class="d-flex flex-row w-100 justify-content-around">
+                            <span class="d-flex flex-column">
+                                <span class="mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jan_2023">
+                                    <label for="">Janeiro</label>
+                                </span>
+                                <span class="mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="fev_2023">
+                                    <label for="">Fevereiro</label>
+                                </span>
+                                <span class="mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mar_2023">
+                                    <label for="">Março</label>
+                                </span>
+                                <span class="mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="abr_2023">
+                                    <label for="">Abril</label>
+                                </span>
+                                <span class="mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mai_2023">
+                                    <label for="">Maio</label>
+                                </span>
+                                <span class="mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jun_2023">
+                                    <label for="">Junho</label>
+                                </span>
+                            </span>
+                            <span>
+                                <span class="d-flex flex-column">
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="jul_2023">
+                                        <label for="">Julho</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="ago_2023">
+                                        <label for="">Agosto</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="set_2023">
+                                        <label for="">Setembro</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="out_2023">
+                                        <label for="">Outubro</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="nov_2023">
+                                        <label for="">Novembro</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="dez_2023">
+                                        <label for="">Dezembro</label>
+                                    </span>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <h4 class="text-center" id="subtitulos_paginas">
+                            2024
+                        </h4>
+                        <div class="d-flex flex-row w-100 justify-content-around">
+                            <span class="d-flex flex-column">
+                                <span class="d-flex d-row mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jan_2024">
+                                    <label for="">Janeiro</label>
+                                </span>
+                                <span class="d-flex d-row mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="fev_2024">
+                                    <label for="">Fevereiro</label>
+                                </span>
+                                <span class="d-flex d-row mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mar_2024">
+                                    <label for="">Março</label>
+                                </span>
+                                <span class="d-flex d-row mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="abr_2024">
+                                    <label for="">Abril</label>
+                                </span>
+                                <span class="d-flex d-row mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mai_2024">
+                                    <label for="">Maio</label>
+                                </span>
+                                <span class="d-flex d-row mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jun_2024">
+                                    <label for="">Junho</label>
+                                </span>
+                            </span>
+                            <span>
+                                <span class="d-flex flex-column">
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="jul_2024">
+                                        <label for="">Julho</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="ago_2024">
+                                        <label for="">Agosto</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="set_2024">
+                                        <label for="">Setembro</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="out_2024">
+                                        <label for="">Outubro</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="nov_2024">
+                                        <label for="">Novembro</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="dez_2024">
+                                        <label for="">Dezembro</label>
+                                    </span>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <h4 class="text-center" id="subtitulos_paginas">
+                            2025
+                        </h4>
+                        <div class="d-flex flex-row w-100 justify-content-around">
+                            <span class="d-flex flex-column">
+                                <span class="d-flex d-row mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jan_2025">
+                                    <label for="">Janeiro</label>
+                                </span>
+                                <span class="d-flex d-row mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="fev_2025">
+                                    <label for="">Fevereiro</label>
+                                </span>
+                                <span class="d-flex d-row mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mar_2025">
+                                    <label for="">Março</label>
+                                </span>
+                                <span class="d-flex d-row mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="abr_2025">
+                                    <label for="">Abril</label>
+                                </span>
+                                <span class="d-flex d-row mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mai_2025">
+                                    <label for="">Maio</label>
+                                </span>
+                                <span class="d-flex d-row mes_freqBenef">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jun_2025">
+                                    <label for="">Junho</label>
+                                </span>
+                            </span>
+                            <span>
+                                <span class="d-flex flex-column">
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="jul_2025">
+                                        <label for="">Julho</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="ago_2025">
+                                        <label for="">Agosto</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="set_2025">
+                                        <label for="">Setembro</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="out_2025">
+                                        <label for="">Outubro</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="nov_2025">
+                                        <label for="">Novembro</label>
+                                    </span>
+                                    <span class="d-flex d-row mes_freqBenef">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="dez_2025">
+                                        <label for="">Dezembro</label>
+                                    </span>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselFrequencia"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselFrequencia"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
                 </button>
             </div>
-        </div>
-        <!-- CAROUSEL -->
-        <h3 style="text-align: center;" class="mb-4" id="subtitulos_paginas">
-            Ano
-        </h3>
-        <div class="mb-4 carousel carousel-dark slide" id="carouselFrequencia">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <h4 class="text-center" id="subtitulos_paginas">
-                        2023
-                    </h4>
-                    <div class="d-flex flex-row w-100 justify-content-around">
-                        <span class="d-flex flex-column">
-                            <span class="mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                <label for="">Janeiro</label>
-                            </span>
-                            <span class="mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="fev_2023">
-                                <label for="">Fevereiro</label>
-                            </span>
-                            <span class="mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="mar_2023">
-                                <label for="">Março</label>
-                            </span>
-                            <span class="mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="abr_2023">
-                                <label for="">Abril</label>
-                            </span>
-                            <span class="mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="mai_2023">
-                                <label for="">Maio</label>
-                            </span>
-                            <span class="mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jun_2023">
-                                <label for="">Junho</label>
-                            </span>
-                        </span>
-                        <span>
-                            <span class="d-flex flex-column">
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="jul_2023">
-                                    <label for="">Julho</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="ago_2023">
-                                    <label for="">Agosto</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="set_2023">
-                                    <label for="">Setembro</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="out_2023">
-                                    <label for="">Outubro</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="nov_2023">
-                                    <label for="">Novembro</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="dez_2023">
-                                    <label for="">Dezembro</label>
-                                </span>
-                            </span>
-                        </span>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <h4 class="text-center" id="subtitulos_paginas">
-                        2024
-                    </h4>
-                    <div class="d-flex flex-row w-100 justify-content-around">
-                        <span class="d-flex flex-column">
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                <label for="">Janeiro</label>
-                            </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                <label for="">Fevereiro</label>
-                            </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                <label for="">Março</label>
-                            </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                <label for="">Abril</label>
-                            </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                <label for="">Maio</label>
-                            </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                <label for="">Junho</label>
-                            </span>
-                        </span>
-                        <span>
-                            <span class="d-flex flex-column">
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                    <label for="">Julho</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                    <label for="">Agosto</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                    <label for="">Setembro</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                    <label for="">Outubro</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                    <label for="">Novembro</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                    <label for="">Dezembro</label>
-                                </span>
-                            </span>
-                        </span>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <h4 class="text-center" id="subtitulos_paginas">
-                        2025
-                    </h4>
-                    <div class="d-flex flex-row w-100 justify-content-around">
-                        <span class="d-flex flex-column">
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                <label for="">Janeiro</label>
-                            </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                <label for="">Fevereiro</label>
-                            </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                <label for="">Março</label>
-                            </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                <label for="">Abril</label>
-                            </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                <label for="">Maio</label>
-                            </span>
-                            <span class="d-flex d-row mes_freqBenef">
-                                <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                <label for="">Junho</label>
-                            </span>
-                        </span>
-                        <span>
-                            <span class="d-flex flex-column">
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                    <label for="">Julho</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                    <label for="">Agosto</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                    <label for="">Setembro</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                    <label for="">Outubro</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                    <label for="">Novembro</label>
-                                </span>
-                                <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" class="caixaMarcacao" name="jan_2023">
-                                    <label for="">Dezembro</label>
-                                </span>
-                            </span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselFrequencia"
-                data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselFrequencia"
-                data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-        <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">
-            <span class="align-items-center text-center">
-                <a href="frequenciaBeneficiario.php" class="text-decoration-none">
-                    <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
-                </a>
-                <p>Voltar</p>
-            </span>
-            <?php if($funcao === "Administrador"): ?>
-                <button type="submit" class="botoes_crud" name="deletar" value="2">
-                    <span class="align-items-center text-center">
-                        <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
-                        <p>Deletar</p>
-                    </span>                        
-                </button>
-            <?php endif?>
-            <button type="submit" class="botoes_crud" name="lancar" value="1">
+            <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">
                 <span class="align-items-center text-center">
-                    <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
-                    <p>Salvar</p>
-                </span>                      
-            </button>
-        </div>
+                    <a href="frequenciaBeneficiario.php" class="text-decoration-none">
+                        <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
+                    </a>
+                    <p>Voltar</p>
+                </span>
+                <?php if($funcao === "Administrador"): ?>
+                    <button type="submit" class="botoes_crud" name="deletar" value="2">
+                        <span class="align-items-center text-center">
+                            <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
+                            <p>Deletar</p>
+                        </span>                        
+                    </button>
+                <?php endif?>
+                <button type="submit" class="botoes_crud" name="lancar" value="1">
+                    <span class="align-items-center text-center">
+                        <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
+                        <p>Salvar</p>
+                    </span>                      
+                </button>
+            </div>
+        </form>
     </main>
+
     <!-- Conexão com Bootstrap  -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

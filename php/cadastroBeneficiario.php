@@ -42,6 +42,7 @@
         && !empty($_POST['rbPCD'])     
         && !empty($_POST['rbPossuiDependentes'])  
         && !empty($_POST['renda_familiarBeneficiario'])
+        && !empty($_POST['quantos_trabalhamBeneficiario'])
     ) {
 
 // Formatando CPF
@@ -83,7 +84,7 @@ if (mysqli_num_rows($result) > 0) {
     $cep_jaCadastrado = False;
 }
 
-// verificar a qunatidade de caracteres
+// verificar a quantidade de caracteres
 if (strlen($cpfBeneficiario) < 11 || strlen($cep) < 8){
     $qnt_caractes_erro = True;
 }
@@ -106,6 +107,7 @@ if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro)
     $rbPossuiBenf = $_POST['rbPossuiBenf'];
     $rbPCD = $_POST['rbPCD'];
     $rbPossuiDependentes = $_POST['rbPossuiDependentes'];
+    $quantos_trabalham = $_POST['quantos_trabalhamBeneficiario'];
     $rbPossuiLaudo = $_POST['rbPossuiLaudo'] ?? 'N';
 
     // Benefício
@@ -159,7 +161,7 @@ if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro)
         $idEndereco = mysqli_insert_id($conexao);
 
         // Inserir benefício, se existir
-        $idBeneficio = "NULL";    
+        $idBeneficio = null;    
         if (!empty($beneficio) && !empty($valor_beneficio)) {
             $sql = "SELECT idBeneficios_gov FROM nomeBeneficiosGov WHERE nome_beneficiogov = '$beneficio'";
             $result = mysqli_query($conexao, $sql);
@@ -179,14 +181,28 @@ if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro)
         }
 
         // Inserir beneficiário
-        $sql = "INSERT INTO Beneficiario (data_nascimento, estado_civil, email, PCD, laudo, doenca, quantos_dependentes, renda_familiar, idPessoa, idEndereco, idBeneficioGov)
-                VALUES ('$data_nascimento', '$estado_civil', '$email','$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes', '$renda_familiar', '$idPessoa', '$idEndereco', $idBeneficio)";
+        $sql = "INSERT INTO Beneficiario (
+        data_nascimento, estado_civil, email, PCD, laudo, doenca, quantos_dependentes, renda_familiar,
+        idPessoa, idEndereco, idBeneficioGov, qnt_trabalham
+        ) VALUES (
+            '$data_nascimento', '$estado_civil', '$email','$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes',
+            '$renda_familiar', '$idPessoa', '$idEndereco', " . ($idBeneficio === null ? "NULL" : "'$idBeneficio'") . ", '$quantos_trabalham'
+        )";
         if (!mysqli_query($conexao, $sql)) {
             die("Erro ao inserir beneficiário: " . mysqli_error($conexao));
         }
         $idBeneficiario = mysqli_insert_id($conexao);
 
         $cadastrado = true;
+
+        // PRECISA CADASTRAR A FREQUÊNCIA COMO F
+        $sql = "INSERT INTO frequencia (ANO, MES, REGISTRO, idBeneficiario) VALUES ('2023', 'JAN', 'F', '$idBeneficiario'), ('2023', 'FEV', 'F', '$idBeneficiario'), ('2023', 'MAR', 'F', '$idBeneficiario'), ('2023', 'ABR', 'F', '$idBeneficiario'), ('2023', 'MAI', 'F', '$idBeneficiario'), ('2023', 'JUN', 'F', '$idBeneficiario'), ('2023', 'JUL', 'F', '$idBeneficiario'), ('2023', 'AGO', 'F', '$idBeneficiario'), ('2023', 'SET', 'F', '$idBeneficiario'), ('2023', 'OUT', 'F', '$idBeneficiario'), ('2023', 'NOV', 'F', '$idBeneficiario'), ('2023', 'DEZ', 'F', '$idBeneficiario'), 
+        ('2024', 'JAN', 'F', '$idBeneficiario'), ('2024', 'FEV', 'F', '$idBeneficiario'), ('2024', 'MAR', 'F', '$idBeneficiario'), ('2024', 'ABR', 'F', '$idBeneficiario'), ('2024', 'MAI', 'F', '$idBeneficiario'), ('2024', 'JUN', 'F', '$idBeneficiario'), ('2024', 'JUL', 'F', '$idBeneficiario'), ('2024', 'AGO', 'F', '$idBeneficiario'), ('2024', 'SET', 'F', '$idBeneficiario'), ('2024', 'OUT', 'F', '$idBeneficiario'), ('2024', 'NOV', 'F', '$idBeneficiario'), ('2024', 'DEZ', 'F', '$idBeneficiario'), 
+        ('2025', 'JAN', 'F', '$idBeneficiario'), ('2025', 'FEV', 'F', '$idBeneficiario'), ('2025', 'MAR', 'F', '$idBeneficiario'), ('2025', 'ABR', 'F', '$idBeneficiario'), ('2025', 'MAI', 'F', '$idBeneficiario'), ('2025', 'JUN', 'F', '$idBeneficiario'), ('2025', 'JUL', 'F', '$idBeneficiario'), ('2025', 'AGO', 'F', '$idBeneficiario'), ('2025', 'SET', 'F', '$idBeneficiario'), ('2025', 'OUT', 'F', '$idBeneficiario'), ('2025', 'NOV', 'F', '$idBeneficiario'), ('2025', 'DEZ', 'F', '$idBeneficiario')";
+
+        $result = mysqli_query($conexao, $sql);
+
+
         $cpfBeneficiario = NULL; // Para não cadastrar novamente
 
         // Redirecionar se possuir dependentes
