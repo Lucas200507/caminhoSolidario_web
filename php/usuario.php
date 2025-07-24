@@ -11,7 +11,12 @@
     $cpf_logado = substr($cpf_logado, 0, 11) . "-" . substr($cpf_logado, "11");
 
     $telefone = substr($telefone, 0, 0) . "(" . substr($telefone, "0");
-    $telefone = substr($telefone, 0, 3) . ")" . substr($telefone, "3");    
+    $telefone = substr($telefone, 0, 3) . ")" . substr($telefone, "3");  
+    
+    // Resetar_senha
+    if (isset($_POST['conf_Senha'])){
+        if ()
+    }
     
 ?>
 <!DOCTYPE html>
@@ -130,23 +135,25 @@
                 </div>
             </form>
             <div class="d-flex flex-column align-items-center">
-                <button class="btn mb-3" id="resetarSenha_usuario">Resetar
+                <button class="btn mb-3" id="resetarSenha_usuario" onclick="resetar_senha()">Resetar
                     Senha
                 </button>
                 <div id="formResetarSenha">
-                    <div class=" mt-3 container">
-                        <input type="password" required class="form-control" id="senhaTemporaria"
-                            placeholder="Nova senha">
-                    </div>
-                    <div class=" mt-3 container">
-                        <input type="password" required class="form-control" id="confirmarSenha"
-                            placeholder="Confirmar senha">
-                    </div>
-                    <span class="d-flex justify-content-center mt-4 mb-3">
-                        <a href="" id="ConfSenhaU" class="btn">Confirmar</a>
-                    </span>
-                </div>
-                <a href="../routes/deslogar.php" class="btn mt-3" id="logout_usuario" onclick="logout()">Logout</a>
+                    <form action="" method="post">
+                        <div class=" mt-3 container">
+                            <input type="password" required class="form-control" id="senhaTemporaria"
+                                placeholder="Nova senha" name="nova_senha">
+                        </div>
+                        <div class=" mt-3 container">
+                            <input type="password" required class="form-control" id="confirmarSenha"
+                                placeholder="Confirmar senha" name="conf_senha">
+                        </div>
+                        <span class="d-flex justify-content-center mt-4 mb-3">
+                            <button value="Confirmar" name="conf_senha" type="input" class="btn" id="ConfSenhaU">Confirmar</button>                        
+                        </span>
+                        </div>
+                        <a href="../routes/deslogar.php" class="btn mt-3" id="logout_usuario" onclick="logout()">Logout</a>
+                    </form>
             </div>
 
     </main>    

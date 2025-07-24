@@ -109,28 +109,14 @@ function navegar_usuario(){
 // Usuário
 let FotoU = document.getElementById('imgFotoU');
 let iconU = document.getElementById('IconUsuarioU');
-function iconHoverIn(){
-    if(iconU){
-        iconU.style.opacity = 0.2;
-        iconU.style.zIndex = 0;                
-    }
-}
 
-function iconHoverOut(){
-    if(iconU){
-        iconU.style.opacity = 1;
-        iconU.style.zIndex = 2;
-    }
-}
-
-
-function resetarSenhaU(){
+function resetar_senha(){
     let container = document.getElementById('formResetarSenha');
     if (container.style.display == 'none'){
         container.style.display =  'block';
     } else {
         container.style.display = 'none';
-        }
+    }
 }
 
 function logout(){

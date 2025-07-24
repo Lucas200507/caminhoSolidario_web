@@ -177,10 +177,12 @@
                 </a>
                 <p>Voltar</p>
             </span>
-            <span class="align-items-center text-center">
-                <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
-                <p>Deletar</p>
-            </span>
+            <?php if($funcao == 'Administrador'): ?>
+                <span class="align-items-center text-center">
+                    <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
+                    <p>Deletar</p>
+                </span>
+            <?php endif; ?>
             <span class="align-items-center text-center">
                 <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
                 <p>Salvar</p>
