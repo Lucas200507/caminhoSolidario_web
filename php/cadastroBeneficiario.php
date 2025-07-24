@@ -207,6 +207,7 @@ if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro)
 
         // Redirecionar se possuir dependentes
         if ($quantos_dependentes > 0) {
+            echo "<script>window.alert('Beneficiário cadastrado com sucesso!');</script>";
             header("Location: ../php/cadastroDependente.php?IDbeneficiario=$idBeneficiario&dependentes_pendentes=$quantos_dependentes");
             exit;
         }

@@ -8,6 +8,7 @@
     $sqlSelect_tbBeneficiario = "SELECT cpf FROM tbBeneficiario";
     $result1 = $conexao->query($sqlSelect_tbBeneficiario);
 
+    $campo = [];
     // LISTAR TODAS AS FREQUÊNCIAS
     if (isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
         $anosF = ['2023', '2024', '2025'];
@@ -22,22 +23,21 @@
         $sqlSelect_frequencia = "SELECT * FROM tbRelatorio WHERE cpf = '$cpfBeneficiario' AND ANO BETWEEN '2023' AND '2025';";
         $result2 = mysqli_query($conexao, $sqlSelect_frequencia);
         
-            if (mysqli_num_rows > 0){
-                $campo = []; // Zera o array antes para evitar sujeira anterior
+            if (mysqli_num_rows($result2) > 0){
+                $campo = []; // Zera o array antes para evitar sujeira anterior                
 
-            while ($dados_frequencia = mysqli_fetch_assoc($result2)){
-                $ano = $dados_frequencia['ANO'];       // ex: '2023'
-                $mes_bd = $dados_frequencia['MES'];    // ex: 'JAN'
+                while ($dados_frequencia = mysqli_fetch_assoc($result2)){
+                    $ano = $dados_frequencia['ANO'];       // ex: '2023'
+                    $mes_bd = strtoupper(trim($dados_frequencia['MES']));
+                    $mes_pt = array_search($mes_bd, $mesesF);
 
-                // Descobre a chave correta do input:
-                $mes_pt = array_search($mes_bd, $mesesF); // ex: 'jan'
-
-                if ($mes_pt !== false) { // Garante que o mês exista no mapeamento
-                    $campo["{$mes_pt}_{$ano}"] = $dados_frequencia['REGISTRO'];
+                    
+                    $registro = trim(strtoupper($dados_frequencia['REGISTRO']));
+                    if ($registro == 'P' && $mes_pt !== false) {
+                        $campo["{$mes_pt}_{$ano}"] = 'P';                       
                     }
                 }
-            }
-
+            }        
 
     } else if (isset($_POST['pesquisar']) && empty($_POST['cpfBeneficiario'])){
         echo "<script>window.alert('Você deve primeiro selecionar um cpf');</script>";
@@ -204,54 +204,54 @@
                         <div class="d-flex flex-row w-100 justify-content-around">
                             <span class="d-flex flex-column">
                                 <span class="mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jan_2023">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jan_2023" <?= ($campo["jan_2023"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Janeiro</label>
                                 </span>
                                 <span class="mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="fev_2023">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="fev_2023" <?= ($campo["fev_2023"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Fevereiro</label>
                                 </span>
                                 <span class="mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mar_2023">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mar_2023" <?= ($campo["mar_2023"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Março</label>
                                 </span>
                                 <span class="mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="abr_2023">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="abr_2023" <?= ($campo["abr_2023"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Abril</label>
                                 </span>
                                 <span class="mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mai_2023">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mai_2023" <?= ($campo["mai_2023"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Maio</label>
                                 </span>
                                 <span class="mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jun_2023">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jun_2023" <?= ($campo["jun_2023"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Junho</label>
                                 </span>
                             </span>
                             <span>
                                 <span class="d-flex flex-column">
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="jul_2023">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="jul_2023" <?= ($campo["jul_2023"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Julho</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="ago_2023">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="ago_2023" <?= ($campo["ago_2023"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Agosto</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="set_2023">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="set_2023" <?= ($campo["set_2023"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Setembro</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="out_2023">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="out_2023" <?= ($campo["out_2023"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Outubro</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="nov_2023">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="nov_2023" <?= ($campo["nov_2023"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Novembro</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="dez_2023">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="dez_2023" <?= ($campo["dez_2023"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Dezembro</label>
                                     </span>
                                 </span>
@@ -265,54 +265,54 @@
                         <div class="d-flex flex-row w-100 justify-content-around">
                             <span class="d-flex flex-column">
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jan_2024">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jan_2024" <?= ($campo["jan_2024"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Janeiro</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="fev_2024">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="fev_2024" <?= ($campo["fev_2024"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Fevereiro</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mar_2024">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mar_2024" <?= ($campo["mar_2024"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Março</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="abr_2024">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="abr_2024" <?= ($campo["abr_2024"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Abril</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mai_2024">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mai_2024" <?= ($campo["mai_2024"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Maio</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jun_2024">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jun_2024" <?= ($campo["jun_2024"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Junho</label>
                                 </span>
                             </span>
                             <span>
                                 <span class="d-flex flex-column">
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="jul_2024">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="jul_2024" <?= ($campo["jul_2024"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Julho</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="ago_2024">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="ago_2024" <?= ($campo["ago_2024"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Agosto</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="set_2024">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="set_2024" <?= ($campo["set_2024"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Setembro</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="out_2024">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="out_2024" <?= ($campo["out_2024"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Outubro</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="nov_2024">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="nov_2024" <?= ($campo["nov_2024"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Novembro</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="dez_2024">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="dez_2024" <?= ($campo["dez_2024"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Dezembro</label>
                                     </span>
                                 </span>
@@ -326,54 +326,54 @@
                         <div class="d-flex flex-row w-100 justify-content-around">
                             <span class="d-flex flex-column">
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jan_2025">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jan_2025" <?= ($campo["jan_2025"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Janeiro</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="fev_2025">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="fev_2025" <?= ($campo["fev_2025"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Fevereiro</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mar_2025">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mar_2025" <?= ($campo["mar_2025"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Março</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="abr_2025">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="abr_2025" <?= ($campo["abr_2025"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Abril</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mai_2025">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="mai_2025" <?= ($campo["mai_2025"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Maio</label>
                                 </span>
                                 <span class="d-flex d-row mes_freqBenef">
-                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jun_2025">
+                                    <input type="checkbox" value="P" class="caixaMarcacao" name="jun_2025" <?= ($campo["jun_2025"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                     <label for="">Junho</label>
                                 </span>
                             </span>
                             <span>
                                 <span class="d-flex flex-column">
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="jul_2025">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="jul_2025" <?= ($campo["jul_2025"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Julho</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="ago_2025">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="ago_2025" <?= ($campo["ago_2025"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Agosto</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="set_2025">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="set_2025" <?= ($campo["set_2025"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Setembro</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="out_2025">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="out_2025" <?= ($campo["out_2025"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Outubro</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="nov_2025">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="nov_2025" <?= ($campo["nov_2025"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Novembro</label>
                                     </span>
                                     <span class="d-flex d-row mes_freqBenef">
-                                        <input type="checkbox" value="P" class="caixaMarcacao" name="dez_2025">
+                                        <input type="checkbox" value="P" class="caixaMarcacao" name="dez_2025" <?= ($campo["dez_2025"] ?? '') == 'P' ? 'checked ' . ' disabled' : '' ?>>
                                         <label for="">Dezembro</label>
                                     </span>
                                 </span>
@@ -399,14 +399,14 @@
                     </a>
                     <p>Voltar</p>
                 </span>
-                <?php if($funcao === "Administrador"): ?>
+                <?php if($funcao == 'Administrador'): ?>
                     <button type="submit" class="botoes_crud" name="deletar" value="2">
                         <span class="align-items-center text-center">
                             <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
                             <p>Deletar</p>
                         </span>                        
                     </button>
-                <?php endif?>
+                <?php endif; ?>
                 <button type="submit" class="botoes_crud" name="lancar" value="1">
                     <span class="align-items-center text-center">
                         <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>

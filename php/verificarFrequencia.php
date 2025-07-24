@@ -3,6 +3,46 @@
     include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");
+
+    $resultFiltra_mes_ano = null;
+    $resultFiltra_ano = null;
+    $resultFiltra_mes = null;
+    $resultFiltra_tudo = null;
+
+    // FAZER OS SELECTS
+    if (isset($_POST['filtrar'])){
+        // FILTRA O MÊS E O ANO SELECIONADO
+        if (!empty($_POST['mes']) && !empty($_POST['ano'])){
+            $mes = $_POST['mes'];
+            $ano = $_POST['ano'];
+            $sqlFiltra_mes_ano = "SELECT * FROM tbRelatorio WHERE MES = '$mes' AND ANO = '$ano';";
+            $resultFiltra_mes_ano = mysqli_query($conexao, $sqlFiltra_mes_ano);            
+        }
+        // FILTRAR O ANO
+        elseif (!empty($_POST['ano']) && empty($_POST['mes'])){
+            $ano = $_POST['ano'];
+            $sqlFiltra_ano = "SELECT * FROM tbRelatorio WHERE ANO = '$ano' AND REGISTRO = 'P';";
+            $resultFiltra_ano = mysqli_query($conexao, $sqlFiltra_ano);                       
+        }
+        // FILTRAR PELO MES
+        elseif (!empty($_POST['mes']) && empty($_POST['ano'])){
+            $mes = $_POST['mes'];
+            $sqlFiltra_mes = "SELECT * FROM tbRelatorio WHERE MES = '$mes' AND REGISTRO = 'P';";
+            $resultFiltra_mes = mysqli_query($conexao, $sqlFiltra_mes);            
+        }    
+        // FILTRA TUDO
+        elseif (empty($_POST['mes']) && empty($_POST['ano'])){
+            // SELECIONA TODOS OS DADOS DE tbRelatorio
+            $sqlFiltra_tudo = "SELECT * FROM tbRelatorio WHERE REGISTRO = 'P';";
+            $resultFiltra_tudo = mysqli_query($conexao, $sqlFiltra_tudo);            
+        }
+    } else {
+        // Não clicou em filtrar
+        // SELECIONA TODOS OS DADOS DE tbRelatorio
+            $sqlFiltra_tudo = "SELECT * FROM tbRelatorio WHERE REGISTRO = 'P';";
+            $resultFiltra_tudo = mysqli_query($conexao, $sqlFiltra_tudo);            
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -90,105 +130,117 @@
         </div>
     </div>
 
-    <main class="mt-5 container d-flex flex-column align-items-center">
-        <h2 style="text-align: center;" class="mb-4" id="subtitulos_paginas">
-            Aqui você consegue ver as frequências dos beneficiários
-        </h2>
-        <h2 style="text-align: center; color: #17a2b9;" class="mb-4">
-            Ano
-        </h2>
-        <select name="" id="" class="form-select form-select-md w-50">
-            <option value="" selected></option>
-            <option value="">2023</option>
-            <option value="">2024</option>
-            <option value="">2025</option>
-        </select>
-        <h2 style="text-align: center; color: #17a2b9;" class="mb-4 mt-2">
-            Mês
-        </h2>
-        <select name="" id="" class="form-select form-select-md w-50">
-            <option value="" selected></option>
-            <option value="">Janeiro</option>
-            <option value="">Fevereiro</option>
-            <option value="">Março</option>
-            <option value="">Abril</option>
-            <option value="">Maio</option>
-            <option value="">Junho</option>
-            <option value="">Julho</option>
-            <option value="">Agosto</option>
-            <option value="">Setembro</option>
-            <option value="">Outubro</option>
-            <option value="">Novembro</option>
-            <option value="">Dezembro</option>
-        </select>
-        <button class="text-light mt-4" id="botao_pesquisarVF">
-            <div class="d-flex p-0 align-items-center w-100 justify-content-between">
-                <span style="font-size: 18px;">Filtrar</span>
-                <ion-icon name="filter-outline" style="font-size: 25px;"></ion-icon>
+    <form action="" method="post">
+        <main class="mt-5 container d-flex flex-column align-items-center">
+            <h2 style="text-align: center;" class="mb-4" id="subtitulos_paginas">
+                Aqui você consegue ver as frequências dos beneficiários
+            </h2>
+            <h2 style="text-align: center; color: #17a2b9;" class="mb-4">
+                Ano
+            </h2>
+            <select name="ano" id="" class="form-select form-select-md w-50">
+                <option value="" selected></option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+            </select>
+            <h2 style="text-align: center; color: #17a2b9;" class="mb-4 mt-2">
+                Mês
+            </h2>
+            <select name="mes" id="" class="form-select form-select-md w-50">
+                <option value="" selected></option>
+                <option value="JAN">Janeiro</option>
+                <option value="FEV">Fevereiro</option>
+                <option value="MAR">Março</option>
+                <option value="ABR">Abril</option>
+                <option value="MAI">Maio</option>
+                <option value="JUN">Junho</option>
+                <option value="JUL">Julho</option>
+                <option value="AGO">Agosto</option>
+                <option value="SET">Setembro</option>
+                <option value="OUT">Outubro</option>
+                <option value="NOV">Novembro</option>
+                <option value="DEZ">Dezembro</option>
+            </select>
+            <button class="text-light mt-4" id="botao_pesquisarVF" name="filtrar">
+                <div class="d-flex p-0 align-items-center w-100 justify-content-between">                    
+                    <span style="font-size: 18px;">Filtrar</span>
+                    <ion-icon name="filter-outline" style="font-size: 25px;"></ion-icon>
+                </div>
+            </button>
+            <div class=" w-100 p-1 d-flex flex-row m-5 tabelaVF">
+                <table class="my-table">
+                    <thead class="w-100">
+                        <tr> 
+                            <td class="titulo_colunasVF">ANO</td>
+                            <td class="titulo_colunasVF">MES</td>
+                            <td class="titulo_colunasVF">NOME</td>
+                            <td class="titulo_colunasVF">CPF</td>
+                        </tr>
+                    </thead>
+                    <tbody id="frequencia">
+                        <?php if(isset($_POST['filtrar']) && mysqli_num_rows($resultFiltra_mes_ano) > 0): ?>
+                            <?php while ($dados_Filtrado = mysqli_fetch_assoc($resultFiltra_mes_ano)): ?>
+                                <tr>
+                                    <td><?= $dados_Filtrado['ANO'] ?></td>
+                                    <td><?= $dados_Filtrado['MES'] ?></td>
+                                    <td><?= $dados_Filtrado['nome'] ?></td>
+                                    <td><?= $dados_Filtrado['cpf'] ?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php elseif (isset($_POST['filtrar']) && mysqli_num_rows($resultFiltra_ano) > 0) : ?>
+                            <?php while ($dados_Filtrado = mysqli_fetch_assoc($resultFiltra_ano)): ?>
+                                <tr>
+                                    <td><?= $dados_Filtrado['ANO'] ?></td>
+                                    <td><?= $dados_Filtrado['MES'] ?></td>
+                                    <td><?= $dados_Filtrado['nome'] ?></td>
+                                    <td><?= $dados_Filtrado['cpf'] ?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php elseif(isset($_POST['filtrar']) && mysqli_num_rows($resultFiltra_mes) > 0): ?>
+                            <?php while ($dados_Filtrado = mysqli_fetch_assoc($resultFiltra_mes)): ?>
+                                <tr>
+                                    <td><?= $dados_Filtrado['ANO'] ?></td>
+                                    <td><?= $dados_Filtrado['MES'] ?></td>
+                                    <td><?= $dados_Filtrado['nome'] ?></td>
+                                    <td><?= $dados_Filtrado['cpf'] ?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php elseif(empty($_POST['filtrar']) || (isset($_POST['filtrar']) && mysqli_num_rows($resultFiltra_ano) > 0 && mysqli_num_rows($resultFiltra_mes) > 0)): ?>
+                            <?php while ($dados_Filtrado = mysqli_fetch_assoc($resultFiltra_tudo)): ?>
+                                <tr>
+                                    <td><?= $dados_Filtrado['ANO'] ?></td>
+                                    <td><?= $dados_Filtrado['MES'] ?></td>
+                                    <td><?= $dados_Filtrado['nome'] ?></td>
+                                    <td><?= $dados_Filtrado['cpf'] ?></td>
+                                </tr>
+                            <?php endwhile; ?>                        
+                        <?php endif; ?>                                                                                                            
+                    </tbody>
+                </table>                
             </div>
-        </button>
-        <div class=" w-100 p-1 d-flex flex-row m-5 tabelaVF">
-            <table class="my-table">
-                <thead class="w-100">
-                    <tr> 
-                        <td class="titulo_colunasVF">ANO</td>
-                        <td class="titulo_colunasVF">MES</td>
-                        <td class="titulo_colunasVF">NOME</td>
-                        <td class="titulo_colunasVF">CPF</td>
-                    </tr>
-                </thead>
-                <tbody id="frequencia">
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>
-                    </tr>
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>
-                    </tr>
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>
-                    </tr>
-                    <tr>
-                        <td>2024</td>
-                        <td>JAN</td>
-                        <td>Fabricio Romano</td>
-                        <td>45174186486</td>                   
-                    </tr>
-                </tbody>
-
-                <tr>
-
-
-                </tr>
-            </table>
-        </div>
-         <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">
-            <span class="align-items-center text-center">
-                <a href="frequenciaBeneficiario.php" class="text-decoration-none">
-                    <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
-                </a>
-                <p>Voltar</p>
-            </span>
-            <?php if($funcao == 'Administrador'): ?>
+            <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">
                 <span class="align-items-center text-center">
-                    <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
-                    <p>Deletar</p>
+                    <a href="frequenciaBeneficiario.php" class="text-decoration-none">
+                        <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
+                    </a>
+                    <p>Voltar</p>
                 </span>
-            <?php endif; ?>
-            <span class="align-items-center text-center">
-                <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
-                <p>Salvar</p>
-            </span>
-        </div>
-    </main>
+                <?php if($funcao == 'Administrador'): ?>
+                    <span class="align-items-center text-center">
+                        <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
+                        <p>Deletar</p>
+                    </span>
+                <?php endif; ?>
+                <button type="submit" class="botoes_crud" name="verificar" value="1">
+                    <span class="align-items-center text-center">
+                        <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
+                        <p>Salvar</p>
+                    </span>                      
+                </button>
+            </div>
+        </main>
+    </form>
 
     <!-- Conexão com Bootstrap  -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"

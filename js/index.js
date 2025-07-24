@@ -79,13 +79,13 @@ function navegar_alterarDependente(){
 }
 
 function navegar_lancarFrequencia(){
-    // window.location.href = "lancarFrequencia.php";
-    window.location.href = "em_manutencao.html";
+    window.location.href = "lancarFrequencia.php";
+    //window.location.href = "em_manutencao.html";
 }
 
 function navegar_verificarFrequencia(){
-//     window.location.href = "verificarFrequencia.php";
-    window.location.href = "em_manutencao.html";
+    window.location.href = "verificarFrequencia.php";
+//    window.location.href = "em_manutencao.html";
 }
 
 function navegar_documentos(){
