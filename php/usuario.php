@@ -5,7 +5,8 @@
     include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");
-
+    $_SESSION['cpf_formatado'] = $cpf_logado; 
+    
     $cpf_logado = substr($cpf_logado, 0, 3) . "." . substr($cpf_logado, "3");
     $cpf_logado = substr($cpf_logado, 0, 7) . "." . substr($cpf_logado, "7");
     $cpf_logado = substr($cpf_logado, 0, 11) . "-" . substr($cpf_logado, "11");
@@ -13,9 +14,28 @@
     $telefone = substr($telefone, 0, 0) . "(" . substr($telefone, "0");
     $telefone = substr($telefone, 0, 3) . ")" . substr($telefone, "3");  
     
+    $senha_alterada = False;
     // Resetar_senha
-    if (isset($_POST['conf_Senha'])){
-        if ()
+    if (isset($_POST['confirmar']) && !$senha_alterada){
+        $senha = $_POST['nova_senha'];
+        $conf_senha = $_POST['conf_senha'];
+        if ($senha != $conf_senha){
+            echo "<script>window.alert('Os dois campos devem ser iguais.');</script>";
+        } else {
+            $cpf_usuario = $_SESSION['cpf_formatado'];
+            echo "<script>window.alert('$cpf_usuario');</script>";
+            // FAZER O UPDATE DA SENHA DO VOLUNTÁRIO
+            $sql_senha = "UPDATE login SET senha = UPPER(MD5('$conf_senha')), lembrar_senha = 0 WHERE cpf = '$cpf_usuario';";
+
+            $result_senha = mysqli_query($conexao, $sql_senha);
+            if ($result_senha){
+                echo "<script>window.alert('Senha alterada com sucesso!!.');</script>";
+                unset($_SESSION['cpf_formatado']);
+                $senha_alterada = True;
+            } else {
+                echo "<script>window.alert('Erro na alteração da senha.');</script>";
+            }
+        }
     }
     
 ?>
@@ -142,14 +162,14 @@
                     <form action="" method="post">
                         <div class=" mt-3 container">
                             <input type="password" required class="form-control" id="senhaTemporaria"
-                                placeholder="Nova senha" name="nova_senha">
+                                placeholder="Nova senha" name="nova_senha" value="<?php if(isset($_POST['confirmar']) && !$senha_alterada) echo $_POST['nova_senha']; ?>">
                         </div>
                         <div class=" mt-3 container">
                             <input type="password" required class="form-control" id="confirmarSenha"
-                                placeholder="Confirmar senha" name="conf_senha">
+                                placeholder="Confirmar senha" name="conf_senha" value="<?php if(isset($_POST['confirmar']) && !$senha_alterada) echo $_POST['conf_senha']; ?>">
                         </div>
                         <span class="d-flex justify-content-center mt-4 mb-3">
-                            <button value="Confirmar" name="conf_senha" type="input" class="btn" id="ConfSenhaU">Confirmar</button>                        
+                            <button value="Confirmar" name="confirmar" type="input" class="btn" id="ConfSenhaU">Confirmar</button>                        
                         </span>
                         </div>
                         <a href="../routes/deslogar.php" class="btn mt-3" id="logout_usuario" onclick="logout()">Logout</a>

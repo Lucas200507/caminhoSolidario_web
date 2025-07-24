@@ -79,11 +79,13 @@ function navegar_alterarDependente(){
 }
 
 function navegar_lancarFrequencia(){
-    window.location.href = "lancarFrequencia.php";
+    // window.location.href = "lancarFrequencia.php";
+    window.location.href = "em_manutencao.html";
 }
 
 function navegar_verificarFrequencia(){
-    window.location.href = "verificarFrequencia.php";
+//     window.location.href = "verificarFrequencia.php";
+    window.location.href = "em_manutencao.html";
 }
 
 function navegar_documentos(){
@@ -109,6 +111,20 @@ function navegar_usuario(){
 // Usuário
 let FotoU = document.getElementById('imgFotoU');
 let iconU = document.getElementById('IconUsuarioU');
+function iconHoverIn(){
+    if(iconU){
+        iconU.style.opacity = 0.2;
+        iconU.style.zIndex = 0;                
+    }
+}
+
+function iconHoverOut(){
+    if(iconU){
+        iconU.style.opacity = 1;
+        iconU.style.zIndex = 2;
+    }
+}
+
 
 function resetar_senha(){
     let container = document.getElementById('formResetarSenha');
@@ -116,7 +132,7 @@ function resetar_senha(){
         container.style.display =  'block';
     } else {
         container.style.display = 'none';
-    }
+        }
 }
 
 function logout(){
