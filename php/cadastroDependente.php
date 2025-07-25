@@ -267,7 +267,7 @@ if (isset($_POST['cadastrar'])
             <h3 style="text-align: center;" class="mb-3" id="subtitulos_paginas">Dados Pessoais</h3>
             <div class="d-flex flex-column container">
                 <label class="form-label">Nome Completo:</label>
-                <input type="text" required class="form-control border" name="nome_completo" 
+                <input type="text" required class="form-control border" id="nome" name="nome_completo"
                     value="<?php if(isset($_POST['nome_completo']) && !$cadastrado_dependente) echo $_POST['nome_completo']; ?>">
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">

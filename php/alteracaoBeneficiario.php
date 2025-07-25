@@ -353,7 +353,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
             </h3>
             <div class="d-flex flex-column container">
                 <label class="form-label">Nome Completo:</label>
-                <input type="text" class="form-control border" disabled value="<?= !empty($nome_Beneficiario) ? $nome_Beneficiario : ''; ?>">
+                <input type="text" id="nome" class="form-control border" disabled value="<?= !empty($nome_Beneficiario) ? $nome_Beneficiario : ''; ?>">
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">            
                 <span class="col-xl-3">

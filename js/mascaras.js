@@ -15,6 +15,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    const nome = document.getElementById('nome');
+    if (nome){
+        nome.addEventListener('input', function () {
+            // Remove tudo que for número
+            nome.value = nome.value.replace(/[0-9]/g, '');
+        });
+    }
+
     const telefone = document.getElementById("telefone");
     if (telefone) {
         telefone.addEventListener('input', () => {
@@ -36,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 valor = valor.slice(0, 5) + '-' + valor.slice(5, 8);
             }
             cep.value = valor;
-        });
+        });    
 });
 
 

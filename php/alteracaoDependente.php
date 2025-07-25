@@ -118,7 +118,7 @@
             </h3>
             <div class="d-flex flex-column container">
                 <label class="form-label">Nome Completo:</label>
-                <input type="text" required class="form-control border" name="nome_completo" disabled>
+                <input type="text" id="nome" required class="form-control border" name="nome_completo" disabled>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <!-- <span class="col-lg-3">

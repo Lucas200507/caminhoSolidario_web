@@ -4,18 +4,13 @@
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");
 
-    $resultFiltra_mes_ano = null;
-    $resultFiltra_ano = null;
-    $resultFiltra_mes = null;
-    $resultFiltra_tudo = null;
-
     // FAZER OS SELECTS
     if (isset($_POST['filtrar'])){
         // FILTRA O MÊS E O ANO SELECIONADO
         if (!empty($_POST['mes']) && !empty($_POST['ano'])){
             $mes = $_POST['mes'];
             $ano = $_POST['ano'];
-            $sqlFiltra_mes_ano = "SELECT * FROM tbRelatorio WHERE MES = '$mes' AND ANO = '$ano';";
+            $sqlFiltra_mes_ano = "SELECT * FROM tbRelatorio WHERE MES = '$mes' AND ANO = '$ano' AND REGISTRO = 'P';";
             $resultFiltra_mes_ano = mysqli_query($conexao, $sqlFiltra_mes_ano);            
         }
         // FILTRAR O ANO
@@ -39,8 +34,8 @@
     } else {
         // Não clicou em filtrar
         // SELECIONA TODOS OS DADOS DE tbRelatorio
-            $sqlFiltra_tudo = "SELECT * FROM tbRelatorio WHERE REGISTRO = 'P';";
-            $resultFiltra_tudo = mysqli_query($conexao, $sqlFiltra_tudo);            
+        $sqlFiltra_tudo = "SELECT * FROM tbRelatorio WHERE REGISTRO = 'P';";
+        $resultFiltra_tudo = mysqli_query($conexao, $sqlFiltra_tudo);   
     }
 
 ?>
@@ -179,7 +174,8 @@
                         </tr>
                     </thead>
                     <tbody id="frequencia">
-                        <?php if(isset($_POST['filtrar']) && mysqli_num_rows($resultFiltra_mes_ano) > 0): ?>
+                        <!-- FILTRANDO ANO E MES -->
+                        <?php if(isset($_POST['filtrar']) && ($resultFiltra_mes_ano && mysqli_num_rows($resultFiltra_mes_ano) > 0)): ?>
                             <?php while ($dados_Filtrado = mysqli_fetch_assoc($resultFiltra_mes_ano)): ?>
                                 <tr>
                                     <td><?= $dados_Filtrado['ANO'] ?></td>
@@ -188,7 +184,8 @@
                                     <td><?= $dados_Filtrado['cpf'] ?></td>
                                 </tr>
                             <?php endwhile; ?>
-                        <?php elseif (isset($_POST['filtrar']) && mysqli_num_rows($resultFiltra_ano) > 0) : ?>
+                            <!-- // FILTRANDO SOMENTE ANO -->
+                        <?php elseif (isset($_POST['filtrar']) && ($resultFiltra_ano && mysqli_num_rows($resultFiltra_ano) > 0)) : ?>
                             <?php while ($dados_Filtrado = mysqli_fetch_assoc($resultFiltra_ano)): ?>
                                 <tr>
                                     <td><?= $dados_Filtrado['ANO'] ?></td>
@@ -197,7 +194,8 @@
                                     <td><?= $dados_Filtrado['cpf'] ?></td>
                                 </tr>
                             <?php endwhile; ?>
-                        <?php elseif(isset($_POST['filtrar']) && mysqli_num_rows($resultFiltra_mes) > 0): ?>
+                            <!-- FILTRANDO SOMENTE MES -->
+                        <?php elseif(isset($_POST['filtrar']) && ( $resultFiltra_mes && mysqli_num_rows($resultFiltra_mes) > 0)): ?>
                             <?php while ($dados_Filtrado = mysqli_fetch_assoc($resultFiltra_mes)): ?>
                                 <tr>
                                     <td><?= $dados_Filtrado['ANO'] ?></td>
@@ -206,7 +204,8 @@
                                     <td><?= $dados_Filtrado['cpf'] ?></td>
                                 </tr>
                             <?php endwhile; ?>
-                        <?php elseif(empty($_POST['filtrar']) || (isset($_POST['filtrar']) && mysqli_num_rows($resultFiltra_ano) > 0 && mysqli_num_rows($resultFiltra_mes) > 0)): ?>
+                            <!-- FILTRANDO TUDO -->
+                        <?php elseif(empty($_POST['filtrar']) || (isset($_POST['filtrar']) && $resultFiltra_tudo && mysqli_num_rows($resultFiltra_tudo) > 0)): ?>
                             <?php while ($dados_Filtrado = mysqli_fetch_assoc($resultFiltra_tudo)): ?>
                                 <tr>
                                     <td><?= $dados_Filtrado['ANO'] ?></td>
@@ -214,7 +213,9 @@
                                     <td><?= $dados_Filtrado['nome'] ?></td>
                                     <td><?= $dados_Filtrado['cpf'] ?></td>
                                 </tr>
-                            <?php endwhile; ?>                        
+                            <?php endwhile; ?> 
+                        <?php else: ?>
+                            <script>window.alert('Erro em filtragem')</script>;
                         <?php endif; ?>                                                                                                            
                     </tbody>
                 </table>                

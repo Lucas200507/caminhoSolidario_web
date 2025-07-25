@@ -85,7 +85,7 @@ function navegar_lancarFrequencia(){
 
 function navegar_verificarFrequencia(){
     window.location.href = "verificarFrequencia.php";
-//    window.location.href = "em_manutencao.html";
+//  window.location.href = "em_manutencao.html";
 }
 
 function navegar_documentos(){

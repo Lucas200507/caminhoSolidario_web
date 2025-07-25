@@ -323,7 +323,7 @@ if ($em_branco && isset($_POST['cadastrar'])) {
             </h3>
             <div class="d-flex flex-column container">
                 <label class="form-label">Nome Completo:</label>
-                <input type="text" required class="form-control border" name="nome_completoBeneficiario" value="<?php if(isset($_POST['nome_completoBeneficiario']) && !$cadastrado) echo $_POST['nome_completoBeneficiario']; ?>">            
+                <input type="text" required class="form-control border" name="nome_completoBeneficiario" id="nome" value="<?php if(isset($_POST['nome_completoBeneficiario']) && !$cadastrado) echo $_POST['nome_completoBeneficiario']; ?>">            
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-xl-3">
@@ -501,7 +501,7 @@ if ($em_branco && isset($_POST['cadastrar'])) {
                             <label for="depSim">Sim</label>                        
                         </div>                         
                         <div class="form-check col-6">
-                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="N" <?php echo(isset($_POST['rbPossuiDependentes']) && $_POST['rbPossuiDependentes'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
+                            <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="N" <?php echo(isset($_POST['rbPossuiDependentes']) && $_POST['rbPossuiDependentes'] == 'N' && !$cadastrado) ? 'checked ': ''; ?>>
                             <label for="depNao">Não</label>
                         </div>               
                     </div>
