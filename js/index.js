@@ -74,8 +74,8 @@ function navegar_alterarVoluntario(){
 }
 
 function navegar_alterarDependente(){
-   // window.location.href = "alteracaoDependente.php";
-   window.location.href = "em_manutencao.html";
+   window.location.href = "alteracaoDependente.php";
+   //window.location.href = "em_manutencao.html";
 }
 
 function navegar_lancarFrequencia(){
@@ -89,18 +89,18 @@ function navegar_verificarFrequencia(){
 }
 
 function navegar_documentos(){
-    // window.location.href = "documentos.php";
-    window.location.href = "em_manutencao.html";
+    window.location.href = "documentos.php";
+    //window.location.href = "em_manutencao.html";
 }
 
 function navegar_documentosDependente(){
-   //  window.location.href = "documentosDependente.php";
-   window.location.href = "em_manutencao.html";
+   window.location.href = "documentosDependente.php";
+   //window.location.href = "em_manutencao.html";
 }
 
 function navegar_documentosBeneficiario(){
-   // window.location.href = "documentosBeneficiario.php";
-   window.location.href = "em_manutencao.html";
+   window.location.href = "documentosBeneficiario.php";
+   //window.location.href = "em_manutencao.html";
 }
 
 function navegar_usuario(){        

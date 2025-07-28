@@ -8,6 +8,32 @@
      $sqlSelect_dependentes = "SELECT * FROM filho_dependente;";
      $result = $conexao->query($sqlSelect_dependentes);
 
+     if(!isset($_SESSION['Dependente_alterado'])){
+        $_SESSION['Dependente_alterado'] = False;
+    }
+
+     // LISTAR OS DADOS DE DEPENDENTE PARA OUTROS CAMPOS
+    if (isset($_POST['pesquisar']) && !empty($_POST['cpfDependente'])){
+        $_SESSION['cpf_dependente'] = $_POST['cpfDependente'];
+        $cpf_dependente = $_SESSION['cpf_dependente'];
+    }
+
+    // Flags de erro
+    $qnt_caracteres_erro = false;
+    $em_branco = false;
+    $incoerencia_Beneficio = false;
+    $incoerencia_PCD = false;
+    $incoerencia_Dependentes = false;
+    $qtd_dependentes_incoerente = false;
+    $erro_idade = False;
+
+    if(mysqli_num_rows($result0) > 0){
+        while ($dados_tbBeneficiario = mysqli_fetch_assoc($result0)){
+            $idBeneficiario = $dados_tbBeneficiario['ID'];
+            $_SESSION['idBeneficiario'] = $idBeneficiario;                
+        }
+    }
+    
 
 
 ?>
@@ -18,7 +44,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro Dependente</title>
+    <title>Alteração Dependente</title>
     <!-- icone no titulo da pagina -->
     <link rel="icon" href="../img/logo_semnome.png">
 
@@ -108,7 +134,7 @@
                             <?php endwhile; ?>
                         <?php endif ?>
                     </select>                        
-                <button id="buttonPesquisarCPF">
+                <button id="buttonPesquisarCPF" name="pesquisar" type="submit">
                     Pesquisar
                 </button>
             </div>

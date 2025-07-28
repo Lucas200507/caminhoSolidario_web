@@ -22,8 +22,7 @@
         if ($senha != $conf_senha){
             echo "<script>window.alert('Os dois campos devem ser iguais.');</script>";
         } else {
-            $cpf_usuario = $_SESSION['cpf_formatado'];
-            echo "<script>window.alert('$cpf_usuario');</script>";
+            $cpf_usuario = $_SESSION['cpf_formatado'];           
             // FAZER O UPDATE DA SENHA DO VOLUNTÁRIO
             $sql_senha = "UPDATE login SET senha = UPPER(MD5('$conf_senha')), lembrar_senha = 0 WHERE cpf = '$cpf_usuario';";
 
