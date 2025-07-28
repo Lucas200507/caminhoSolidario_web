@@ -6,6 +6,8 @@
 
     function get_endereco($cep){
 
+    // MÁSCARAS: data_nascimento não pode ser uma data inexistente. | vós não podem ter idade < 60 | pais não podem ter idade < 40
+        
 
     // formatar o cep removendo caracteres nao numericos    
     $url = "http://viacep.com.br/ws/$cep/xml/";
@@ -24,6 +26,7 @@
     $possuiDependentes = False;
     $dependentes_pendentes = 0;
     $qnt_caractes_erro = False;
+    $erro_idade = False;
 
     if (
         isset($_POST['cadastrar'])
@@ -89,13 +92,21 @@ if (strlen($cpfBeneficiario) < 11 || strlen($cep) < 8){
     $qnt_caractes_erro = True;
 }
 
-if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro) {
+if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro && !$erro_idade) {
     $nome_completo = $_POST['nome_completoBeneficiario'];
     $data_nascimento = $_POST['data_nascimentoBeneficiario'];
     $estado_civil = $_POST['estado_civilBeneficiario'];
     $telefone = str_replace(['(', ')', '-', ' '], '', $_POST['telefoneBeneficiario']);
     if (strlen($telefone) < 11){
         $qnt_caractes_erro = True;
+    }
+    $idade = (new DateTime($data_nascimento))->diff(new DateTime())->y;    
+    if ($idade < 0){
+        echo "<script>window.alert('Escolha uma data de nascimento que relamente exista');</script>";
+        $erro_idade = True;
+    } else if ($idade < 20){
+        echo "<script>window.alert('A idade mínima para se cadastrar como Beneficiário(a) é de 20 anos.');</script>";
+        $erro_idade = True;
     }
     $email = $_POST['emailBeneficiario'];
     $endereco = $_POST['endereco_completoBeneficiario'];    
@@ -371,7 +382,7 @@ if ($em_branco && isset($_POST['cadastrar'])) {
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-3">
                     <label for="">Cidade</label>
-                    <input type="text" required class="form-control" name="cidadeBeneficiario" value="<?php if(isset($_POST['cidadeBeneficiario']) && !$cadastrado) echo $_POST['cidadeBeneficiario']; ?>">
+                    <input type="text" required class="form-control" name="cidadeBeneficiario" id="cidade" value="<?php if(isset($_POST['cidadeBeneficiario']) && !$cadastrado) echo $_POST['cidadeBeneficiario']; ?>">
                 </span>
                 <span class="col-lg-3">
                     <label for="">Estado</label>
@@ -418,7 +429,7 @@ if ($em_branco && isset($_POST['cadastrar'])) {
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-12">
                     <label>Valor do Aluguel + Despesas (Água e luz):</label>
-                    <input type="number" class="form-control" name="valor_despesasBeneficiario" value="<?php if(isset($_POST['valor_despesasBeneficiario']) && !$cadastrado) echo $_POST['valor_despesasBeneficiario']; ?>">
+                    <input type="number" class="form-control" name="valor_despesasBeneficiario" id="valor" value="<?php if(isset($_POST['valor_despesasBeneficiario']) && !$cadastrado) echo $_POST['valor_despesasBeneficiario']; ?>">
                 </span>            
             </div>
             <!-- SITUAÇÃO -->
@@ -442,7 +453,7 @@ if ($em_branco && isset($_POST['cadastrar'])) {
                     </span>
                     <span class="col-8">
                         <label for="">Qual o nome do Benefício?</label>
-                        <select name="beneficioBeneficiario" class="form-select form-select-md">
+                        <select name="beneficioBeneficiario" class="form-select form-select-md" id="beneficio">
                             <option value=""></option>
                             <option value="Aposentadoria" <?php echo(isset($_POST['beneficioBeneficiario']) && $_POST['beneficioBeneficiario'] == 'Aposentadoria' && !$cadastrado) ? 'selected ': ''; ?>>Aposentadoria</option>
                             <option value="Benefício de Prestação Continuada (BPC)" <?php echo(isset($_POST['beneficioBeneficiario']) && $_POST['beneficioBeneficiario'] == 'Benefício de Prestação Continuada (BPC)' && !$cadastrado) ? 'selected ': ''; ?>>Benefício de Prestação Continuada (BPC)</option>
@@ -455,7 +466,7 @@ if ($em_branco && isset($_POST['cadastrar'])) {
                 </div>           
                 <span class="col-lg-4 ">
                     <label for="">Valor</label>
-                    <input type="number" class="form-control" name="valor_benecicioBeneficiario" value="<?php if(isset($_POST['valor_benecicioBeneficiario']) && !$cadastrado) echo $_POST['valor_benecicioBeneficiario']; ?>">
+                    <input type="number" id="valorB" class="form-control" name="valor_benecicioBeneficiario" value="<?php if(isset($_POST['valor_benecicioBeneficiario']) && !$cadastrado) echo $_POST['valor_benecicioBeneficiario']; ?>">
                 </span> 
             </div>
             <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">
@@ -489,7 +500,7 @@ if ($em_branco && isset($_POST['cadastrar'])) {
                 </div>           
                 <span class="col-lg-6">
                     <label for="">Nome da Comorbidade</label>
-                    <input type="text" class="form-control" name="nome_doencaBeneficiario" value="<?php if(isset($_POST['nome_doencaBeneficiario']) && !$cadastrado) echo $_POST['nome_doencaBeneficiario']; ?>">
+                    <input type="text" class="form-control" name="nome_doencaBeneficiario" id="comorbidade" value="<?php if(isset($_POST['nome_doencaBeneficiario']) && !$cadastrado) echo $_POST['nome_doencaBeneficiario']; ?>">
                 </span> 
             </div> 
               <div class="d-flex flex-row justify-content-between container formularios_Beneficiario mt-3">        
@@ -508,17 +519,17 @@ if ($em_branco && isset($_POST['cadastrar'])) {
                 </span> 
                 <span class="col-lg-7  col-sm-6">
                     <label for="">Quantos?</label>
-                    <input type="number" class="form-control" name="quantos_dependentes" value="<?php if(isset($_POST['quantos_dependentes']) && !$cadastrado) echo $_POST['quantos_dependentes']; ?>">
+                    <input type="number" id="quantos_dependentes" class="form-control" name="quantos_dependentes" value="<?php if(isset($_POST['quantos_dependentes']) && !$cadastrado) echo $_POST['quantos_dependentes']; ?>">
                 </span> 
             </div>                                    
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5  col-xs-12">
                     <label>Quantos trabalham em casa:</label>
-                    <input type="number" class="form-control" name="quantos_trabalhamBeneficiario" value="<?php if(isset($_POST['quantos_trabalhamBeneficiario']) && !$cadastrado) echo $_POST['quantos_trabalhamBeneficiario']; ?>">
+                    <input type="number" class="form-control" id="quantos_trabalham" name="quantos_trabalhamBeneficiario" value="<?php if(isset($_POST['quantos_trabalhamBeneficiario']) && !$cadastrado) echo $_POST['quantos_trabalhamBeneficiario']; ?>">
                 </span>
                 <span class="col-lg-6  col-xs-12">
                     <label>Renda Familiar total:</label>
-                    <input type="number" required class="form-control" name="renda_familiarBeneficiario" value="<?php if(isset($_POST['renda_familiarBeneficiario']) && !$cadastrado) echo $_POST['renda_familiarBeneficiario']; ?>">
+                    <input type="number" required class="form-control" id="renda_familiar" name="renda_familiarBeneficiario" value="<?php if(isset($_POST['renda_familiarBeneficiario']) && !$cadastrado) echo $_POST['renda_familiarBeneficiario']; ?>">
                 </span>
             </div>            
             <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">

@@ -126,15 +126,21 @@ function iconHoverOut(){
 }
 
 
-// function resetar_senha(){
-//     let container = document.getElementById('formResetarSenha');
-//     if (container.style.display == 'none'){
-//         container.style.display =  'block';
-//     } else {
-//         container.style.display = 'none';
-//         }
-// }
+function resetar_senha(){
+    let container = document.getElementById('formResetarSenha');
+    if (container.style.display == 'none'){
+        container.style.display =  'block';
+    } else {
+        container.style.display = 'none';
+        }
+}
 
 function logout(){
     window.alert('Saindo!!!');
 }
+
+/************************************************ */
+//CONTAINER DELETE
+// function alterar_fundo_delete(){
+//     document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+// }

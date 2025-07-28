@@ -192,8 +192,7 @@ nav{
     align-items: center;
     justify-content: center;
     border-radius: 5px;
-    position: relative;
-    
+    position: relative;    
 }
 
 .caixaMarcacao:before{
@@ -207,11 +206,17 @@ nav{
     transform: rotate(45deg);
     top: 1px;
     opacity: 0;
-    transition: all 600ms ease-in-out;        
+    transition: all 600ms ease-in-out;         
 }
 
-.caixaMarcacao:checked:before{
+.caixaMarcacao:checked::before{
     opacity: 1;
+}
+
+.caixaMarcacao:checked {
+    background-color: #17a2b9; /* Cor da marcação */
+    border-color: #17a2b9;
+    
 }
 
 label{
@@ -267,6 +272,26 @@ label{
     display: block;
 }
 
+/* CONTAINER CONFIRMAR O DELETE */
+.container_confDelete{
+    display: flex; 
+    position: absolute; 
+    align-items: center;   
+    text-align: center;  
+    right: 25%; 
+    left: 25%;    
+}
+
+.confDelete{    
+    width: 100%;
+    background-color: white;
+    padding: 1em;
+    border-radius: 2em;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    right: auto;
+    left: auto;  
+    z-index: 1;    
+}
 
 /*///////////////////////////////////////////////////////////////*/
         /* SPLASH */

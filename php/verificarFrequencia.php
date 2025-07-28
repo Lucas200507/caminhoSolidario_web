@@ -6,6 +6,10 @@
 
     // FAZER OS SELECTS
     if (isset($_POST['filtrar'])){
+        $resultFiltra_mes_ano = NULL;
+        $resultFiltra_ano = NULL;
+        $resultFiltra_mes = NULL;
+        $resultFiltra_tudo = NULL;
         // FILTRA O MÊS E O ANO SELECIONADO
         if (!empty($_POST['mes']) && !empty($_POST['ano'])){
             $mes = $_POST['mes'];
@@ -32,6 +36,9 @@
             $resultFiltra_tudo = mysqli_query($conexao, $sqlFiltra_tudo);            
         }
     } else {
+        $sqlFiltra_mes_ano = NULL;
+        $resultFiltra_ano = NULL;
+        $resultFiltra_mes = NULL;        
         // Não clicou em filtrar
         // SELECIONA TODOS OS DADOS DE tbRelatorio
         $sqlFiltra_tudo = "SELECT * FROM tbRelatorio WHERE REGISTRO = 'P';";
@@ -195,7 +202,7 @@
                                 </tr>
                             <?php endwhile; ?>
                             <!-- FILTRANDO SOMENTE MES -->
-                        <?php elseif(isset($_POST['filtrar']) && ( $resultFiltra_mes && mysqli_num_rows($resultFiltra_mes) > 0)): ?>
+                        <?php elseif(isset($_POST['filtrar']) && ($resultFiltra_mes && mysqli_num_rows($resultFiltra_mes) > 0)): ?>
                             <?php while ($dados_Filtrado = mysqli_fetch_assoc($resultFiltra_mes)): ?>
                                 <tr>
                                     <td><?= $dados_Filtrado['ANO'] ?></td>
@@ -205,7 +212,7 @@
                                 </tr>
                             <?php endwhile; ?>
                             <!-- FILTRANDO TUDO -->
-                        <?php elseif(empty($_POST['filtrar']) || (isset($_POST['filtrar']) && $resultFiltra_tudo && mysqli_num_rows($resultFiltra_tudo) > 0)): ?>
+                        <?php elseif((empty($_POST['filtrar']) && !empty($resultFiltra_tudo)) || (isset($_POST['filtrar']) && !empty($resultFiltra_tudo) && mysqli_num_rows($resultFiltra_tudo) > 0)): ?>
                             <?php while ($dados_Filtrado = mysqli_fetch_assoc($resultFiltra_tudo)): ?>
                                 <tr>
                                     <td><?= $dados_Filtrado['ANO'] ?></td>
@@ -213,9 +220,7 @@
                                     <td><?= $dados_Filtrado['nome'] ?></td>
                                     <td><?= $dados_Filtrado['cpf'] ?></td>
                                 </tr>
-                            <?php endwhile; ?> 
-                        <?php else: ?>
-                            <script>window.alert('Erro em filtragem')</script>;
+                            <?php endwhile; ?>                         
                         <?php endif; ?>                                                                                                            
                     </tbody>
                 </table>                
@@ -226,19 +231,7 @@
                         <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
                     </a>
                     <p>Voltar</p>
-                </span>
-                <?php if($funcao == 'Administrador'): ?>
-                    <span class="align-items-center text-center">
-                        <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
-                        <p>Deletar</p>
-                    </span>
-                <?php endif; ?>
-                <button type="submit" class="botoes_crud" name="verificar" value="1">
-                    <span class="align-items-center text-center">
-                        <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
-                        <p>Salvar</p>
-                    </span>                      
-                </button>
+                </span>                               
             </div>
         </main>
     </form>

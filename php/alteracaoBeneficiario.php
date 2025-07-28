@@ -24,6 +24,7 @@ $incoerencia_Beneficio = false;
 $incoerencia_PCD = false;
 $incoerencia_Dependentes = false;
 $qtd_dependentes_incoerente = false;
+$erro_idade = False;
 
 // Consulta CPF
 $sql = "SELECT cpf FROM tbBeneficiario;";
@@ -88,7 +89,7 @@ if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
 }
 
 // ALTERAÇÃO
-if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False) {
+if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && !$erro_idade) {
     if (!empty($_POST['data_nascimentoBeneficiario']) 
         && !empty($_POST['estado_civilBeneficiario']) 
         && !empty($_POST['telefoneBeneficiario']) 
@@ -108,8 +109,16 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False) {
         if (strlen($telefone) < 11 || strlen($cep) < 8) {
             $qnt_caracteres_erro = true;
         }
-
         $data_nascimento = $_POST['data_nascimentoBeneficiario'];
+        $idade = (new DateTime($data_nascimento))->diff(new DateTime())->y;    
+        if ($idade < 0){
+            echo "<script>window.alert('Escolha uma data de nascimento que relamente exista');</script>";
+            $erro_idade = True;
+        } else if ($idade < 20){
+            echo "<script>window.alert('A idade mínima para se cadastrar como Beneficiário(a) é de 20 anos.');</script>";
+            $erro_idade = True;
+        }
+        
         $estado_civil = $_POST['estado_civilBeneficiario'];
         $endereco = $_POST['endereco_completoBeneficiario'];
         $cidade = $_POST['cidadeBeneficiario'];
@@ -148,7 +157,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False) {
             $incoerencia_Dependentes = true;
         }
 
-        if (!$qnt_caracteres_erro && !$em_branco && !$incoerencia_Beneficio && !$incoerencia_PCD && !$incoerencia_Dependentes && !$qtd_dependentes_incoerente) {
+        if (!$qnt_caracteres_erro && !$em_branco && !$incoerencia_Beneficio && !$incoerencia_PCD && !$incoerencia_Dependentes && !$qtd_dependentes_incoerente && !$erro_idade) {
             $idPessoa = $_SESSION['idPessoa'];
             $idEndereco = $_SESSION['idEndereco']; // já definido
             $idBeneficioGov = $_SESSION['idbeneficioGov'];
@@ -397,7 +406,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-3">
                     <label for="">Cidade</label>
-                    <input type="text" class="form-control" name="cidadeBeneficiario" value="<?= !empty($cidade) ? $cidade : ''; ?>">
+                    <input type="text" class="form-control" name="cidadeBeneficiario" id="cidade" value="<?= !empty($cidade) ? $cidade : ''; ?>">
                 </span>
                 <span class="col-lg-3">
                     <label for="">Estado</label>
@@ -444,7 +453,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-12">
                     <label>Valor do Aluguel + Despesas (Água e luz):</label>
-                    <input type="number" class="form-control" name="valor_despesasBeneficiario" value="<?= !empty($valor_despesas) ? $valor_despesas : ''; ?>">
+                    <input type="number" class="form-control" id="valor" name="valor_despesasBeneficiario" value="<?= !empty($valor_despesas) ? $valor_despesas : ''; ?>">
                 </span>            
             </div>
             <!-- SITUAÇÃO -->
@@ -481,7 +490,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                 </div>           
                 <span class="col-lg-4 ">
                     <label for="">Valor</label>
-                    <input type="number" class="form-control" name="valor_benecicioBeneficiario" value="<?= !empty($nome_Beneficiario) ? $nome_Beneficiario : ''; ?>">
+                    <input type="number" id="valorB" class="form-control" name="valor_benecicioBeneficiario" value="<?= !empty($nome_Beneficiario) ? $nome_Beneficiario : ''; ?>">
                 </span> 
             </div>
             <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">
@@ -515,7 +524,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                 </div>           
                 <span class="col-lg-6">
                     <label for="">Nome da Comorbidade</label>
-                    <input type="text" class="form-control" name="doenca" value="<?= !empty($comorbidade) ? $comorbidade : ''; ?>">
+                    <input type="text" class="form-control" name="doenca" id="comorbidade" value="<?= !empty($comorbidade) ? $comorbidade : ''; ?>">
                 </span> 
             </div> 
                 <div class="d-flex flex-row justify-content-between container formularios_Beneficiario mt-3">        
@@ -534,18 +543,18 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                 </span> 
                 <span class="col-lg-7  col-sm-6">
                     <label for="">Quantos?</label>
-                    <input type="number" class="form-control" name="quantos_dependentes" value="<?= !empty($quantos_dependentes) ? $quantos_dependentes : ''; ?>">
+                    <input type="number" id="quantos_dependentes" class="form-control" name="quantos_dependentes" value="<?= !empty($quantos_dependentes) ? $quantos_dependentes : ''; ?>">
                 </span> 
             </div>                                    
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5  col-xs-12">
                     <!-- ?????????????????????????????????????????????????????????????????????????????????????????????? -->
                     <label>Quantos trabalham em casa:</label>
-                    <input type="number" class="form-control" name="quantos_trabalhamBeneficiario" value="<?= !empty($quantos_trabalham) ? $quantos_trabalham : '';?>">
+                    <input type="number" class="form-control" id="quantos_trabalham" name="quantos_trabalhamBeneficiario" value="<?= !empty($quantos_trabalham) ? $quantos_trabalham : '';?>">
                 </span>
                 <span class="col-lg-6  col-xs-12">
                     <label>Renda Familiar total:</label>
-                    <input type="number" class="form-control" name="renda_familiarBeneficiario" value="<?= !empty($renda_familiar) ? $renda_familiar : ''; ?>">
+                    <input type="number" class="form-control" id="renda_familiar" name="renda_familiarBeneficiario" value="<?= !empty($renda_familiar) ? $renda_familiar : ''; ?>">
                 </span>
             </div>            
             <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">

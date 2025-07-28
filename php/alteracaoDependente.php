@@ -167,7 +167,7 @@
                 </div>           
                 <span class="col-lg-4 ">
                     <label for="">Valor</label>
-                    <input type="number" class="form-control" name="valor_benecicioDependente">
+                    <input type="number" id="valor" class="form-control" name="valor_benecicioDependente">
                 </span> 
             </div>
             <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">
@@ -201,7 +201,7 @@
                 </div>           
                 <span class="col-lg-6">
                     <label for="">Nome da Comorbidade</label>
-                    <input type="text" class="form-control" name="nome_doenca">
+                    <input type="text" class="form-control" name="nome_doenca" id="comorbidade">
                 </span> 
             </div> 
             <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">

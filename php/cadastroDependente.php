@@ -37,6 +37,7 @@ $MAX_dep = false;
 $jaCadastrado = false;
 $cadastrado_dependente = false;
 $incoerencia = false;
+$erro_idade = False;
 
 // Lógica de cadastro
 if (isset($_POST['cadastrar']) 
@@ -47,7 +48,7 @@ if (isset($_POST['cadastrar'])
     && !empty($_POST['rbPCD'])     
     && !empty($_POST['rbPossuiBenf'])
 ) {
-    if (!$em_branco && !$jaCadastrado && !$cadastrado_dependente && !$MAX_dep && !$incoerencia) {
+    if (!$em_branco && !$jaCadastrado && !$cadastrado_dependente && !$MAX_dep && !$incoerencia && !$erro_idade) {
 
         $cpfBeneficiario = $_POST['cpfBeneficiario'] ?? ($_SESSION['cpfBeneficiario'] ?? null);
 
@@ -87,15 +88,28 @@ if (isset($_POST['cadastrar'])
         $pcd = $_POST['rbPCD'];
         $possuiBenf = $_POST['rbPossuiBenf'];
 
-        if ($parentesco == "Filho_M") {
-            $idade = (new DateTime($data_nascimento))->diff(new DateTime())->y;
-            if ($idade >= 18) {
-                $incoerencia = true;
-            }
+        $idade = (new DateTime($data_nascimento))->diff(new DateTime())->y;
+         if ($idade < 0){
+            echo "<script>window.alert('Escolha uma data de nascimento que realmente exista');</script>";
+            $erro_idade = True;
+        }
+        if ($parentesco == "Filho_M" && idade >= 18) {  
+            echo "<script>window.alert('A idade do filho(a) deve ser menor de 18 anos.');</script>";
+            $incoerencia = true;
+        
         } elseif ($parentesco == "Parente_Pcd" && $pcd == "N") {
             $incoerencia = true;
         } elseif ($parentesco != "Parente_Pcd" && $pcd == "S") {
             $incoerencia = true;
+        } else if ($parentesco == "Mae ou pai" && $idade < 36){
+            echo "<script>window.alert('A idade do pai ou mãe deve ser no mínimo 36 anos.');</script>";
+            $erro_idade = True;
+        } else if ($parentesco == "Neto(a)" && $idade < 18){
+            echo "<script>window.alert('A idade do(a) neto(a) deve ser menor de 18 anos.');</script>";
+            $erro_idade = True;
+        } else if ($parentesco == "Irmao(a)" && $idade < 18){
+            echo "<script>window.alert('A idade do(a) neto(a) deve ser menor de 18 anos.');</script>";
+            $erro_idade = True;
         }
 
         if ($possuiBenf == "S") {
@@ -123,7 +137,7 @@ if (isset($_POST['cadastrar'])
             $em_branco = true;
         }
 
-        if (!$em_branco && !$MAX_dep && !$jaCadastrado && !$incoerencia) {
+        if (!$em_branco && !$MAX_dep && !$jaCadastrado && !$incoerencia && !$erro_idade) {
             $sqlInsert = "INSERT INTO filho_dependente 
             (nome_filho_dependente, cpf, data_nascimento_filho_dep, parentesco, PCD, laudo, doenca, idBeneficiario)
             VALUES ('$nome', '$cpfDependente', '$data_nascimento', '$parentesco', '$pcd', '$rbPossuiLaudo', '$nome_doenca', '$idBeneficiario')";
@@ -328,7 +342,7 @@ if (isset($_POST['cadastrar'])
                 </div>           
                 <span class="col-lg-4">
                     <label for="">Valor</label>
-                    <input type="number" class="form-control" name="valor_benecicioDependente"
+                    <input type="number" class="form-control" name="valor_benecicioDependente" id="valor"
                         value="<?php if(isset($_POST['valor_benecicioDependente']) && !$cadastrado_dependente) echo $_POST['valor_benecicioDependente']; ?>">
                 </span> 
             </div>
@@ -368,7 +382,7 @@ if (isset($_POST['cadastrar'])
                 </div>           
                 <span class="col-lg-6">
                     <label for="">Nome da Comorbidade</label>
-                    <input type="text" class="form-control" name="nome_doenca"
+                    <input type="text" class="form-control" name="nome_doenca" id="comorbidade"
                         value="<?php if(isset($_POST['nome_doenca']) && !$cadastrado_dependente) echo $_POST['nome_doenca']; ?>">
                 </span> 
             </div> 

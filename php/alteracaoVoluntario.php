@@ -91,6 +91,7 @@
     </div>
     <main class="mt-5 d-flex flex-column container">
         <div class="d-flex justify-content-around w-100 input-group mb-4">
+            <!-- SELECT DE TODOS AS PESSOAS DA TABELA DE ESPERA -->
             <select class="form-select form-select-md w-50">
                 <option value="">CPF do(a) Voluntário(a)</option>
             </select>
@@ -104,22 +105,22 @@
         </h3>
         <div class="d-flex flex-column container">
             <label class="form-label">Nome Completo:</label>
-            <input type="text" class="form-control border" disabled>
+            <input type="text" class="form-control border" id="nome" disabled>
         </div>
         <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
             <span class="col-lg-12 col-md-12">
                 <label for="">CPF</label>
-                <input type="text" class="form-control" disabled>
+                <input type="text" class="form-control" id="cpf" disabled>
             </span>
         </div>
         <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
             <span class="col-lg-5 col-md-5">
                 <label>Telefone:</label>
-                <input type="number" class="form-control">
+                <input type="number" class="form-control" id="telefone">
             </span>
             <span class="col-lg-6 col-md-6">
                 <label>Email:</label>
-                <input type="text" class="form-control form-control-xl">
+                <input type="text" class="form-control form-control-xl" id="email">
             </span>
         </div>
         <div class=" mt-3 container">

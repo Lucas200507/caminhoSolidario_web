@@ -55,7 +55,9 @@
         if(mysqli_num_rows($result) > 0){ // se tiver mais de uma linha de registros iguais ao usuário e senha    
                 if (!empty($_GET['lembrar_senha'])){ // foi selecionado
                 $lembrar_senha = 1;
-                $sqlLembrar_senha = "UPDATE login SET lembrar_senha = '$lembrar_senha' WHERE cpf = '$usuario';";
+                $lembrar_senha = trim($lembrar_senha);
+                
+                $sqlLembrar_senha = "UPDATE login SET lembrar_senha = $lembrar_senha WHERE cpf = '$usuario';";
                 $resultUpdate = $conexao->query($sqlLembrar_senha);
             }   
             
