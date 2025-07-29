@@ -8,12 +8,9 @@
      $sqlSelect_dependentes = "SELECT * FROM filho_dependente;";
      $result = $conexao->query($sqlSelect_dependentes);
 
-     if(!isset($_SESSION['Dependente_alterado'])){
-        $_SESSION['Dependente_alterado'] = False;
-    }
-
     // Flags de erro
     $erro = False;
+    $alterado = False;
 
      // LISTAR OS DADOS DE DEPENDENTE PARA OUTROS CAMPOS
     if (isset($_POST['pesquisar']) && !empty($_POST['cpfDependente']) ){
@@ -44,13 +41,13 @@
                         $_SESSION['idBeneficioGov_dep'] = $id_BeneficioGov;
                     }
                     if(!empty($id_BeneficioGov)){
-                        $sqlSelect_beneficioGov = "SELECT * FROM BeneficioGov WHERE beneficio = '$id_BeneficioGov';";
+                        $sqlSelect_beneficioGov = "SELECT * FROM BeneficioGov WHERE idBeneficioGov = '$id_BeneficioGov';";
                         $resultSelect_benefioGov = mysqli_query($conexao, $sqlSelect_beneficioGov);
                             if(mysqli_num_rows($resultSelect_benefioGov) > 0){
                                 while($dados_beneficioGov = mysqli_fetch_assoc($resultSelect_benefioGov)){
                                     $id_nomesBeneficioGov = $dados_beneficioGov['idBeneficios_gov'];
                                     $_SESSION['idNome_beneficio_dep'] = $id_nomesBeneficioGov;
-                                    $valor_beneficioGov = $dados_beneficioGov['valor_beneficio'];
+                                    $valor_beneficioGov = $dados_beneficioGov['valor_beneficio'];                                    
                                 }
                             }        
                     }
@@ -59,7 +56,7 @@
     }
     
     // ALTERAR DEPENDENTE
-    if(isset($_POST['alterar']) && !$erro){
+    if(isset($_POST['alterar']) && !$erro && !$alterado){
         // verificar se possui algum campo obrigatório em branco. Verificar máscaras
         if(empty($_POST['data_nascimento'])){
             echo "<script>window.alert('O campo data de nascimento está em branco');</script>";
@@ -122,37 +119,68 @@
             $comorbidade = $_POST['nome_doenca'];
             $valorBeneficioGov = $_POST['valor_benecicioDependente']; // alterar Beneficio gov
             $beneficioGov = $_POST['beneficioDependente']; // alterar nomeBeneficiosGov
-            // ID BENEFICIOGOV
-            $id_nomesBeneficioGov = $_SESSION['idNome_beneficio_dep'];
-            // UPDATE EM BENEFICIO SE TIVER        
-            if (!empty($beneficioGov) && !empty($valorBeneficioGov) && !empty($id_nomesBeneficioGov)) {
+            // ID BENEFICIOGOV 
+            if (!empty($beneficioGov) && !empty($valorBeneficioGov)){
                 switch ($beneficioGov) {
                     case "Novo Bolsa Família": $id_nomesBeneficioGov = 1; break;
                     case "Benefício de Prestação Continuada (BPC)": $id_nomesBeneficioGov = 2; break;
                     case "Aposentadoria": $id_nomesBeneficioGov = 3; break;
                     case "Vale-Gas": $id_nomesBeneficioGov = 4; break;
                     case "Outros": $id_nomesBeneficioGov = 5; break;
-                    default: $id_nomesBeneficioGov = NULL; break;
-                }
-                $idBeneficioGov = $_SESSION['idBeneficioGov_dep'];
-                $sqlUpdate_BeneficioGov = "UPDATE BeneficioGov SET idBeneficiosGov = '$id_nomesBeneficioGov', valor_beneficio = '$valor_BeneficioGov' WHERE idBeneficioGov = '$idBeneficioGov';";
-                $resultUpdate_Beneficio = mysqli_query($conexao, $sqlUpdate_BeneficioGov);
-                if ($resultUpdate_Beneficio){
-                    unset($_SESSION['idNome_beneficio_dep']);  
-                } else {
-                    $resultUpdate_Beneficio = False;
-                }
+                    default: $id_nomesBeneficioGov = NULL; break; 
+                }                       
+                    if (empty($_SESSION['idBeneficioGov_dep'])){
+                        // NÃO TINHA UM BENEFÍCIO
+                        $sqlInsert_beneficioGov = "INSERT INTO BeneficioGov (idBeneficios_gov, valor_beneficio) VALUES ('$id_nomesBeneficioGov','$valorBeneficioGov')";
+                        $resultInsert_beneficioGov = mysqli_query($conexao, $sqlInsert_beneficioGov);
+                            // TEM QUE SELECIONAR O ÚLTIMO BENEFICIO CADASTRADO
+                            $sqlSelect_beneficioGov = "SELECT idBeneficioGov FROM BeneficioGov ORDER BY idBeneficioGov DESC LIMIT 1;";
+                            $resultSelect_benefioGov = mysqli_query($conexao, $sqlSelect_beneficioGov);
+                            if(mysqli_num_rows($resultSelect_benefioGov) > 0){
+                                $dados_beneficioGov = mysqli_fetch_assoc($resultSelect_benefioGov);
+                                $idBeneficioGov = $dados_beneficioGov['idBeneficioGov'];
+                            }
+
+                    } else {
+                        // JÁ POSSUÍA UM BENEFÍCIO
+                        $idBeneficioGov = $_SESSION['idBeneficioGov_dep'];
+                        $sqlUpdate_BeneficioGov = "UPDATE BeneficioGov SET idBeneficios_gov = '$id_nomesBeneficioGov', valor_beneficio = '$valorBeneficioGov' WHERE idBeneficioGov = '$idBeneficioGov';";
+                        $resultUpdate_Beneficio = mysqli_query($conexao, $sqlUpdate_BeneficioGov);
+                    }
+            }                     
+            // UPDATE EM filho_dependente
+            $idDependente = $_SESSION['idDependente'];
+            if (!empty($idBeneficioGov)){
+                $sqlUpdate_filhoDep = "UPDATE filho_dependente SET data_nascimento_filho_dep = '$data_nascimento', parentesco = '$parentesco', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade', idBeneficioGov = '$idBeneficioGov' WHERE idFilho_Dependente = '$idDependente';";  
+                echo "Possui beneficio";
             } else {
-                $resultUpdate_Beneficio = true;
+                $sqlUpdate_filhoDep = "UPDATE filho_dependente SET data_nascimento_filho_dep = '$data_nascimento', parentesco = '$parentesco', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade' WHERE idFilho_Dependente = '$idDependente';"; 
             }
 
-            // UPDATE EM filho_dependente
-            if ($resultUpdate_Beneficio){
-                $sqlUpdate_filhoDep = "UPDATE filho_dependente SET data_nascimento_filho_dep = '$data_nascimento', parentesco = '$parentesco', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade', $id_BeneficioGov = '$id_nomesBeneficioGov';";
+            $resultUpdate_filhoDep = mysqli_query($conexao, $sqlUpdate_filhoDep);
+            if ($resultUpdate_filhoDep){
+                echo "<script>window.alert('Dependente alterado com sucesso!');</script>";
+                unset($_SESSION['cpf_dependente']);
+                unset($_SESSION['idBeneficioGov_dep']);
+                unset($_SESSION['idDependente']);
+                unset($_SESSION['idNome_beneficio_dep']);
+                $data_nascimento = '';
+                $parentesco = '';
+                $pcd = '';
+                $laudo = '';
+                $comorbidad = '';
+                $valorBeneficioGov = '';
+                $beneficioGov = '';
+                $idBeneficioGov = '';
+                $id_nomesBeneficioGov = '';
+                $alterado = True;
+            } else {
+                echo "<script>window.alert('Erro em alterar Dependente!');</script>";
+                $erro = True;
             }
         }
-
     }
+    
     
 ?>
 <!DOCTYPE html>
@@ -305,17 +333,17 @@
                         <label for="">Qual o nome do Benefício?</label>
                           <select name="beneficioDependente" class="form-select form-select-md">
                             <option value=""></option>
-                            <option value="Aposentadoria" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Aposentadoria' && !$cadastrado) ? 'selected ': ''; ?>>Aposentadoria</option>
-                            <option value="Benefício de Prestação Continuada (BPC)" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Benefício de Prestação Continuada (BPC)' && !$cadastrado) ? 'selected ': ''; ?>>Benefício de Prestação Continuada (BPC)</option>
-                            <option value="Novo Bolsa Família" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Novo Bolsa Família' && !$cadastrado) ? 'selected ': ''; ?>>Bolsa Família</option>
-                            <option value="Vale-gas" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Vale-gas' && !$cadastrado) ? 'selected ': ''; ?>>Vale Gás</option>
-                            <option value="Outros" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Outros' && !$cadastrado) ? 'selected ': ''; ?>>Outros</option>                            
+                            <option value="Aposentadoria" <?= (!empty($id_nomesBeneficioGov) && $id_nomesBeneficioGov == 3) ? 'selected' : '' ?>>Aposentadoria</option>
+                            <option value="Benefício de Prestação Continuada (BPC)" <?= (!empty($id_nomesBeneficioGov) && $id_nomesBeneficioGov == 2) ? 'selected' : '' ?>>Benefício de Prestação Continuada (BPC)</option>
+                            <option value="Novo Bolsa Família" <?= (!empty($id_nomesBeneficioGov) && $id_nomesBeneficioGov == 1) ? 'selected' : '' ?>>Bolsa Família</option>
+                            <option value="Vale-gas" <?= (!empty($id_nomesBeneficioGov) && $id_nomesBeneficioGov == 4) ? 'selected' : '' ?>>Vale Gás</option>
+                            <option value="Outros" <?= (!empty($id_nomesBeneficioGov) && $id_nomesBeneficioGov == 5) ? 'selected' : '' ?>>Outros</option>                            
                         </select>                
                     </span> 
                 </div>           
                 <span class="col-lg-4 ">
                     <label for="">Valor</label>
-                    <input type="number" id="valor" class="form-control" name="valor_benecicioDependente" <?= !empty($valor_beneficioGov) ? $valor_beneficioGov : '' ?>>
+                    <input type="number" id="valor" class="form-control" name="valor_benecicioDependente" value="<?= !empty($valor_beneficioGov) ? $valor_beneficioGov : '' ?>">
                 </span> 
             </div>
             <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">

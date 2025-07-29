@@ -18,6 +18,7 @@ SELECT * FROM tbUsuarios_web;
 SELECT * FROM tbBeneficiario;
 SELECT * FROM tbRelatorio;
 SELECT * FROM tbFilho_dependente;
+SELECT * FROM tbBeneficioGov;
 
 -- DELETE
 DELETE FROM filho_dependente WHERE id IN (0, 5);
@@ -157,6 +158,17 @@ FOREIGN KEY (idBeneficios_gov) REFERENCES nomeBeneficiosGov (idBeneficios_gov),
 valor_beneficio FLOAT(10));
 
 SELECT * FROM BeneficioGov;
+-- --------------------------------------------
+
+CREATE VIEW tbBeneficioGov AS
+SELECT 
+bgov.idBeneficioGov AS ID,
+nbgov.nome_beneficiogov AS Beneficio_gov,
+bgov.valor_beneficio
+FROM BeneficioGov bgov
+INNER JOIN nomeBeneficiosGov nbgov ON nbgov.idBeneficios_gov = bgov.idBeneficios_gov;
+
+SELECT * FROM tbBeneficioGov;
 -- --------------------------------------------
 CREATE TABLE Beneficiario (
     idBeneficiario INT PRIMARY KEY AUTO_INCREMENT,

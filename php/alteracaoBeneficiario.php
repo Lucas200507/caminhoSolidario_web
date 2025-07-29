@@ -1,7 +1,7 @@
 <?php
 // DEVE MUDAR O COMBO_BOX do cpf para um input, para o usuário pesquisar o cpf e filtrar
 
-// session_start();
+//session_start();
 include_once('../conexao_banco.php');
 include_once('../routes/verificacao_logado.php');
 include_once("../routes/dados_usuarioLogado.php");
@@ -62,7 +62,7 @@ if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
             $_SESSION['idPessoa'] = $idPessoa;
             $idEndereco = $dadosBeneficiario['idEndereco'];
             $_SESSION['idEndereco'] = $idEndereco;
-            $idBeneficioGov = $dadosBeneficiario['idBeneficioGov'];
+            $idBeneficioGov = $dadosBeneficiario['idBeneficioGov']; 
             $_SESSION['idbeneficioGov'] = $idBeneficioGov;
 
             $sql3 = "SELECT * FROM pessoa WHERE idPessoa = '$idPessoa';";
@@ -81,6 +81,13 @@ if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
                 $situacao_moradia = $dados_endereco['situacao_moradia'];
                 $valor_despesas = $dados_endereco['valor_despesas'];
                 $cep = substr($dados_endereco['cep'], 0, 5) . "-" . substr($dados_endereco['cep'], 5);
+            }
+
+            $sql5 = "SELECT * FROM tbBeneficioGov WHERE ID = '$idBeneficioGov';";
+            $result5 = mysqli_query($conexao, $sql5);
+            if ($dados_beneficioGov = mysqli_fetch_assoc($result5)) {
+                $BeneficioGov = $dados_beneficioGov['Beneficio_Gov'];
+                $valor_beneficio = $dados_beneficioGov['valor_beneficio'];
             }
         }
     }
@@ -168,8 +175,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
 
         if (!$qnt_caracteres_erro && !$em_branco && !$incoerencia_Beneficio && !$incoerencia_PCD && !$incoerencia_Dependentes && !$qtd_dependentes_incoerente && !$erro_idade) {
             $idPessoa = $_SESSION['idPessoa'];
-            $idEndereco = $_SESSION['idEndereco']; // já definido
-            $idBeneficioGov = $_SESSION['idbeneficioGov'];
+            $idEndereco = $_SESSION['idEndereco']; // já definido            
 
             $sqlUpdate_endereco = "UPDATE endereco SET endereco = '$endereco', cidade = '$cidade', estado = '$estado', cep = '$cep', situacao_moradia = '$situacao_moradia', valor_despesas = '$valor_despesas' WHERE idEndereco = '$idEndereco';";
             $sqlUpdate_pessoa = "UPDATE pessoa SET telefone = '$telefone' WHERE idPessoa = '$idPessoa';";
@@ -177,26 +183,51 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
             $resultUpdate_endereco = mysqli_query($conexao, $sqlUpdate_endereco);
             $resultUpdate_pessoa = mysqli_query($conexao, $sqlUpdate_pessoa);
 
+            // BENEFICIO GOV        
             if (!empty($beneficioGov) && !empty($valor_beneficio)) {
                 switch ($beneficioGov) {
-                    case "Novo Bolsa Família": $idBeneficio = 1; break;
-                    case "Benefício de Prestação Continuada (BPC)": $idBeneficio = 2; break;
-                    case "Aposentadoria": $idBeneficio = 3; break;
-                    case "Vale-Gas": $idBeneficio = 4; break;
-                    case "Outros": $idBeneficio = 5; break;
-                    default: $idBeneficio = NULL; break;
+                    case "Novo Bolsa Família": $idNome_Beneficio = 1; break;
+                    case "Benefício de Prestação Continuada (BPC)": $idNome_Beneficio = 2; break;
+                    case "Aposentadoria": $idNome_Beneficio = 3; break;
+                    case "Vale-Gas": $idNome_Beneficio = 4; break;
+                    case "Outros": $idNome_Beneficio = 5; break;
+                    default: $idNome_Beneficio = NULL; break;
                 }
 
-                $sqlUpdate_BeneficioGov = "UPDATE BeneficioGov SET idBeneficiosGov = '$idBeneficio', valor_beneficio = '$valor_beneficio' WHERE idBeneficioGov = '$idBeneficioGov';";
-                $resultUpdate_Beneficio = mysqli_query($conexao, $sqlUpdate_BeneficioGov);
+                if (empty($_SESSION['idbeneficioGov'])) { // Verifica se o usuário já possuía um benefício
+                    $sqlInsert_BeneficioGov = "INSERT INTO BeneficioGov (idBeneficios_gov, valor_beneficio) VALUES ('$idNome_Beneficio', '$valor_beneficio');";
+                    $resultUpdate_Beneficio = mysqli_query($conexao, $sqlInsert_BeneficioGov);
+
+                    if ($resultUpdate_Beneficio) {
+                        $sqlSelect_idBeneficioGov = "SELECT idBeneficioGov FROM BeneficioGov ORDER BY idBeneficioGov DESC LIMIT 1;";
+                        $resultSelect_idBeneficioGov = mysqli_query($conexao, $sqlSelect_idBeneficioGov);
+                        if (mysqli_num_rows($resultSelect_idBeneficioGov)) {
+                            $dado_Beneficio = mysqli_fetch_assoc($resultSelect_idBeneficioGov);
+                            $idBeneficioGov = $dado_Beneficio['idBeneficioGov'];
+                            $_SESSION['idbeneficioGov'] = $idBeneficioGov;
+                        }
+                    }
+                } else {
+                    $idBeneficioGov = $_SESSION['idbeneficioGov']; // CORRIGIDO: usava o nome errado antes
+                    $sqlUpdate_BeneficioGov = "UPDATE BeneficioGov SET idBeneficios_gov = '$idNome_Beneficio', valor_beneficio = '$valor_beneficio' WHERE idBeneficioGov = '$idBeneficioGov';";
+                    $resultUpdate_Beneficio = mysqli_query($conexao, $sqlUpdate_BeneficioGov);
+                }                          
+            } 
+            // UPDATE BENEFICIARIO
+            //COM BENEFICIO
+            if (!empty($idBeneficioGov)){
+                $sqlUpdate_Beneficiario = "UPDATE Beneficiario SET data_nascimento = '$data_nascimento', email = '$email', estado_civil = '$estado_civil', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade', quantos_dependentes = '$quantos_dependentes', renda_familiar = '$renda_familiar', qnt_trabalham = '$quantos_trabalham', idBeneficioGov = '$idBeneficioGov' WHERE idBeneficiario = '$id';";
             } else {
-                $resultUpdate_Beneficio = true;
+                $sqlUpdate_Beneficiario = "UPDATE Beneficiario SET data_nascimento = '$data_nascimento', email = '$email', estado_civil = '$estado_civil', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade', quantos_dependentes = '$quantos_dependentes', renda_familiar = '$renda_familiar', qnt_trabalham = '$quantos_trabalham' WHERE idBeneficiario = '$id';";
             }
 
-            $sqlUpdate_Beneficiario = "UPDATE Beneficiario SET data_nascimento = '$data_nascimento', email = '$email', estado_civil = '$estado_civil', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade', quantos_dependentes = '$quantos_dependentes', renda_familiar = '$renda_familiar', qnt_trabalham = '$quantos_trabalham' WHERE idBeneficiario = '$id';";
+            
             $resultUpdate_Beneficiario = mysqli_query($conexao, $sqlUpdate_Beneficiario);
+            if ($resultUpdate_Beneficiario){
+                echo "<script>window.alert('Beneficiário alterado com sucesso!);</script>";
+            }
 
-            if ($resultUpdate_endereco && $resultUpdate_pessoa && $resultUpdate_Beneficio && $resultUpdate_Beneficiario) {               
+            if ($resultUpdate_endereco && $resultUpdate_pessoa && $resultUpdate_Beneficiario) {               
                 // LIBERAR AS SESSÕES
                 unset($_SESSION['idBeneficiario']);
                 unset($_SESSION['idbeneficioGov']);
@@ -204,8 +235,9 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
                 unset($_SESSION['idPessoa']);
                 unset($_SESSION['idEndereco']);
                 // Limpa variáveis em memória
+                $id = '';
                 $telefone = "";
-                $BeneficioGov = "";
+                $beneficioGov = "";
                 $valor_beneficio = "";
                 $quantos_dependentes = "";
                 $data_nascimento = "";
@@ -222,12 +254,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
                 $valor_despesas = "";
                 $cep = "";
                 $nome_Beneficiario = "";
-                $_SESSION['beneficiario_alterado'] = true;
-                 echo "<script>
-                        alert('Beneficiário alterado com sucesso');
-                        window.location.href = window.location.href;
-                       </script>";
-
+                $_SESSION['beneficiario_alterado'] = true;                 
             }   else {
                 echo "<script>alert('Erro ao alterar o beneficiário. Verifique os dados e tente novamente.');</script>";
             }
