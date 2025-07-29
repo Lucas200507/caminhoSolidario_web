@@ -9,8 +9,9 @@ SELECT * FROM Beneficiario;
 SELECT * FROM endereco;
 SELECT * FROM filho_dependente;
 SELECT * FROM frequencia;
-SELECT * FROM filho_dependente;
 SELECT * FROM documentos;
+SELECT * FROM BeneficioGov;
+SELECT * FROM nomeBeneficiosGov;
 
 -- VIEWS
 SELECT * FROM tbUsuarios_web;
@@ -19,8 +20,7 @@ SELECT * FROM tbRelatorio;
 SELECT * FROM tbFilho_dependente;
 
 -- DELETE
-DELETE FROM pessoa WHERE idPessoa IN (99);
-
+DELETE FROM filho_dependente WHERE id IN (0, 5);
 
 -- ---------------------------------------------------------------------------------------------------------------------------
 		-- ADM / VOLUNTARIO / BENEFICIARIO
@@ -158,7 +158,6 @@ valor_beneficio FLOAT(10));
 
 SELECT * FROM BeneficioGov;
 -- --------------------------------------------
-
 CREATE TABLE Beneficiario (
     idBeneficiario INT PRIMARY KEY AUTO_INCREMENT,
     data_nascimento DATE NOT NULL,
@@ -250,7 +249,13 @@ PCD CHAR(1) NOT NULL,
 laudo CHAR(1), -- CASO PCD, possui laudo ou não (s/n)
 doenca VARCHAR(50),
 idBeneficiario INT NOT NULL,
+idBeneficioGov INT,
+FOREIGN KEY (idBeneficioGov) REFERENCES BeneficioGov(idBeneficioGov),
 FOREIGN KEY (idBeneficiario) references Beneficiario (idBeneficiario));
+
+-- ALTER TABLE filho_dependente
+-- ADD COLUMN idBeneficioGov INT, ADD CONSTRAINT fk_beneficio FOREIGN KEY (idBeneficioGov) REFERENCES BeneficioGov(idBeneficioGov);
+
 
 SELECT * FROM filho_dependente;
 -- -------------------------------------------------------------------------------
@@ -262,15 +267,22 @@ CREATE VIEW tbFilho_dependente AS
 SELECT 
 	fd.idFilho_Dependente,
     fd.nome_filho_dependente AS nome,
+    fd.cpf,
     fd.data_nascimento_filho_dep AS data_nascimento,
     fd.parentesco,
     fd.pcd,
+    fd.laudo,
+    fd.doenca AS comorbidade,
+    bgov.nome_beneficiogov AS beneficioGov,
     p.nome_completo AS beneficiario
 FROM filho_dependente fd
 INNER JOIN Beneficiario b ON fd.idBeneficiario = b.idBeneficiario
-INNER JOIN pessoa p ON p.idPessoa = b.idPessoa;
+INNER JOIN pessoa p ON p.idPessoa = b.idPessoa
+LEFT JOIN BeneficioGov bg ON bg.idBeneficioGov = fd.idBeneficioGov -- O LEFT JOIN retorna todas as linhas da tabela Beneficiario mesmo que não haja correspondência na tabela BeneficioGov.
+LEFT JOIN nomeBeneficiosGov bgov ON bgov.idBeneficios_gov = bg.idBeneficios_gov;
 
 SELECT * FROM tbFilho_dependente;
+
 -- ------------------------------------------
 
 CREATE TABLE documentos (
@@ -280,7 +292,7 @@ CREATE TABLE documentos (
     tipo_mime VARCHAR(100),
     idBeneficiario INT,
     idFilho_Dependente INT,    
-    data_upload DATETIME DEFAULT CURRENT_TIMESTAMP,
+    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (idFilho_Dependente) references filho_dependente (idFilho_Dependente),
 	FOREIGN KEY (idBeneficiario) references Beneficiario (idBeneficiario));
     

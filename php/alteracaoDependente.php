@@ -12,30 +12,96 @@
         $_SESSION['Dependente_alterado'] = False;
     }
 
+    // Flags de erro
+    $erro = False;
+
      // LISTAR OS DADOS DE DEPENDENTE PARA OUTROS CAMPOS
-    if (isset($_POST['pesquisar']) && !empty($_POST['cpfDependente'])){
+    if (isset($_POST['pesquisar']) && !empty($_POST['cpfDependente']) ){
         $_SESSION['cpf_dependente'] = $_POST['cpfDependente'];
         $cpf_dependente = $_SESSION['cpf_dependente'];
+
+        $sqlSelect_dependente = "SELECT * FROM tbFilho_dependente WHERE cpf = '$cpf_dependente';";
+        $resultSelect_dependente = mysqli_query($conexao, $sqlSelect_dependente);
+        if(mysqli_num_rows($resultSelect_dependente) > 0){
+            while ($dados_tbDependente = mysqli_fetch_assoc($resultSelect_dependente)){
+                $idDependente = $dados_tbDependente['idFilho_Dependente'];
+                $_SESSION['idDependente'] = $idDependente;  
+                $nome_dependente = $dados_tbDependente['nome'];   
+                $data_nascimento = $dados_tbDependente['data_nascimento'];
+                $parentesco = $dados_tbDependente['parentesco'];
+                $pcd = $dados_tbDependente['pcd'];
+                $laudo = $dados_tbDependente['laudo'];
+                $comorbidade = $dados_tbDependente['beneficiario'];  
+                // TEM QUE FAZER O SELECT DO BENEFICIOGOV
+                $beneficioGov = $dados_tbDependente['beneficioGov'];                
+            }
+            if (!empty($idDependente)){
+                $sqlSelect_filho_dep = "SELECT idBeneficioGov FROM filho_dependente WHERE idFilho_Dependente = '$idDependente';";
+                $resultSelect_filho_dep = mysqli_query($conexao, $sqlSelect_filho_dep);
+                    if(mysqli_num_rows($resultSelect_filho_dep) > 0){
+                        $dado_filhoDep = mysqli_fetch_assoc($resultSelect_filho_dep);
+                        $id_BeneficioGov = $dado_filhoDep['idBeneficioGov'];
+                    }
+                    if(!empty($id_BeneficioGov)){
+                        $sqlSelect_beneficioGov = "SELECT * FROM BeneficioGov WHERE beneficio = '$id_BeneficioGov';";
+                        $resultSelect_benefioGov = mysqli_query($conexao, $sqlSelect_beneficioGov);
+                            if(mysqli_num_rows($resultSelect_benefioGov) > 0){
+                                while($dados_beneficioGov = mysqli_fetch_assoc($resultSelect_benefioGov)){
+                                    $id_nomesBeneficioGov = $dados_beneficioGov['idBeneficios_gov'];
+                                    $valor_beneficioGov = $dados_beneficioGov['valor_beneficio'];
+                                }
+                            }        
+                    }
+            }
+        }
     }
 
-    // Flags de erro
-    $qnt_caracteres_erro = false;
-    $em_branco = false;
-    $incoerencia_Beneficio = false;
-    $incoerencia_PCD = false;
-    $incoerencia_Dependentes = false;
-    $qtd_dependentes_incoerente = false;
-    $erro_idade = False;
-
-    if(mysqli_num_rows($result0) > 0){
-        while ($dados_tbBeneficiario = mysqli_fetch_assoc($result0)){
-            $idBeneficiario = $dados_tbBeneficiario['ID'];
-            $_SESSION['idBeneficiario'] = $idBeneficiario;                
+    // ALTERAR DEPENDENTE
+    if(isset($_POST['alterar']) && !$erro){
+        // verificar se possui algum campo obrigatório em branco. Verificar máscaras
+        if(empty($_POST['data_nascimento'])){
+            echo "<script>window.alert('O campo data de nascimento está em branco');</script>";
+            $erro = true;
+        } else {
+            $data_nascimento = $_POST['data_nascimento'];
+            $idade = (new DateTime($data_nascimento))->diff(new DateTime())->y;            
+            if ($idade < 0){
+                echo "<script>window.alert('Insira uma data de nascimento que já exista.');</script>";
+                $erro = true;
+            } 
+            if (empty($_POST['rbParentesco'])){
+                echo "<script>window.alert('O campo parentesco está em branco');</script>";
+            } else {
+                if (($_POST['rbParentesco'] == 'Filho(a) - Menor') && $idade >= 18){
+                    echo "<script>window.alert('Há uma incoerência em relação a idade do(a) menor.');</script>";
+                    $erro = true;
+                } 
+                else if ($_POST['rbParentesco'] == 'Mae ou pai' && $idade < 37){
+                    echo "<script>window.alert('Há uma incoerência em relação a idade da mãe ou pai.');</script>";
+                    $erro = true;
+                } else if ($_POST['rbParentesco'] == 'Parente_Pcd'){
+                    if (empty($_POST['rbPcd']) || $_POST['rbPcd'] == "N"){
+                        echo "<script>window.alert('Há uma incoerência em relação à PCD.');</script>";
+                        $erro = true;
+                    }
+                } 
+            }             
+        }
+        if (empty($_POST['rbPossuiBenf'])){
+            echo "<script>window.alert('O campo Possui Benefício está em branco');</script>";
+            $erro = true;
+        } else {
+            if ($_POST['rbPossuiBenf'] == "S" && (empty($_POST['valor_benecicioDependente']) || empty($_POST['beneficioDependente']))){
+                echo "<script>window.alert('Há uma incoerência em relação ao Benefício do Dependente');</script>";
+                $erro = true;
+            }
+        }
+        if (!empty($_POST['rbPcd']) && $_POST['rbPcd'] == "S" && empty($_POST['nome_doenca'])){
+            echo "<script>window.alert('Há uma incoerência em relação à PCD.');</script>";
+            $erro = true;
         }
     }
     
-
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -130,7 +196,7 @@
                         <!-- TEM QUE PEGAR ESSE CPF PARA FAZER O SELECT -->
                         <?php if(mysqli_num_rows($result) > 0): ?>
                             <?php while($dependente_data = mysqli_fetch_assoc($result)): ?>
-                                <option value="<?= $dependente_data['cpf'] ?>"><?= $dependente_data['cpf'] ?></option>;
+                                <option value="<?= $dependente_data['cpf'] ?>"<?= (isset($cpf_dependente) && $cpf_dependente == $dependente_data['cpf']) ? 'selected' : '' ?>><?=$dependente_data['cpf']?></option>;
                             <?php endwhile; ?>
                         <?php endif ?>
                     </select>                        
@@ -144,26 +210,23 @@
             </h3>
             <div class="d-flex flex-column container">
                 <label class="form-label">Nome Completo:</label>
-                <input type="text" id="nome" required class="form-control border" name="nome_completo" disabled>
+                <input type="text" id="nome" class="form-control border" name="nome_completo" disabled value="<?= !empty($nome_dependente) ? $nome_dependente : '' ?>">
             </div>
-            <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
-                <!-- <span class="col-lg-3">
-                    <label for="">CPF</label>
-                    <input type="text" maxlength="14" minlength="14" id="cpf" disabled class="form-control" name="cpfDependente" id="cpf">
-                </span> -->
+            <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">          
                 <span class="col-lg-3">
                     <label for="">Data Nascimento</label>
-                    <input type="date" class="form-control" name="data_nascimento" required>
+                    <input type="date" class="form-control" name="data_nascimento" value="<?= !empty($data_nascimento) ? $data_nascimento : '' ?>">
                 </span>
                 <span class="col-lg-4">
                     <label for="">Parentesco</label>
-                    <select class="form-select form-select-md" name="rbParentesco" required>
-                        <option value=""></option>
-                        <option value="Filho(a)">Filho(a) - de Menor ou PCD</option>
-                        <option value="Mae ou pai">Mãe ou pai</option>
-                        <option value="Neto(a)">Neto(a)</option>
-                        <option value="Irmao(a)">Irmão(ã)</option>
-                        <option value="Outro">Outro</option>
+                    <select class="form-select form-select-md" name="rbParentesco">
+                        <option value="" <?= !empty($parentesco) && $parentesco == "" ? 'selected' : '' ?>></option>
+                        <option value="Filho_M" <?= !empty($parentesco) && $parentesco == "Filho_M" ? 'selected' : '' ?>>Filho(a) - Menor</option>
+                        <option value="Parente_Pcd" <?= !empty($parentesco) && $parentesco == "Parente_Pcd" ? 'selected' : '' ?>>Parente - PCD</option>
+                        <option value="Mae ou pai" <?= !empty($parentesco) && $parentesco == "Mae ou pai" ? 'selected' : '' ?>>Mãe ou pai</option>
+                        <option value="Neto(a)" <?= !empty($parentesco) && $parentesco == "Neto(a)" ? 'selected' : '' ?>>Neto(a)</option>
+                        <option value="Irmao(a)" <?= !empty($parentesco) && $parentesco == "Irmao(a)" ? 'selected' : '' ?>>Irmão(ã)</option>
+                        <option value="Outro" <?= !empty($parentesco) && $parentesco == "Outro" ? 'selected' : '' ?>>Outro</option>
                     </select>
                 </span>
             </div>
@@ -177,23 +240,23 @@
                         <label for="">Possui Benefício?</label>
                         <div class="d-flex container justify-content-start p-0">
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="S">
+                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="S" <?= (!empty($beneficioGov)) ? 'checked' : '' ?>>
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="N">
+                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="N" <?= (isset($_POST['pesquisar']) && empty($beneficioGov)) ? 'checked' : '' ?>>
                                 <label for="">Não</label>
                             </div>               
                         </div>
                     </span>
                     <span class="col-8">
                         <label for="">Qual o nome do Benefício?</label>
-                         <input type="text" class="form-control" name="beneficioDependente"> <!-- PODIA SER UM COMBOBOX -->
+                         <input type="text" class="form-control" name="beneficioDependente" <?= !empty($beneficioGov) ? $beneficioGov : '' ?>> <!-- PODIA SER UM COMBOBOX -->
                     </span> 
                 </div>           
                 <span class="col-lg-4 ">
                     <label for="">Valor</label>
-                    <input type="number" id="valor" class="form-control" name="valor_benecicioDependente">
+                    <input type="number" id="valor" class="form-control" name="valor_benecicioDependente" <?= !empty($valor_beneficioGov) ? $valor_beneficioGov : '' ?>>
                 </span> 
             </div>
             <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">
@@ -202,11 +265,11 @@
                         <label for="">PCD?</label>
                         <div class="d-flex container p-0">
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPCD" value="S">
+                                <input type="radio" class="form-check-input" name="rbPCD" value="S" <?= (!empty($pcd) && $pcd == "S") ? 'checked' : '' ?>>
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPCD" value="N">
+                                <input type="radio" class="form-check-input" name="rbPCD" value="N" <?= (!empty($pcd) && $pcd == "N") ? 'checked' : '' ?>>
                                 <label for="">Não</label>
                             </div>               
                         </div>
@@ -215,11 +278,11 @@
                         <label for="">Possui Laudo Médico?</label>
                         <div class="d-flex container justify-content-start p-0">
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="S">
+                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="S" <?= (!empty($laudo) && $laudo == "S") ? 'checked' : '' ?>>
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="N">
+                                <input type="radio" class="form-check-input" name="rbPossuiLaudo" value="N" <?= (!empty($laudo) && $laudo == "N") ? 'checked' : '' ?>>
                                 <label for="">Não</label>
                             </div>               
                         </div>
@@ -227,7 +290,7 @@
                 </div>           
                 <span class="col-lg-6">
                     <label for="">Nome da Comorbidade</label>
-                    <input type="text" class="form-control" name="nome_doenca" id="comorbidade">
+                    <input type="text" class="form-control" name="nome_doenca" id="comorbidade" <?= (!empty($comorbidade)) ? $comorbidade : '' ?>>
                 </span> 
             </div> 
             <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">
@@ -241,7 +304,7 @@
                     <ion-icon name="close-circle-outline" id="btCancelar"></ion-icon>
                     <p>Deletar</p>
                 </span>
-               <button type="submit" class="botoes_crud" name="atualizar" value="1">
+               <button type="submit" class="botoes_crud" name="alterar" value="1">
                     <span class="align-items-center text-center">
                         <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
                         <p>Salvar</p>
