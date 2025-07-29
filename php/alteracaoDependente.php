@@ -41,6 +41,7 @@
                     if(mysqli_num_rows($resultSelect_filho_dep) > 0){
                         $dado_filhoDep = mysqli_fetch_assoc($resultSelect_filho_dep);
                         $id_BeneficioGov = $dado_filhoDep['idBeneficioGov'];
+                        $_SESSION['idBeneficioGov_dep'] = $id_BeneficioGov;
                     }
                     if(!empty($id_BeneficioGov)){
                         $sqlSelect_beneficioGov = "SELECT * FROM BeneficioGov WHERE beneficio = '$id_BeneficioGov';";
@@ -48,6 +49,7 @@
                             if(mysqli_num_rows($resultSelect_benefioGov) > 0){
                                 while($dados_beneficioGov = mysqli_fetch_assoc($resultSelect_benefioGov)){
                                     $id_nomesBeneficioGov = $dados_beneficioGov['idBeneficios_gov'];
+                                    $_SESSION['idNome_beneficio_dep'] = $id_nomesBeneficioGov;
                                     $valor_beneficioGov = $dados_beneficioGov['valor_beneficio'];
                                 }
                             }        
@@ -55,7 +57,7 @@
             }
         }
     }
-
+    
     // ALTERAR DEPENDENTE
     if(isset($_POST['alterar']) && !$erro){
         // verificar se possui algum campo obrigatório em branco. Verificar máscaras
@@ -64,11 +66,21 @@
             $erro = true;
         } else {
             $data_nascimento = $_POST['data_nascimento'];
-            $idade = (new DateTime($data_nascimento))->diff(new DateTime())->y;            
-            if ($idade < 0){
-                echo "<script>window.alert('Insira uma data de nascimento que já exista.');</script>";
-                $erro = true;
-            } 
+            ///         DATA NASCIMENTO         ///        
+            $data_nascimentoDT = new DateTime($data_nascimento); // CONVERTE PARA DATA
+            $data_atual = new DateTime();
+            $intervalo = $data_nascimentoDT->diff($data_atual);
+            $idade = $intervalo->y; // A IDADE SERÁ O INTERVALO EM ANOS, DO DIA DE HOJE PARA A DATA_NASCIMENTO
+            if($intervalo->invert){
+                // Se o invert == 1 -> FUTURO
+                // SE O invert == 0 -> PASSADO
+                $Verifica_idade = $intervalo->invert;
+            }
+              
+            if (!empty($Verifica_idade) && $Verifica_idade == 1){            
+                echo "<script>window.alert('Escolha uma data de nascimento que realmente exista');</script>";
+                $erro_idade = True;
+            }
             if (empty($_POST['rbParentesco'])){
                 echo "<script>window.alert('O campo parentesco está em branco');</script>";
             } else {
@@ -100,6 +112,46 @@
             echo "<script>window.alert('Há uma incoerência em relação à PCD.');</script>";
             $erro = true;
         }
+
+        if (!$erro){
+            // LANCAR NO BANCO
+            $data_nascimento = $_POST['data_nascimento'];
+            $parentesco = $_POST['rbParentesco'];
+            $pcd = $_POST['rbPCD'];
+            $laudo = $_POST['rbPossuiLaudo'];
+            $comorbidade = $_POST['nome_doenca'];
+            $valorBeneficioGov = $_POST['valor_benecicioDependente']; // alterar Beneficio gov
+            $beneficioGov = $_POST['beneficioDependente']; // alterar nomeBeneficiosGov
+            // ID BENEFICIOGOV
+            $id_nomesBeneficioGov = $_SESSION['idNome_beneficio_dep'];
+            // UPDATE EM BENEFICIO SE TIVER        
+            if (!empty($beneficioGov) && !empty($valorBeneficioGov) && !empty($id_nomesBeneficioGov)) {
+                switch ($beneficioGov) {
+                    case "Novo Bolsa Família": $id_nomesBeneficioGov = 1; break;
+                    case "Benefício de Prestação Continuada (BPC)": $id_nomesBeneficioGov = 2; break;
+                    case "Aposentadoria": $id_nomesBeneficioGov = 3; break;
+                    case "Vale-Gas": $id_nomesBeneficioGov = 4; break;
+                    case "Outros": $id_nomesBeneficioGov = 5; break;
+                    default: $id_nomesBeneficioGov = NULL; break;
+                }
+                $idBeneficioGov = $_SESSION['idBeneficioGov_dep'];
+                $sqlUpdate_BeneficioGov = "UPDATE BeneficioGov SET idBeneficiosGov = '$id_nomesBeneficioGov', valor_beneficio = '$valor_BeneficioGov' WHERE idBeneficioGov = '$idBeneficioGov';";
+                $resultUpdate_Beneficio = mysqli_query($conexao, $sqlUpdate_BeneficioGov);
+                if ($resultUpdate_Beneficio){
+                    unset($_SESSION['idNome_beneficio_dep']);  
+                } else {
+                    $resultUpdate_Beneficio = False;
+                }
+            } else {
+                $resultUpdate_Beneficio = true;
+            }
+
+            // UPDATE EM filho_dependente
+            if ($resultUpdate_Beneficio){
+                $sqlUpdate_filhoDep = "UPDATE filho_dependente SET data_nascimento_filho_dep = '$data_nascimento', parentesco = '$parentesco', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade', $id_BeneficioGov = '$id_nomesBeneficioGov';";
+            }
+        }
+
     }
     
 ?>
@@ -251,7 +303,14 @@
                     </span>
                     <span class="col-8">
                         <label for="">Qual o nome do Benefício?</label>
-                         <input type="text" class="form-control" name="beneficioDependente" <?= !empty($beneficioGov) ? $beneficioGov : '' ?>> <!-- PODIA SER UM COMBOBOX -->
+                          <select name="beneficioDependente" class="form-select form-select-md">
+                            <option value=""></option>
+                            <option value="Aposentadoria" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Aposentadoria' && !$cadastrado) ? 'selected ': ''; ?>>Aposentadoria</option>
+                            <option value="Benefício de Prestação Continuada (BPC)" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Benefício de Prestação Continuada (BPC)' && !$cadastrado) ? 'selected ': ''; ?>>Benefício de Prestação Continuada (BPC)</option>
+                            <option value="Novo Bolsa Família" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Novo Bolsa Família' && !$cadastrado) ? 'selected ': ''; ?>>Bolsa Família</option>
+                            <option value="Vale-gas" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Vale-gas' && !$cadastrado) ? 'selected ': ''; ?>>Vale Gás</option>
+                            <option value="Outros" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Outros' && !$cadastrado) ? 'selected ': ''; ?>>Outros</option>                            
+                        </select>                
                     </span> 
                 </div>           
                 <span class="col-lg-4 ">

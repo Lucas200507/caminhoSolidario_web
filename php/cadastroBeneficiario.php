@@ -100,10 +100,21 @@ if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro 
     if (strlen($telefone) < 11){
         $qnt_caractes_erro = True;
     }
-    $idade = (new DateTime($data_nascimento))->diff(new DateTime())->y;    
-    if ($idade < 0){
-        echo "<script>window.alert('Escolha uma data de nascimento que relamente exista');</script>";
-        $erro_idade = True;
+   ///         DATA NASCIMENTO         ///        
+   $data_nascimentoDT = new DateTime($data_nascimento); // CONVERTE PARA DATA
+   $data_atual = new DateTime();
+   $intervalo = $data_nascimentoDT->diff($data_atual);
+   $idade = $intervalo->y; // A IDADE SERÁ O INTERVALO EM ANOS, DO DIA DE HOJE PARA A DATA_NASCIMENTO
+   if($intervalo->invert){
+       // Se o invert == 1 -> FUTURO
+       // SE O invert == 0 -> PASSADO
+       $Verifica_idade = $intervalo->invert;
+   }
+         
+    if (!empty($Verifica_idade) && $Verifica_idade == 1){            
+       echo "<script>window.alert('Escolha uma data de nascimento que realmente exista');</script>";
+       $erro_idade = True;
+   }
     } else if ($idade < 20){
         echo "<script>window.alert('A idade mínima para se cadastrar como Beneficiário(a) é de 20 anos.');</script>";
         $erro_idade = True;
@@ -224,7 +235,7 @@ if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro 
         }
     }
 }
-} else {
+else {
 $em_branco = true;
 }
 

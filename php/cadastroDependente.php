@@ -88,15 +88,24 @@ if (isset($_POST['cadastrar'])
         $pcd = $_POST['rbPCD'];
         $possuiBenf = $_POST['rbPossuiBenf'];
 
-        $idade = (new DateTime($data_nascimento))->diff(new DateTime())->y;
-         if ($idade < 0){
+        ///         DATA NASCIMENTO         ///        
+        $data_nascimentoDT = new DateTime($data_nascimento); // CONVERTE PARA DATA
+        $data_atual = new DateTime();
+        $intervalo = $data_nascimentoDT->diff($data_atual);
+        $idade = $intervalo->y; // A IDADE SERÁ O INTERVALO EM ANOS, DO DIA DE HOJE PARA A DATA_NASCIMENTO
+        if($intervalo->invert){
+            // Se o invert == 1 -> FUTURO
+            // SE O invert == 0 -> PASSADO
+            $Verifica_idade = $intervalo->invert;
+        }
+              
+         if (!empty($Verifica_idade) && $Verifica_idade == 1){            
             echo "<script>window.alert('Escolha uma data de nascimento que realmente exista');</script>";
             $erro_idade = True;
         }
-        if ($parentesco == "Filho_M" && idade >= 18) {  
+        if ($parentesco == "Filho_M" && $idade >= 18) {  
             echo "<script>window.alert('A idade do filho(a) deve ser menor de 18 anos.');</script>";
-            $incoerencia = true;
-        
+            $incoerencia = true;        
         } elseif ($parentesco == "Parente_Pcd" && $pcd == "N") {
             $incoerencia = true;
         } elseif ($parentesco != "Parente_Pcd" && $pcd == "S") {

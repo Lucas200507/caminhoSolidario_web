@@ -43,8 +43,6 @@ if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
             $_SESSION['idBeneficiario'] = $idBeneficiario;                
         }
         
-        
-
         $sql2 = "SELECT * FROM Beneficiario WHERE idBeneficiario = '$idBeneficiario';";
         $result2 = mysqli_query($conexao, $sql2);
 
@@ -110,10 +108,20 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
             $qnt_caracteres_erro = true;
         }
         $data_nascimento = $_POST['data_nascimentoBeneficiario'];
-        $idade = (new DateTime($data_nascimento))->diff(new DateTime())->y;    
-        if ($idade < 0){
-            echo "<script>window.alert('Escolha uma data de nascimento que relamente exista');</script>";
-            $erro_idade = True;
+        ///         DATA NASCIMENTO         ///        
+        $data_nascimentoDT = new DateTime($data_nascimento); // CONVERTE PARA DATA
+        $data_atual = new DateTime();
+        $intervalo = $data_nascimentoDT->diff($data_atual);
+        $idade = $intervalo->y; // A IDADE SERÁ O INTERVALO EM ANOS, DO DIA DE HOJE PARA A DATA_NASCIMENTO
+        if($intervalo->invert){
+            // Se o invert == 1 -> FUTURO
+            // SE O invert == 0 -> PASSADO
+            $Verifica_idade = $intervalo->invert;
+        }
+              
+         if (!empty($Verifica_idade) && $Verifica_idade == 1){            
+            echo "<script>window.alert('Escolha uma data de nascimento que realmente exista');</script>";
+            $erro_idade = True;        
         } else if ($idade < 20){
             echo "<script>window.alert('A idade mínima para se cadastrar como Beneficiário(a) é de 20 anos.');</script>";
             $erro_idade = True;
@@ -125,6 +133,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
         $estado = $_POST['estadoBeneficiario'];
         $situacao_moradia = $_POST['situacao_moradiaBeneficiario'];
         $beneficioGov = $_POST['beneficioBeneficiario'];
+        $valor_beneficio = $_POST['valor_benecicioBeneficiario'];
         $valor_despesas = $_POST['valor_despesasBeneficiario'];
         $comorbidade = $_POST['doenca'];
         $renda_familiar = $_POST['renda_familiarBeneficiario'];
@@ -145,7 +154,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
         }
 
         // Validações de coerência
-        if ($_POST['rbPossuiBenf'] == 'S' && (empty($beneficioGov) || empty($valor_despesas))) {
+        if ($_POST['rbPossuiBenf'] == 'S' && (empty($beneficioGov) || empty($valor_beneficio))) {
             $incoerencia_Beneficio = true;
         }
 
@@ -168,7 +177,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
             $resultUpdate_endereco = mysqli_query($conexao, $sqlUpdate_endereco);
             $resultUpdate_pessoa = mysqli_query($conexao, $sqlUpdate_pessoa);
 
-            if (!empty($beneficioGov) && !empty($valor_despesas)) {
+            if (!empty($beneficioGov) && !empty($valor_beneficio)) {
                 switch ($beneficioGov) {
                     case "Novo Bolsa Família": $idBeneficio = 1; break;
                     case "Benefício de Prestação Continuada (BPC)": $idBeneficio = 2; break;
@@ -178,7 +187,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
                     default: $idBeneficio = NULL; break;
                 }
 
-                $sqlUpdate_BeneficioGov = "UPDATE BeneficioGov SET idBeneficiosGov = '$idBeneficio', valor_beneficio = '$valor_despesas' WHERE idBeneficioGov = '$idBeneficioGov';";
+                $sqlUpdate_BeneficioGov = "UPDATE BeneficioGov SET idBeneficiosGov = '$idBeneficio', valor_beneficio = '$valor_beneficio' WHERE idBeneficioGov = '$idBeneficioGov';";
                 $resultUpdate_Beneficio = mysqli_query($conexao, $sqlUpdate_BeneficioGov);
             } else {
                 $resultUpdate_Beneficio = true;
@@ -197,6 +206,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
                 // Limpa variáveis em memória
                 $telefone = "";
                 $BeneficioGov = "";
+                $valor_beneficio = "";
                 $quantos_dependentes = "";
                 $data_nascimento = "";
                 $email = "";
@@ -490,7 +500,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                 </div>           
                 <span class="col-lg-4 ">
                     <label for="">Valor</label>
-                    <input type="number" id="valorB" class="form-control" name="valor_benecicioBeneficiario" value="<?= !empty($nome_Beneficiario) ? $nome_Beneficiario : ''; ?>">
+                    <input type="number" id="valorB" class="form-control" name="valor_benecicioBeneficiario" value="<?= !empty($valor_beneficio) ? $valor_beneficio : ''; ?>">
                 </span> 
             </div>
             <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">
