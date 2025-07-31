@@ -16,8 +16,8 @@
             } else {
                 // VERIFICAR SE POSSUI ESSE CPF E EMAIL NO BANCO
                 $cpf_formatado = $_POST['cpf'];
-                $_SESSION['cpf_resetarSenha'] = $cpf_formatado;
                 $cpf_formatado = str_replace(['.', '-'], '', $cpf_formatado); 
+                $_SESSION['cpf_resetarSenha'] = $cpf_formatado;
                 $email = $_POST['email'];            
                 $sqlSelect_Usuarios_web = "SELECT * FROM tbUsuarios_web WHERE email = ? AND cpf = ?";            
                 $stmt = mysqli_prepare($conexao, $sqlSelect_Usuarios_web);            
@@ -87,55 +87,58 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 </head>
-<body id="sem_tema">    
-    <div class="container_login d-flex align-items-center justify-content-center flex-column">        
-            <div class="container_resetSenha" id="container_reset">
-                <div class="confDelete">  
-                    <form action="" method="post">
-                        <p style="color: black;" class="h4">Insira os campos senha e Confirmar senha.</p>
-                        <span class="d-flex flex-column mt-1 align-items-center">
-                            <input type="password" placeholder="Senha:" class="form-control border-primary text-dark w-100 mb-2" name="senha">
-                            <input type="password" placeholder="Confirmar senha:" class="form-control border-primary text-dark w-100 mb-2" name="Confsenha">
-                            <button name="conf_resetSenha" class="btn btn-sm w-50 btn-success mt-2" type="submit">Confirmar</button>
-                            <button name="cancelar_resetSenha" class="btn btn-sm w-50 btn-danger mt-2" type="submit">Cancelar</button>
-                        </span>
-                    </form>                  
+<body id="sem_tema">
+    <div id="container_body">
+        <div class="container_login d-flex align-items-center justify-content-center flex-column">        
+                <div class="container_resetSenha" id="container_reset">
+                    <div class="confDelete">  
+                        <form action="" method="post">
+                            <p style="color: black;" class="h4">Insira os campos senha e Confirmar senha.</p>
+                            <span class="d-flex flex-column mt-1 align-items-center">
+                                <input type="password" placeholder="Senha:" class="form-control border-primary text-dark w-100 mb-2" name="senha">
+                                <input type="password" placeholder="Confirmar senha:" class="form-control border-primary text-dark w-100 mb-2" name="Confsenha">
+                                <button name="conf_resetSenha" class="btn btn-sm w-50 btn-success mt-2" type="submit">Confirmar</button>
+                                <button name="cancelar_resetSenha" class="btn btn-sm w-50 btn-danger mt-2" type="submit">Cancelar</button>
+                            </span>
+                        </form>                  
+                    </div>
+                </div>        
+            <img src="../img/logo_nomeembaixo.png" alt="" class="mb-5 logo_esqueceu_senha" style="<?= $inserindo_senha ? 'opacity: 0.1;' : '' ?>" >
+            <h3 class="texto_esqueceuSenha">ESQUECEU A SENHA ?</h3>
+            <form class="d-block p-3 form_login" method="post" action="">
+                <div class="form-group d-flex flex-column mt-3">
+                    <label for=""><input type="text" placeholder="CPF:" name="cpf" id="cpf" class="form-control border-primary text-dark w-100"></label>
+                    <label for=""><input type="text" placeholder="Email:" name="email" id="email" class="form-control border-primary text-dark w-100"></label>
                 </div>
-            </div>        
-        <img src="../img/logo_nomeembaixo.png" alt="" class="mb-5 logo_esqueceu_senha">
-        <h3 class="texto_esqueceuSenha">ESQUECEU A SENHA ?</h3>
-        <form class="d-block p-3 form_login" method="post" action="">
-            <div class="form-group d-flex flex-column mt-3">
-                <label for=""><input type="text" placeholder="CPF:" name="cpf" id="cpf" class="form-control border-primary text-dark w-100"></label>
-                <label for=""><input type="text" placeholder="Email:" name="email" id="email" class="form-control border-primary text-dark w-100"></label>
-            </div>
-           <button class="btn btn-primary btn-block btn-lg mb-3" <?= $_SESSION['inserindo_senha'] ? 'disabled' : '' ?> value="1" name="enviar" type="submit">Enviar</button>
-           <a href="login.php">
-            <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
-           </a>           
-        </form>
-    </div>
-
-    <div id="rodapeI">
-    </div>
-    <!-- PARA O CONTAINER RESETAR SENHA -->
-    <script>
-    const inserindo_senha = <?= json_encode($inserindo_senha ?? false) ?>;
-    if (inserindo_senha) {
-        document.getElementById('container_reset').style.display = 'block';
-        document.body.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-    } else {
-        document.getElementById('container_reset').style.display = 'none';
-        document.body.style.backgroundColor = '';
-    }
-    </script>
-
-    <script src="../js/mascaras.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <!-- IONICONS -->
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+            <button class="btn btn-primary btn-block btn-lg mb-3" <?= $_SESSION['inserindo_senha'] ? 'disabled' : '' ?> value="1" name="enviar" type="submit">Enviar</button>
+            <a href="login.php">
+                <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
+            </a>           
+            </form>
+        </div>
+    
+        <div id="rodapeI">
+        </div>
+        <!-- PARA O CONTAINER RESETAR SENHA -->
+        <script>
+        const inserindo_senha = <?= json_encode($inserindo_senha ?? false) ?>;
+        const container = document.getElementById('container_body');
+        if (inserindo_senha) {
+            document.getElementById('container_reset').style.display = 'block';
+            container.style.backgroundColor = 'rgba(0, 0, 1, 0.8)';
+        } else {
+            document.getElementById('container_reset').style.display = 'none';
+            container.style.backgroundColor = '';
+        }
+        </script>
+    
+        <script src="../js/mascaras.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+            <!-- IONICONS -->
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    </div>    
 </body>
 </html>

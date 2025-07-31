@@ -112,6 +112,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
         $cep = preg_replace('/[^0-9]/', '', $_POST['cepBeneficiario']);
 
         if (strlen($telefone) < 11 || strlen($cep) < 8) {
+            echo "<script>alert('Telefone ou CEP possuem caracteres insuficientes');</script>";
             $qnt_caracteres_erro = true;
         }
         $data_nascimento = $_POST['data_nascimentoBeneficiario'];
@@ -155,21 +156,29 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
         $sqlSelect_Dependente = "SELECT COUNT(*) AS total FROM filho_dependente WHERE idBeneficiario = '$id';";
         $resDep = mysqli_query($conexao, $sqlSelect_Dependente);
         $total_dependentes = mysqli_fetch_assoc($resDep)['total'];
+        echo "$total_dependentes";
 
         if ($total_dependentes > $quantos_dependentes) {
-            $qtd_dependentes_incoerente = true;
+            echo "<script>window.alert('Quantidade de dependentes já cadastrados é maior que a informada');</script>";   
+            $qtd_dependentes_incoerente = true;         
         }
 
         // Validações de coerência
         if ($_POST['rbPossuiBenf'] == 'S' && (empty($beneficioGov) || empty($valor_beneficio))) {
+            echo "<script>window.alert('Há uma incoerência em relação ao Benefício do Beneficiário');</script>";
             $incoerencia_Beneficio = true;
         }
 
         if ($_POST['rbPCD'] == 'S' && (empty($comorbidade) || $_POST['rbPossuiLaudo'] == 'N')) {
+            echo "<script>alert('Há uma incoerência em relação à PCD');</script>";
             $incoerencia_PCD = true;
         }
 
         if ($_POST['rbPossuiDependentes'] == 'S' && empty($quantos_dependentes)) {
+            echo "<script>alert('Há uma incoerência em relação aos Dependentes');</script>";
+            $incoerencia_Dependentes = true;
+        } else if ($_POST['rbPossuiDependentes'] == 'N' && $total_dependentes > 0){
+            echo "<script>alert('Já possui Dependentes cadastrados em relação ao Beneficiário');</script>";
             $incoerencia_Dependentes = true;
         }
 
@@ -267,17 +276,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
 // Alertas - ALTERAÇÃO
 if ($em_branco) {
     echo "<script>alert('Há campos em branco');</script>";
-} else if ($incoerencia_Beneficio) {
-    echo "<script>alert('Há uma incoerência em relação ao Benefício do Beneficiário');</script>";
-} else if ($incoerencia_Dependentes) {
-    echo "<script>alert('Há uma incoerência em relação aos Dependentes');</script>";
-} else if ($incoerencia_PCD) {
-    echo "<script>alert('Há uma incoerência em relação à PCD');</script>";
-} else if ($qtd_dependentes_incoerente) {
-    echo "<script>alert('Quantidade de dependentes cadastrados é maior que a informada');</script>";
-} else if ($qnt_caracteres_erro) {
-    echo "<script>alert('Telefone ou CEP possuem caracteres insuficientes');</script>";
-}
+} 
 
 // DELETAR
 if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
