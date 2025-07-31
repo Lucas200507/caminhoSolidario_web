@@ -100,7 +100,27 @@ body{
 #mensagem_erro2{
     color: red;
 }
+/*********************************************************************************************************/
+/* Esqueceu Senha  */
+.container_resetSenha{
+    display: none; 
+    position: absolute; 
+    align-items: center;   
+    text-align: center;  
+    right: 25%; 
+    left: 25%; 
+    z-index: 1;   
+}
 
+.subContainer_resetSenha{
+     width: 100%;
+    background-color: white;
+    padding: 1em;
+    border-radius: 2em;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    right: auto;
+    left: auto;      
+}
 
 /*********************************************************************************************************/
 /* Telas do voluntário*/

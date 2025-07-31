@@ -4,6 +4,7 @@ USE caminho_solidario;
 
 -- TABELAS
 SELECT * FROM pessoa;
+SELECT * FROM login;
 SELECT * FROM espera_voluntario;
 SELECT * FROM Beneficiario;
 SELECT * FROM endereco;

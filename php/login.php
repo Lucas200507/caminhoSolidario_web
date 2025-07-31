@@ -27,6 +27,7 @@
         // tem que tirar os caracteres especiais
         $usuario = str_replace(['.', '-'], '', $usuario); // formata a string retirando os caracteres especiais e substituindo para vazio
         
+        
         $sqlVerificarLembrarSenha = "SELECT * FROM login WHERE cpf = $usuario AND lembrar_senha = 1;";
         $result2 = $conexao->query($sqlVerificarLembrarSenha);
         if(mysqli_num_rows($result2)){ // O usuário clicou em lembrar senha anteriormente
@@ -103,8 +104,8 @@
                     <input type="checkbox" class="form-check-input" id="cbLembrar_senha" name="lembrar_senha">
                     <label for="" class="form-check-label">Lembrar Senha</label>
                 </div>
-                <!-- <a href="esqueceu_senha.php" class="text-primary">Esqueceu sua senha?</a> -->
-                <a href="em_manutencao.html" class="text-primary">Esqueceu sua senha?</a>
+                <a href="esqueceu_senha.php" class="text-primary">Esqueceu sua senha?</a>
+                <!-- <a href="em_manutencao.html" class="text-primary">Esqueceu sua senha?</a> -->
             </div>            
             <input type="submit" class="btn btn-block btn-light btn-outline-primary btn-lg" name="submit" value="Entrar">                         
                 <div class="text-center mt-3 mb-2 border-bottom border-dark pb-3">
