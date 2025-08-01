@@ -1,11 +1,12 @@
 <?php
-    // PRECIAS COLOCAR AS MÁSCARAS MANUALMENTE COM PHP
+    // Checar o telefone, cada usuário tem um telefone único
 
     include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
     include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
     // Acessando o dados_usuario_logado para receber seus dados 
     include_once("../routes/dados_usuarioLogado.php");
     $_SESSION['cpf_formatado'] = $cpf_logado; 
+
     
     $cpf_logado = substr($cpf_logado, 0, 3) . "." . substr($cpf_logado, "3");
     $cpf_logado = substr($cpf_logado, 0, 7) . "." . substr($cpf_logado, "7");
@@ -13,7 +14,40 @@
 
     $telefone = substr($telefone, 0, 0) . "(" . substr($telefone, "0");
     $telefone = substr($telefone, 0, 3) . ")" . substr($telefone, "3");  
+    $telefone = substr($telefone, 0, 4) . " " . substr($telefone, "4");  
     
+    $email_alterado = false;
+    $erro = false;
+    if(isset($_POST['salvar_user']) && !empty($_POST['email']) && !$erro && !$email_alterado){
+        $cpf = $_SESSION['cpf_formatado'];
+        // select tabela tbUsuarios_web pelo cpf e pegar o id
+        $sql_SelectUsuarios_web = "SELECT ID from tbUsuarios_web WHERE cpf = '$cpf';";
+        $result_SelectUsuarios_web = mysqli_query($conexao, $sql_SelectUsuarios_web);
+        if (mysqli_num_rows($result_SelectUsuarios_web) > 0){
+            $dado_usuario_web = mysqli_fetch_assoc($result_SelectUsuarios_web);
+            $id_usuario_web = $dado_usuario_web['ID'];
+                $email = $_POST['email'];
+                $sqlUpdate_email = "UPDATE usuarios_web SET email = '$email' WHERE idUsuariosWeb = '$id_usuario_web';";
+                $resultUdate_email = mysqli_query($conexao, $sqlUpdate_email);
+                if ($resultUdate_email){
+                    echo "<script>window.alert('Email alterado com sucesso!');</script>";
+                    $email_alterado = true;
+                } else {
+                    echo "<script>window.alert('Erro na alteração do email!');</script>";
+                    $erro = true;
+                }
+        } else {
+            echo "<script>window.alert('Erro na busca do ID usuario web!');</script>";
+            $erro = true;
+        }
+
+
+    } else if (!isset($_POST['salvar_user']) && empty($_POST['email'])){
+        echo "<script>window.alert('O campo email do usuário está em branco!');</script>";
+        $erro = true;
+    }
+
+
     $senha_alterada = False;
     // Resetar_senha
     if (isset($_POST['confirmar']) && !$senha_alterada){
@@ -118,10 +152,10 @@
         </div>
         <!-- DADOS DO USUÁRIO -->
         <div class="dadosUsuario mb-5 w-100">
-            <form action="">
+            <form action="" method="post">
                 <div class="d-flex flex-column container">
                     <label class="form-label">Nome Completo:</label>
-                    <input type="text" required class="form-control border" id="nomeCompleto_user" value="<?php echo $nome_completo ?>">
+                    <input type="text" class="form-control border" id="nomeCompleto_user" disabled value="<?php echo $nome_completo ?>">
                 </div>
                 <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                     <span class="col-12">
@@ -132,11 +166,11 @@
                 <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                     <span class="col-lg-5  col-xs-12">
                         <label>Telefone:</label>
-                        <input type="tel" required class="form-control" value="<?php echo $telefone?>" id="telefone">
+                        <input type="tel" class="form-control" disabled value="<?php echo $telefone?>" id="telefone">
                     </span>
                     <span class="col-lg-6  col-xs-12">
                         <label>Email:</label>
-                        <input type="email" required class="form-control form-control-xl" value="<?php echo $email_logado?>">
+                        <input type="email" name="email" required class="form-control form-control-xl" value="<?php echo $email_logado?>">
                     </span>
                 </div>               
                 <div class="d-flex container justify-content-around w-100 align-items-center mb-5"
@@ -146,11 +180,13 @@
                             <ion-icon name="arrow-back-circle-outline" id="btVoltar"></ion-icon>
                         </a>
                         <p>Voltar</p>
-                    </span>                   
-                    <span class="align-items-center text-center" onclick="Salvar_user()">
-                        <ion-icon name="cloud-done-outline" id="btSalvar" id="btSalvar_user"></ion-icon>
-                        <p>Salvar</p>
-                    </span>
+                    </span>            
+                    <button type="input" value="1" name="salvar_user" class="botoes_crud">
+                        <span class="align-items-center text-center">
+                            <ion-icon name="cloud-done-outline" id="btSalvar" id="btSalvar_user"></ion-icon>
+                            <p>Salvar</p>
+                        </span>
+                    </button>       
                 </div>
             </form>
             <div class="d-flex flex-column align-items-center">
