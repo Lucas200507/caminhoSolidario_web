@@ -19,14 +19,9 @@
     // $endereco = get_endereco("37500405");
 
     // tem que pegar o dado do email
-    $cadastrado = False;
-    $cep_jaCadastrado = False;
-    $ja_cadastrado = False;
-    $em_branco = False;
-    $possuiDependentes = False;
-    $dependentes_pendentes = 0;
-    $qnt_caractes_erro = False;
-    $erro_idade = False;
+    $cadastrado = False;                            
+    $erro = false;
+    $mudar_pagina = false; 
 
     if (
         isset($_POST['cadastrar'])
@@ -67,7 +62,8 @@ if (mysqli_num_rows($result) > 0) {
         die("Erro na consulta de beneficiário: " . mysqli_error($conexao));
     }
     if (mysqli_num_rows($result_benef) > 0) {
-        $ja_cadastrado = true;        
+        echo "<script>window.alert('CPF já cadastrado');</script>";
+        $erro = true;        
     }
 }
 
@@ -82,23 +78,33 @@ if (!$result) {
 
 if (mysqli_num_rows($result) > 0) {
     // Já possui alguém com o mesmo cep
-    $cep_jaCadastrado = True;    
+    echo "<script>window.alert('CEP já cadastrado');</script>";
+    $erro = True;    
 } else {
-    $cep_jaCadastrado = False;
+    $erro = False;
 }
 
 // verificar a quantidade de caracteres
 if (strlen($cpfBeneficiario) < 11 || strlen($cep) < 8){
-    $qnt_caractes_erro = True;
+    echo "<script>window.alert('Quantidade de caracteres de CPF ou CEP insuficientes');</script>";
+    $erro = True;
 }
 
-if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro && !$erro_idade) {
+if (!$erro) {
     $nome_completo = $_POST['nome_completoBeneficiario'];
     $data_nascimento = $_POST['data_nascimentoBeneficiario'];
     $estado_civil = $_POST['estado_civilBeneficiario'];
-    $telefone = str_replace(['(', ')', '-', ' '], '', $_POST['telefoneBeneficiario']);
+    $telefone = str_replace(['(', ')', ' '], '', $_POST['telefoneBeneficiario']);    
+    $sqlTelefone = "SELECT * FROM pessoa WHERE telefone = '$telefone';";
+            $resultTelefone = mysqli_query($conexao, $sqlTelefone);
+                if (mysqli_num_rows($resultTelefone) > 0){                                       
+                        echo "<script>window.alert('O telefone informado já está cadastrado por outra pessoa');</script>";
+                        $erro = True;                        
+                    }
+                
     if (strlen($telefone) < 11){
-        $qnt_caractes_erro = True;
+        echo "<script>window.alert('Quantidade de caracteres do telefone insuficientes');</script>";
+        $erro = True;
     }
    ///         DATA NASCIMENTO         ///        
    $data_nascimentoDT = new DateTime($data_nascimento); // CONVERTE PARA DATA
@@ -113,12 +119,13 @@ if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro 
          
     if (!empty($Verifica_idade) && $Verifica_idade == 1){            
        echo "<script>window.alert('Escolha uma data de nascimento que realmente exista');</script>";
-       $erro_idade = True;
+       $erro = True;
    }
     } else if ($idade < 20){
         echo "<script>window.alert('A idade mínima para se cadastrar como Beneficiário(a) é de 20 anos.');</script>";
-        $erro_idade = True;
+        $erro = True;
     }
+
     $email = $_POST['emailBeneficiario'];
     $endereco = $_POST['endereco_completoBeneficiario'];    
     $cidade = $_POST['cidadeBeneficiario'];
@@ -140,8 +147,8 @@ if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro 
             $beneficio = $_POST['beneficioBeneficiario'];
             $valor_beneficio = $_POST['valor_benecicioBeneficiario'];
         } else {
-            $em_branco = true;
-
+            echo "<script>window.alert('Campo Beneficío está em branco');</script>";
+            $erro = True;            
         }
     }
 
@@ -151,7 +158,8 @@ if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro 
         if (!empty($_POST['quantos_dependentes'])) {
             $quantos_dependentes = $_POST['quantos_dependentes'];
         } else {
-            $em_branco = true;
+            echo "<script>window.alert('Incoerência em relação à Dependentes');</script>";
+            $erro = True;
         }
     }
 
@@ -161,13 +169,14 @@ if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro 
         if (!empty($rbPossuiLaudo) && !empty($_POST['nome_doencaBeneficiario'])) {
             $nome_doenca = $_POST['nome_doencaBeneficiario'];
         } else {
-            $em_branco = true;
+            echo "<script>window.alert('Incoerência em relação à comorbidade');</script>";
+            $erro = True;
         }
     } else {
         $rbPossuiLaudo = "N";
     }
 
-    if (!$em_branco) {
+    if (!$erro) {
         // Inserir pessoa
         $sql = "INSERT INTO pessoa (nome_completo, cpf, telefone) VALUES ('$nome_completo', '$cpfBeneficiario', '$telefone')";
         if (!mysqli_query($conexao, $sql)) {
@@ -185,7 +194,7 @@ if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro 
         // Inserir benefício, se existir
         $idBeneficio = null;    
         if (!empty($beneficio) && !empty($valor_beneficio)) {
-            $sql = "SELECT idBeneficios_gov FROM nomeBeneficiosGov WHERE nome_beneficiogov = '$beneficio'";
+            $sql = "SELECT idBeneficios_gov FROM nomeBeneficiosGov WHERE nome_beneficiogov = '$beneficio';";
             $result = mysqli_query($conexao, $sql);
             if (!$result) {
                 die("Erro ao buscar benefício: " . mysqli_error($conexao));
@@ -215,7 +224,7 @@ if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro 
         }
         $idBeneficiario = mysqli_insert_id($conexao);
 
-        $cadastrado = true;
+        echo "<script>window.alert('Beneficiário cadastrado com sucesso!');</script>";            
 
         // PRECISA CADASTRAR A FREQUÊNCIA COMO F
         $sql = "INSERT INTO frequencia (ANO, MES, REGISTRO, idBeneficiario) VALUES ('2023', 'JAN', 'F', '$idBeneficiario'), ('2023', 'FEV', 'F', '$idBeneficiario'), ('2023', 'MAR', 'F', '$idBeneficiario'), ('2023', 'ABR', 'F', '$idBeneficiario'), ('2023', 'MAI', 'F', '$idBeneficiario'), ('2023', 'JUN', 'F', '$idBeneficiario'), ('2023', 'JUL', 'F', '$idBeneficiario'), ('2023', 'AGO', 'F', '$idBeneficiario'), ('2023', 'SET', 'F', '$idBeneficiario'), ('2023', 'OUT', 'F', '$idBeneficiario'), ('2023', 'NOV', 'F', '$idBeneficiario'), ('2023', 'DEZ', 'F', '$idBeneficiario'), 
@@ -230,23 +239,19 @@ if (!$em_branco && !$ja_cadastrado && !$cep_jaCadastrado && !$qnt_caractes_erro 
         // Redirecionar se possuir dependentes
         if ($quantos_dependentes > 0) {
             echo "<script>window.alert('Beneficiário cadastrado com sucesso!');</script>";
+            $cadastrado = true;
+            $mudar_pagina = true;            
+        }
+
+        if ($mudar_pagina){
             header("Location: ../php/cadastroDependente.php?IDbeneficiario=$idBeneficiario&dependentes_pendentes=$quantos_dependentes");
             exit;
         }
     }
 }
 else {
-$em_branco = true;
-}
-
-if ($em_branco && isset($_POST['cadastrar'])) {
     echo '<script>alert("Existem campos em branco.");</script>';
-} elseif ($cadastrado) {
-    echo '<script>alert("Cadastrado com sucesso!");</script>';
-} elseif ($cep_jaCadastrado){
-    echo '<script>alert("Cep já cadastrado no banco");</script>';
-} elseif ($qnt_caractes_erro){
-    echo '<script>alert("A quantidade de caracteres em telefone, cep ou cpf estão abaixo do mínimo");</script>';
+    $erro = true;
 }
 ?>
 <!DOCTYPE html>
@@ -266,12 +271,7 @@ if ($em_branco && isset($_POST['cadastrar'])) {
     <!-- Conexao com JS -->
     <script src="../js/index.js" defer></script> 
 </head>
-<body id="telaBody">
-    <?php if($ja_cadastrado): ?>
-        <script>
-            window.alert("Beneficiário já cadastrado no sistema");
-        </script>
-    <?php endif; ?>
+<body id="telaBody">    
     <nav class="navbar navbar-expand-lg navbar-dark barraNav" style="padding: 0.8em;">
         <!-- logo -->
         <a href="#" class="navbar-brand p-0 d-block" id="container_logoHome">

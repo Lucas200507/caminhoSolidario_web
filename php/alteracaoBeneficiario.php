@@ -18,13 +18,7 @@ if(!isset($_SESSION['beneficiario_alterado'])){
 }
 
 // Flags de erro
-$qnt_caracteres_erro = false;
-$em_branco = false;
-$incoerencia_Beneficio = false;
-$incoerencia_PCD = false;
-$incoerencia_Dependentes = false;
-$qtd_dependentes_incoerente = false;
-$erro_idade = False;
+$erro = False;
 
 // Consulta CPF
 $sql = "SELECT cpf FROM tbBeneficiario;";
@@ -93,8 +87,28 @@ if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
     }
 }
 
+if (isset(($_POST['ver']))){    
+    $telefone = str_replace(['(', ')', ' '], '', $_POST['telefoneBeneficiario']);    
+    
+    $idPessoa = $_SESSION['idPessoa'];
+     $sqlTelefone = "SELECT * FROM pessoa WHERE telefone = '$telefone';";
+            $resultTelefone = mysqli_query($conexao, $sqlTelefone);
+                if (mysqli_num_rows($resultTelefone) > 0){
+                    echo "tem usuario";
+                    while ($dados_telefone = mysqli_fetch_assoc($resultTelefone)){
+                        $id_telefone = $dados_telefone['idPessoa'];
+                        if (!empty($id_telefone) && $id_telefone != $idPessoa){
+                            echo "<script>window.alert('O telefone informado já está cadastrado por outra pessoa');</script>";
+                            $erro = true;
+                        } else {
+                            echo "Não está cadastrado";
+                        }
+                    }
+                }
+}
+
 // ALTERAÇÃO
-if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && !$erro_idade) {
+if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && !$erro) {
     if (!empty($_POST['data_nascimentoBeneficiario']) 
         && !empty($_POST['estado_civilBeneficiario']) 
         && !empty($_POST['telefoneBeneficiario']) 
@@ -108,12 +122,13 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
         && !empty($_POST['quantos_trabalhamBeneficiario'])
     ) {
 
-        $telefone = preg_replace('/[^0-9]/', '', $_POST['telefoneBeneficiario']);
+        // $telefone = preg_replace('/[^0-9]/', '', $_POST['telefoneBeneficiario']);
+        $telefone = str_replace(['(', ')', ' '], '', $_POST['telefoneBeneficiario']);
         $cep = preg_replace('/[^0-9]/', '', $_POST['cepBeneficiario']);
 
         if (strlen($telefone) < 11 || strlen($cep) < 8) {
             echo "<script>alert('Telefone ou CEP possuem caracteres insuficientes');</script>";
-            $qnt_caracteres_erro = true;
+            $erro = true;
         }
         $data_nascimento = $_POST['data_nascimentoBeneficiario'];
         ///         DATA NASCIMENTO         ///        
@@ -129,10 +144,10 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
               
          if (!empty($Verifica_idade) && $Verifica_idade == 1){            
             echo "<script>window.alert('Escolha uma data de nascimento que realmente exista');</script>";
-            $erro_idade = True;        
+            $erro = True;        
         } else if ($idade < 20){
             echo "<script>window.alert('A idade mínima para se cadastrar como Beneficiário(a) é de 20 anos.');</script>";
-            $erro_idade = True;
+            $erro = True;
         }
         
         $estado_civil = $_POST['estado_civilBeneficiario'];
@@ -155,38 +170,52 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
 
         $sqlSelect_Dependente = "SELECT COUNT(*) AS total FROM filho_dependente WHERE idBeneficiario = '$id';";
         $resDep = mysqli_query($conexao, $sqlSelect_Dependente);
-        $total_dependentes = mysqli_fetch_assoc($resDep)['total'];
-        echo "$total_dependentes";
+        $total_dependentes = mysqli_fetch_assoc($resDep)['total']; // QUANTIDADE DE DEPENDENTES CADASTRADOS PELO BENEFICIARIO
+        
 
         if ($total_dependentes > $quantos_dependentes) {
             echo "<script>window.alert('Quantidade de dependentes já cadastrados é maior que a informada');</script>";   
-            $qtd_dependentes_incoerente = true;         
+            $erro = true;         
         }
 
         // Validações de coerência
         if ($_POST['rbPossuiBenf'] == 'S' && (empty($beneficioGov) || empty($valor_beneficio))) {
             echo "<script>window.alert('Há uma incoerência em relação ao Benefício do Beneficiário');</script>";
-            $incoerencia_Beneficio = true;
+            $erro = true;
         }
 
         if ($_POST['rbPCD'] == 'S' && (empty($comorbidade) || $_POST['rbPossuiLaudo'] == 'N')) {
             echo "<script>alert('Há uma incoerência em relação à PCD');</script>";
-            $incoerencia_PCD = true;
+            $erro = true;
         }
 
         if ($_POST['rbPossuiDependentes'] == 'S' && empty($quantos_dependentes)) {
             echo "<script>alert('Há uma incoerência em relação aos Dependentes');</script>";
-            $incoerencia_Dependentes = true;
+            $erro = true;
         } else if ($_POST['rbPossuiDependentes'] == 'N' && $total_dependentes > 0){
             echo "<script>alert('Já possui Dependentes cadastrados em relação ao Beneficiário');</script>";
-            $incoerencia_Dependentes = true;
+            $erro = true;
         }
 
-        if (!$qnt_caracteres_erro && !$em_branco && !$incoerencia_Beneficio && !$incoerencia_PCD && !$incoerencia_Dependentes && !$qtd_dependentes_incoerente && !$erro_idade) {
+        if (!$erro) {
             $idPessoa = $_SESSION['idPessoa'];
             $idEndereco = $_SESSION['idEndereco']; // já definido            
 
             $sqlUpdate_endereco = "UPDATE endereco SET endereco = '$endereco', cidade = '$cidade', estado = '$estado', cep = '$cep', situacao_moradia = '$situacao_moradia', valor_despesas = '$valor_despesas' WHERE idEndereco = '$idEndereco';";
+
+            // VERIFICAR SE JÁ POSSUI ESTE TELEFONE CADASTRADO            
+            $sqlTelefone = "SELECT * FROM pessoa WHERE telefone = '$telefone';";
+            $resultTelefone = mysqli_query($conexao, $sqlTelefone);
+                if (mysqli_num_rows($resultTelefone) > 0){
+                    while ($dados_telefone = mysqli_fetch_assoc($resultTelefone)){
+                        $id_telefone = $dados_telefone['idPessoa'];
+                        if (!empty($id_telefone) && $id_telefone != $idPessoa){
+                            echo "<script>window.alert('O telefone informado já está cadastrado por outra pessoa');</script>";
+                            $erro = true;
+                        }
+                    }
+                }
+
             $sqlUpdate_pessoa = "UPDATE pessoa SET telefone = '$telefone' WHERE idPessoa = '$idPessoa';";
 
             $resultUpdate_endereco = mysqli_query($conexao, $sqlUpdate_endereco);
@@ -269,14 +298,10 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
             }
         }
     } else {
-        $em_branco = true;
+        echo "<script>alert('Há campos em branco');</script>";
+        $erro = true;
     }
 }    
-
-// Alertas - ALTERAÇÃO
-if ($em_branco) {
-    echo "<script>alert('Há campos em branco');</script>";
-} 
 
 // DELETAR
 if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
@@ -608,7 +633,8 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                         </span>                        
                     </button>
                 <?php endif?>
-                 <button type="submit" class="botoes_crud" name="alterar" value="1">
+                 <!-- <button type="submit" class="botoes_crud" name="alterar" value="1"> -->
+                 <button type="submit" class="botoes_crud" name="ver" value="1">
                     <span class="align-items-center text-center">
                         <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
                         <p>Salvar</p>
