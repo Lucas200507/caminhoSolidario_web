@@ -19,13 +19,14 @@ if(!isset($_SESSION['beneficiario_alterado'])){
 
 // Flags de erro
 $erro = False;
-
+$idade = null;
 // Consulta CPF
 $sql = "SELECT cpf FROM tbBeneficiario;";
 $result = mysqli_query($conexao, $sql);
 
 // PESQUISA
 if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
+    $_SESSION['beneficiario_alterado'] = False;
     $cpfBeneficiario = $_POST['cpfBeneficiario'];
     $_SESSION['cpf'] = $cpfBeneficiario;
     $sql = "SELECT ID FROM tbBeneficiario WHERE cpf = '$cpfBeneficiario';";
@@ -77,35 +78,17 @@ if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
                 $cep = substr($dados_endereco['cep'], 0, 5) . "-" . substr($dados_endereco['cep'], 5);
             }
 
-            $sql5 = "SELECT * FROM tbBeneficioGov WHERE ID = '$idBeneficioGov';";
+            $sql5 = "SELECT * FROM tbBeneficioGov WHERE ID = '$idBeneficioGov';";            
             $result5 = mysqli_query($conexao, $sql5);
             if ($dados_beneficioGov = mysqli_fetch_assoc($result5)) {
-                $BeneficioGov = $dados_beneficioGov['Beneficio_Gov'];
+                $BeneficioGov = $dados_beneficioGov['Beneficio_gov'];                
                 $valor_beneficio = $dados_beneficioGov['valor_beneficio'];
             }
         }
     }
 }
 
-if (isset(($_POST['ver']))){    
-    $telefone = str_replace(['(', ')', ' '], '', $_POST['telefoneBeneficiario']);    
-    
-    $idPessoa = $_SESSION['idPessoa'];
-     $sqlTelefone = "SELECT * FROM pessoa WHERE telefone = '$telefone';";
-            $resultTelefone = mysqli_query($conexao, $sqlTelefone);
-                if (mysqli_num_rows($resultTelefone) > 0){
-                    echo "tem usuario";
-                    while ($dados_telefone = mysqli_fetch_assoc($resultTelefone)){
-                        $id_telefone = $dados_telefone['idPessoa'];
-                        if (!empty($id_telefone) && $id_telefone != $idPessoa){
-                            echo "<script>window.alert('O telefone informado já está cadastrado por outra pessoa');</script>";
-                            $erro = true;
-                        } else {
-                            echo "Não está cadastrado";
-                        }
-                    }
-                }
-}
+//if (isset($_POST['ver'])){}
 
 // ALTERAÇÃO
 if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && !$erro) {
@@ -123,18 +106,19 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
     ) {
 
         // $telefone = preg_replace('/[^0-9]/', '', $_POST['telefoneBeneficiario']);
-        $telefone = str_replace(['(', ')', ' '], '', $_POST['telefoneBeneficiario']);
+        $telefone = str_replace(['(', ')', ' '], '', $_POST['telefoneBeneficiario']);        
         $cep = preg_replace('/[^0-9]/', '', $_POST['cepBeneficiario']);
 
         if (strlen($telefone) < 11 || strlen($cep) < 8) {
             echo "<script>alert('Telefone ou CEP possuem caracteres insuficientes');</script>";
             $erro = true;
         }
-        $data_nascimento = $_POST['data_nascimentoBeneficiario'];
+        $data_nascimento = $_POST['data_nascimentoBeneficiario'];        
         ///         DATA NASCIMENTO         ///        
-        $data_nascimentoDT = new DateTime($data_nascimento); // CONVERTE PARA DATA
+        $data_nascimentoDT = new DateTime($data_nascimento); // CONVERTE PARA DATA        
         $data_atual = new DateTime();
         $intervalo = $data_nascimentoDT->diff($data_atual);
+        
         $idade = $intervalo->y; // A IDADE SERÁ O INTERVALO EM ANOS, DO DIA DE HOJE PARA A DATA_NASCIMENTO
         if($intervalo->invert){
             // Se o invert == 1 -> FUTURO
@@ -179,14 +163,17 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
         }
 
         // Validações de coerência
-        if ($_POST['rbPossuiBenf'] == 'S' && (empty($beneficioGov) || empty($valor_beneficio))) {
+        if ((($_POST['rbPossuiBenf'] == 'S' && (empty($beneficioGov)) || (empty($valor_beneficio))) || (!empty($beneficioGov) && $beneficioGov == 'Aposentadoria' && $idade < 60))) {
             echo "<script>window.alert('Há uma incoerência em relação ao Benefício do Beneficiário');</script>";
             $erro = true;
-        }
+        } 
 
-        if ($_POST['rbPCD'] == 'S' && (empty($comorbidade) || $_POST['rbPossuiLaudo'] == 'N')) {
+        //if ($_POST['rbPCD'] == 'S' && (empty($comorbidade) || $_POST['rbPossuiLaudo'] == 'N')) {
+        if ($_POST['rbPCD'] == 'S' && (empty($comorbidade))) {
             echo "<script>alert('Há uma incoerência em relação à PCD');</script>";
             $erro = true;
+        } else if ($_POST['rbPCD'] == 'N'){
+            $comorbidade = '';
         }
 
         if ($_POST['rbPossuiDependentes'] == 'S' && empty($quantos_dependentes)) {
@@ -197,7 +184,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
             $erro = true;
         }
 
-        if (!$erro) {
+        if (!$erro) {            
             $idPessoa = $_SESSION['idPessoa'];
             $idEndereco = $_SESSION['idEndereco']; // já definido            
 
@@ -207,7 +194,8 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
             $sqlTelefone = "SELECT * FROM pessoa WHERE telefone = '$telefone';";
             $resultTelefone = mysqli_query($conexao, $sqlTelefone);
                 if (mysqli_num_rows($resultTelefone) > 0){
-                    while ($dados_telefone = mysqli_fetch_assoc($resultTelefone)){
+                    
+                    while ($dados_telefone = mysqli_fetch_assoc($resultTelefone)){                        
                         $id_telefone = $dados_telefone['idPessoa'];
                         if (!empty($id_telefone) && $id_telefone != $idPessoa){
                             echo "<script>window.alert('O telefone informado já está cadastrado por outra pessoa');</script>";
@@ -260,12 +248,12 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
             }
 
             
-            $resultUpdate_Beneficiario = mysqli_query($conexao, $sqlUpdate_Beneficiario);
+            $resultUpdate_Beneficiario = mysqli_query($conexao, $sqlUpdate_Beneficiario);           
             if ($resultUpdate_Beneficiario){
-                echo "<script>window.alert('Beneficiário alterado com sucesso!);</script>";
+                echo "<script>window.alert('Beneficiário alterado com sucesso!');</script>";
             }
 
-            if ($resultUpdate_endereco && $resultUpdate_pessoa && $resultUpdate_Beneficiario) {               
+            if ($resultUpdate_endereco && $resultUpdate_pessoa && $resultUpdate_Beneficiario) {                               
                 // LIBERAR AS SESSÕES
                 unset($_SESSION['idBeneficiario']);
                 unset($_SESSION['idbeneficioGov']);
@@ -285,6 +273,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
                 $laudo = "";
                 $comorbidade = "";
                 $renda_familiar = "";
+                $quantos_trabalham = "";
                 $endereco = "";
                 $cidade = "";
                 $estado = "";
@@ -302,6 +291,36 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
         $erro = true;
     }
 }    
+
+if ($erro){
+    // LIBERAR AS SESSÕES
+    unset($_SESSION['idBeneficiario']);
+    unset($_SESSION['idbeneficioGov']);
+    unset($_SESSION['cpf']);
+    unset($_SESSION['idPessoa']);
+    unset($_SESSION['idEndereco']);
+    // Limpa variáveis em memória
+    $id = '';
+    $telefone = "";
+    $beneficioGov = "";
+    $valor_beneficio = "";
+    $quantos_dependentes = "";
+    $data_nascimento = "";
+    $email = "";
+    $estado_civil = "";
+    $pcd = "";
+    $laudo = "";
+    $comorbidade = "";
+    $renda_familiar = "";
+    $quantos_trabalham = "";
+    $endereco = "";
+    $cidade = "";
+    $estado = "";
+    $situacao_moradia = "";
+    $valor_despesas = "";
+    $cep = "";
+    $nome_Beneficiario = "";
+}
 
 // DELETAR
 if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
@@ -408,8 +427,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                         <?php while($Beneficiario_data = mysqli_fetch_assoc($result)): ?>
                             <option value="<?= $Beneficiario_data['cpf'] ?>" <?= (isset($cpfBeneficiario) && $cpfBeneficiario == $Beneficiario_data['cpf']) ? 'selected' : '' ?>>
                                 <?= $Beneficiario_data['cpf'] ?>
-                            </option>
-                            <?php $BeneficioGov = $Beneficiario_data['beneficioGov']; ?>
+                            </option>                        
                         <?php endwhile; ?>
                     <?php endif ?>
                 </select>
@@ -531,7 +549,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                                 <label for="">Sim</label>                        
                             </div> 
                             <div class="form-check col-6">
-                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="N" <?= isset($_POST['pesquisar']) && empty($BeneficioGov) ? 'checked' : ''; ?>>
+                                <input type="radio" class="form-check-input" name="rbPossuiBenf" value="N"<?= isset($_POST['pesquisar']) && empty($BeneficioGov) ? 'checked' : ''; ?>>
                                 <label for="">Não</label>
                             </div>               
                         </div>
@@ -540,12 +558,12 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                         <label for="">Qual o nome do Benefício?</label>
                         <select name="beneficioBeneficiario" class="form-select form-select-md">
                             <option value=""></option>
-                            <option value="Aposentadoria" <?php if(!empty($BeneficioGov) && $BeneficioGov == "Aposentadoria") echo "selected" ?>>Aposentadoria</option>
-                            <option value="Benefício de Prestação Continuada (BPC)" <?php if(!empty($BeneficioGov) && $BeneficioGov == "Benefício de Prestação Continuada (BPC)") echo "selected" ?>>Benefício de Prestação Continuada (BPC)</option>
-                            <option value="Novo Bolsa Família" <?php if(!empty($BeneficioGov) && $BeneficioGov == "Novo Bolsa Família") echo "selected" ?>>Bolsa Família</option>
-                            <option value="Vale-gas" <?php if(!empty($BeneficioGov) && $BeneficioGov == "Vale-gas") echo "selected" ?>>Vale Gás</option>
-                            <option value="Outros" <?php if(!empty($BeneficioGov) && $BeneficioGov == "Outros") echo "selected" ?>>Outros</option>                            
-
+                            
+                            <option value="Aposentadoria" <?= (!empty($BeneficioGov) && $BeneficioGov == "Aposentadoria") ? 'selected' : '' ?>>Aposentadoria</option>
+                            <option value="Benefício de Prestação Continuada (BPC)" <?= (!empty($BeneficioGov) && $BeneficioGov == "Benefício de Prestação Continuada (BPC)") ? 'selected' : '' ?>>Benefício de Prestação Continuada (BPC)</option>
+                            <option value="Novo Bolsa Família" <?= (!empty($BeneficioGov) && $BeneficioGov == "Novo Bolsa Família") ? 'selected' : '' ?>>Novo Bolsa Família</option>
+                            <option value="Vale-Gas" <?= (!empty($BeneficioGov) && $BeneficioGov == "Vale-Gas") ? 'selected' : '' ?>>Vale-Gas</option>
+                            <option value="Outros" <?= (!empty($BeneficioGov) && $BeneficioGov == "Outros") ? 'selected' : '' ?>>Outros</option>
                         </select>                   
                     </span> 
                 </div>           
@@ -633,8 +651,8 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                         </span>                        
                     </button>
                 <?php endif?>
-                 <!-- <button type="submit" class="botoes_crud" name="alterar" value="1"> -->
-                 <button type="submit" class="botoes_crud" name="ver" value="1">
+                 <button type="submit" class="botoes_crud" name="alterar" value="1">
+                 <!-- <button type="submit" class="botoes_crud" name="ver" value="1"> -->
                     <span class="align-items-center text-center">
                         <ion-icon name="cloud-done-outline" id="btSalvar"></ion-icon>
                         <p>Salvar</p>

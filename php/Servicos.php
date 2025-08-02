@@ -112,27 +112,48 @@
                 </span>
             </div>
             <!-- ALTERAR -->
-            <div>                                                                        
-                <span class="d-flex flex-row align-items-center m-3 container_MainHome"
-                    onclick="navegar_verificarFrequencia()">
-                    <ion-icon name="calendar-outline" class="icones_mainHome"></ion-icon>
-                    <p class="textos_servicos">Verificar Frequência</p>
+            <div>    
+                 <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_alterarBeneficiario()">
+                     <span style="position: relative;">
+                        <ion-icon name="person-outline" class="icones_alterar_mainHome"></ion-icon>
+                        <ion-icon name="pencil-outline" class="icones_pen_home"></ion-icon>
+                    </span>                                   
+                    <p class="textos_servicos">Alterar Beneficiário</p>
+                </span>
+                <?php if ($funcao == "Administrador"): ?>                              
+                <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_alterarVoluntario()">
+                     <span style="position: relative;">
+                        <ion-icon name="person-outline" class="icones_alterar_mainHome"></ion-icon>
+                        <ion-icon name="pencil-outline" class="icones_pen_home"></ion-icon>
+                    </span>                                   
+                    <p class="textos_servicos">Alterar Voluntário</p>
+                </span>     
+                <?php endif ?>                                                               
+                <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_alterarDependente()">
+                     <ion-icon name="people-outline" class="icones_mainHome"></ion-icon>                                 
+                    <p class="textos_servicos">Alterar Dependente</p>
+                </span>                              
+                 <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_usuario()">
+                    <ion-icon name="refresh-outline" class="icones_mainHome"></ion-icon>                                   
+                    <p class="textos_servicos">Resetar Senha</p>
                 </span>
             </div>
+            
             <!-- DOCUMENTOS -->             
             <div>
                 <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_documentos()">
                     <ion-icon name="documents-outline" class="icones_mainHome"></ion-icon>
                     <p class="textos_servicos">Verificar Documentos</p>
+                </span>                               
+                <span class="d-flex flex-row align-items-center m-3 container_MainHome"
+                    onclick="navegar_verificarFrequencia()">
+                    <ion-icon name="calendar-outline" class="icones_mainHome"></ion-icon>
+                    <p class="textos_servicos">Verificar Frequência</p>
                 </span>
                 <span class="d-flex flex-row align-items-center m-3 container_MainHome"
                     onclick="navegar_lancarFrequencia()">
                     <ion-icon name="checkbox-outline" class="icones_mainHome"></ion-icon>
                     <p class="textos_servicos">Lançar Frequência</p>
-                </span>
-                <span class="d-flex flex-row align-items-center m-3 container_MainHome" onclick="navegar_usuario()">
-                    <ion-icon name="refresh-outline" class="icones_mainHome"></ion-icon>                                   
-                    <p class="textos_servicos">Resetar Senha</p>
                 </span>                
             </div>           
         </div>

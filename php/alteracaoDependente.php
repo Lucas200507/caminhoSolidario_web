@@ -11,6 +11,7 @@
     // Flags de erro
     $erro = False;
     $alterado = False;
+    $erro_idade = False;
 
      // LISTAR OS DADOS DE DEPENDENTE PARA OUTROS CAMPOS
     if (isset($_POST['pesquisar']) && !empty($_POST['cpfDependente']) ){
@@ -74,9 +75,10 @@
                 $Verifica_idade = $intervalo->invert;
             }
               
+            // Verificação da idade
             if (!empty($Verifica_idade) && $Verifica_idade == 1){            
                 echo "<script>window.alert('Escolha uma data de nascimento que realmente exista');</script>";
-                $erro_idade = True;
+                $erro = True;
             }
             if (empty($_POST['rbParentesco'])){
                 echo "<script>window.alert('O campo parentesco está em branco');</script>";
@@ -96,11 +98,16 @@
                 } 
             }             
         }
+
         if (empty($_POST['rbPossuiBenf'])){
             echo "<script>window.alert('O campo Possui Benefício está em branco');</script>";
             $erro = true;
-        } else {
+        } else if (!empty($_POST['rbPossuiBenf'])){
+            $parentesco1 = $_POST['rbParentesco'];            
             if ($_POST['rbPossuiBenf'] == "S" && (empty($_POST['valor_benecicioDependente']) || empty($_POST['beneficioDependente']))){
+                echo "<script>window.alert('Há uma incoerência em relação ao Benefício do Dependente');</script>";
+                $erro = true;
+            } else if ($_POST['rbParentesco'] == 'Filho_M' && $_POST['beneficioDependente'] == 'Aposentadoria'){
                 echo "<script>window.alert('Há uma incoerência em relação ao Benefício do Dependente');</script>";
                 $erro = true;
             }
@@ -151,8 +158,7 @@
             // UPDATE EM filho_dependente
             $idDependente = $_SESSION['idDependente'];
             if (!empty($idBeneficioGov)){
-                $sqlUpdate_filhoDep = "UPDATE filho_dependente SET data_nascimento_filho_dep = '$data_nascimento', parentesco = '$parentesco', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade', idBeneficioGov = '$idBeneficioGov' WHERE idFilho_Dependente = '$idDependente';";  
-                echo "Possui beneficio";
+                $sqlUpdate_filhoDep = "UPDATE filho_dependente SET data_nascimento_filho_dep = '$data_nascimento', parentesco = '$parentesco', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade', idBeneficioGov = '$idBeneficioGov' WHERE idFilho_Dependente = '$idDependente';";                  
             } else {
                 $sqlUpdate_filhoDep = "UPDATE filho_dependente SET data_nascimento_filho_dep = '$data_nascimento', parentesco = '$parentesco', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade' WHERE idFilho_Dependente = '$idDependente';"; 
             }

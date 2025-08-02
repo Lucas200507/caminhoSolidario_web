@@ -379,7 +379,7 @@ label{
 
 /************************************************/
 
-    /* HOME */
+    /*          SERVIÇOS            */
 
 #linksNavegacaoSelecionado{
     color: var(--cor_linksNavegacaoSelecionado);
@@ -453,6 +453,7 @@ label{
 
 .container_MainHome:hover{    
     background-color: var(--container_MainHome_background_hover);
+    cursor: pointer;
 
 }
 
@@ -463,8 +464,7 @@ label{
     
     
 }
-/* //////////////////////////////////////////////////////////////////////////////////////// /*
-/*          SERVIÇOS            */
+
 .container_servicos{
     display: flex;
     justify-content: center;
@@ -475,6 +475,20 @@ label{
     flex-direction: row;
     justify-content: center;
     width: 80%;
+}
+
+.icones_pen_home{
+        position: absolute;
+        font-size: 1.5em;
+        margin: 0;
+        bottom: 5px;
+        right: 9px;        
+        z-index: 1;
+}
+
+.icones_alterar_mainHome{    
+    font-size: 3.5em;    
+    margin-right: 0.5em;   
 }
 
 

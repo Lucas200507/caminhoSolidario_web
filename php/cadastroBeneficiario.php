@@ -95,6 +95,7 @@ if (!$erro) {
     $data_nascimento = $_POST['data_nascimentoBeneficiario'];
     $estado_civil = $_POST['estado_civilBeneficiario'];
     $telefone = str_replace(['(', ')', ' '], '', $_POST['telefoneBeneficiario']);    
+    // Verifica se já possui um telefone cadastrado
     $sqlTelefone = "SELECT * FROM pessoa WHERE telefone = '$telefone';";
             $resultTelefone = mysqli_query($conexao, $sqlTelefone);
                 if (mysqli_num_rows($resultTelefone) > 0){                                       
@@ -249,9 +250,8 @@ if (!$erro) {
         }
     }
 }
-else {
+else if (isset($_POST['cadastrar']) && $erro){
     echo '<script>alert("Existem campos em branco.");</script>';
-    $erro = true;
 }
 ?>
 <!DOCTYPE html>

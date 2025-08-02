@@ -42,7 +42,7 @@
         }
 
 
-    } else if (!isset($_POST['salvar_user']) && empty($_POST['email'])){
+    } else if (isset($_POST['salvar_user']) && empty($_POST['email'])){
         echo "<script>window.alert('O campo email do usuário está em branco!');</script>";
         $erro = true;
     }
