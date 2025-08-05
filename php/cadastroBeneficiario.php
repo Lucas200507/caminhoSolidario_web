@@ -39,8 +39,7 @@
         && !empty($_POST['rbPossuiBenf'])     
         && !empty($_POST['rbPCD'])     
         && !empty($_POST['rbPossuiDependentes'])  
-        && !empty($_POST['renda_familiarBeneficiario'])
-        && !empty($_POST['quantos_trabalhamBeneficiario'])
+        && !empty($_POST['renda_familiarBeneficiario'])       
     ) {
 
 // Formatando CPF
@@ -137,7 +136,11 @@ if (!$erro) {
     $rbPossuiBenf = $_POST['rbPossuiBenf'];
     $rbPCD = $_POST['rbPCD'];
     $rbPossuiDependentes = $_POST['rbPossuiDependentes'];
-    $quantos_trabalham = $_POST['quantos_trabalhamBeneficiario'];
+    if (empty($_POST['quantos_trabalhamBeneficiario'])){
+        $quantos_trabalham = 0;
+    } else {
+        $quantos_trabalham = $_POST['quantos_trabalhamBeneficiario'];
+    }
     $rbPossuiLaudo = $_POST['rbPossuiLaudo'] ?? 'N';
 
     // Benefício
@@ -344,20 +347,20 @@ else if (isset($_POST['cadastrar']) && $erro){
                 Dados Pessoais
             </h3>
             <div class="d-flex flex-column container">
-                <label class="form-label">Nome Completo:</label>
+                <label class="form-label">Nome Completo: *</label>
                 <input type="text" required class="form-control border" name="nome_completoBeneficiario" id="nome" value="<?php if(isset($_POST['nome_completoBeneficiario']) && !$cadastrado) echo $_POST['nome_completoBeneficiario']; ?>">            
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-xl-3">
-                    <label for="">CPF</label>
+                    <label for="">CPF: *</label>
                     <input type="text" maxlength="14" minlength="14" id="cpf" required class="form-control" name="cpfBeneficiario" value="<?php if(isset($_POST['cpfBeneficiario']) && !$cadastrado) echo $_POST['cpfBeneficiario']; ?>">
                 </span>
                 <span class="col-xl-3">
-                    <label for="">Data Nascimento</label>
+                    <label for="">Data Nascimento: *</label>
                     <input type="date" required class="form-control" name="data_nascimentoBeneficiario" value="<?php if(isset($_POST['data_nascimentoBeneficiario']) && !$cadastrado) echo $_POST['data_nascimentoBeneficiario']; ?>">
                 </span>
                 <span class="col-xl-4">
-                    <label for="">Estado Civil</label>
+                    <label for="">Estado Civil: *</label>
                     <select class="form-select form-select-md" name="estado_civilBeneficiario" required>
                         <option value=""></option>
                         <option value="S" <?php echo(isset($_POST['estado_civilBeneficiario']) && $_POST['estado_civilBeneficiario'] == 'S' && !$cadastrado) ? 'selected ': ''; ?>>Solteiro</option>
@@ -368,7 +371,7 @@ else if (isset($_POST['cadastrar']) && $erro){
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5 col-xs-12">
-                    <label>Telefone:</label>
+                    <label>Telefone: *</label>
                     <input type="text" maxlength="15" minlength="15" id="telefone" required class="form-control" name="telefoneBeneficiario" value="<?php if(isset($_POST['telefoneBeneficiario']) && !$cadastrado) echo $_POST['telefoneBeneficiario']; ?>">
                 </span>
                 <span class="col-lg-6 col-xs-12">
@@ -382,21 +385,21 @@ else if (isset($_POST['cadastrar']) && $erro){
             </h3>
             <div class="d-flex justify-content-between container formularios_Beneficiario">
                 <span class="col-lg-7 col-xs-12">
-                    <label class="form-label">Endereço Completo:</label>
+                    <label class="form-label">Endereço Completo: *</label>
                     <input type="text" required class="form-control border" name="endereco_completoBeneficiario" value="<?php if(isset($_POST['endereco_completoBeneficiario']) && !$cadastrado) echo $_POST['endereco_completoBeneficiario']; ?>">            
                 </span>
                 <span class="col-lg-4 col-xs-12">
-                    <label>CEP:</label>
+                    <label>CEP: *</label>
                     <input type="text" id="cep" maxlength="9" minlength="9" required class="form-control form-control-xl" name="cepBeneficiario" value="<?php if(isset($_POST['cepBeneficiario']) && !$cadastrado) echo $_POST['cepBeneficiario']; ?>">
                 </span>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-3">
-                    <label for="">Cidade</label>
+                    <label for="">Cidade: *</label>
                     <input type="text" required class="form-control" name="cidadeBeneficiario" id="cidade" value="<?php if(isset($_POST['cidadeBeneficiario']) && !$cadastrado) echo $_POST['cidadeBeneficiario']; ?>">
                 </span>
                 <span class="col-lg-3">
-                    <label for="">Estado</label>
+                    <label for="">Estado: *</label>
                     <select class="form-select form-select-md" name="estadoBeneficiario" required>
                         <option value=""></option>
                         <option value="AC" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'AC' && !$cadastrado) ? 'selected ': ''; ?>>AC - Acre</option>
@@ -428,7 +431,7 @@ else if (isset($_POST['cadastrar']) && $erro){
                     </select>
                 </span>
                 <span class="col-lg-4">
-                    <label for="">Situação da moradia</label>
+                    <label for="">Situação da moradia: *</label>
                     <select class="form-select form-select-md" name="situacao_moradiaBeneficiario" required>
                         <option value=""></option>
                         <option value="C" <?php echo(isset($_POST['situacao_moradiaBeneficiario']) && $_POST['situacao_moradiaBeneficiario'] == 'C' && !$cadastrado) ? 'selected ': ''; ?>>Comprada</option>
@@ -439,8 +442,8 @@ else if (isset($_POST['cadastrar']) && $erro){
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-12">
-                    <label>Valor do Aluguel + Despesas (Água e luz):</label>
-                    <input type="number" class="form-control" name="valor_despesasBeneficiario" id="valor" value="<?php if(isset($_POST['valor_despesasBeneficiario']) && !$cadastrado) echo $_POST['valor_despesasBeneficiario']; ?>">
+                    <label>Valor do Aluguel + Despesas (Água e luz): *</label>
+                    <input type="number" max="<?= $salario_minimo ?>" class="form-control" name="valor_despesasBeneficiario" id="valor" placeholder="Somente números" value="<?php if(isset($_POST['valor_despesasBeneficiario']) && !$cadastrado) echo $_POST['valor_despesasBeneficiario']; ?>">
                 </span>            
             </div>
             <!-- SITUAÇÃO -->
@@ -450,7 +453,7 @@ else if (isset($_POST['cadastrar']) && $erro){
             <div class="d-flex justify-content-between formularios_Beneficiario  mt-3 container">
                 <div class="d-flex flex-row col-lg-8 col-sm-12 container justify-content-between" id="form_beneficiario_beneficio">
                     <span class="col-4 container p-0">
-                        <label for="">Possui Benefício?</label>
+                        <label for="">Possui Benefício? *</label>
                         <div class="d-flex container justify-content-start p-0">
                             <div class="form-check col-6">
                                 <input type="radio" class="form-check-input" name="rbPossuiBenf" value="S" <?php echo(isset($_POST['rbPossuiBenf']) && $_POST['rbPossuiBenf'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
@@ -477,13 +480,13 @@ else if (isset($_POST['cadastrar']) && $erro){
                 </div>           
                 <span class="col-lg-4 ">
                     <label for="">Valor</label>
-                    <input type="number" id="valorB" class="form-control" name="valor_benecicioBeneficiario" value="<?php if(isset($_POST['valor_benecicioBeneficiario']) && !$cadastrado) echo $_POST['valor_benecicioBeneficiario']; ?>">
+                    <input type="number" id="valorB" max="<?= $salario_minimo ?>" class="form-control" name="valor_benecicioBeneficiario" placeholder="Somente números" value="<?php if(isset($_POST['valor_benecicioBeneficiario']) && !$cadastrado) echo $_POST['valor_benecicioBeneficiario']; ?>">
                 </span> 
             </div>
             <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">
                 <div class="d-flex col-lg-6 flex-row container justify-content-between p-0" id="form_beneficiario_beneficio">
                     <span class="col-6">
-                        <label for="">PCD?</label>
+                        <label for="">PCD? *</label>
                         <div class="d-flex container p-0">
                             <div class="form-check col-6">
                                 <input type="radio" class="form-check-input" name="rbPCD" value="S" <?php echo(isset($_POST['rbPCD']) && $_POST['rbPCD'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
@@ -510,13 +513,13 @@ else if (isset($_POST['cadastrar']) && $erro){
                     </span>                 
                 </div>           
                 <span class="col-lg-6">
-                    <label for="">Nome da Comorbidade</label>
+                    <label for="">Nome da Comorbidade:</label>
                     <input type="text" class="form-control" name="nome_doencaBeneficiario" id="comorbidade" value="<?php if(isset($_POST['nome_doencaBeneficiario']) && !$cadastrado) echo $_POST['nome_doencaBeneficiario']; ?>">
                 </span> 
             </div> 
               <div class="d-flex flex-row justify-content-between container formularios_Beneficiario mt-3">        
                 <span class="col-4">
-                    <label for="">Possui Dependentes?</label>                    
+                    <label for="">Possui Dependentes? *</label>                    
                     <div class="d-flex container justify-content-start p-0">
                         <div class="form-check col-6">
                             <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="S" <?php echo(isset($_POST['rbPossuiDependentes']) && $_POST['rbPossuiDependentes'] == 'S' && !$cadastrado) ? 'checked ': ''; ?>>
@@ -530,17 +533,34 @@ else if (isset($_POST['cadastrar']) && $erro){
                 </span> 
                 <span class="col-lg-7  col-sm-6">
                     <label for="">Quantos?</label>
-                    <input type="number" id="quantos_dependentes" class="form-control" name="quantos_dependentes" value="<?php if(isset($_POST['quantos_dependentes']) && !$cadastrado) echo $_POST['quantos_dependentes']; ?>">
+                    <select name="quantos_dependentes" class="form-control" id="quantos_dependentes">
+                        <option value=""></option>
+                        <option value="1" <?= (isset($_POST['quantos_dependentes']) && !$cadastrado && $_POST['quantos_dependentes'] == 1) ? 'selected' : ''?>>1</option>
+                        <option value="2" <?= (isset($_POST['quantos_dependentes']) && !$cadastrado && $_POST['quantos_dependentes'] == 2) ? 'selected' : ''?>>2</option>
+                        <option value="3" <?= (isset($_POST['quantos_dependentes']) && !$cadastrado && $_POST['quantos_dependentes'] == 3) ? 'selected' : ''?>>3</option>
+                        <option value="4" <?= (isset($_POST['quantos_dependentes']) && !$cadastrado && $_POST['quantos_dependentes'] == 4) ? 'selected' : ''?>>4</option>
+                        <option value="5" <?= (isset($_POST['quantos_dependentes']) && !$cadastrado && $_POST['quantos_dependentes'] == 5) ? 'selected' : ''?>>5</option>
+                        <option value="6" <?= (isset($_POST['quantos_dependentes']) && !$cadastrado && $_POST['quantos_dependentes'] == '6') ? 'selected' : ''?>>+ de 5</option>
+                    </select>
+                    <!-- <input type="number" id="quantos_dependentes" class="form-control" name="quantos_dependentes" value=""> -->
                 </span> 
             </div>                                    
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5  col-xs-12">
-                    <label>Quantos trabalham em casa:</label>
-                    <input type="number" class="form-control" id="quantos_trabalham" name="quantos_trabalhamBeneficiario" value="<?php if(isset($_POST['quantos_trabalhamBeneficiario']) && !$cadastrado) echo $_POST['quantos_trabalhamBeneficiario']; ?>">
+                    <label>Quantos trabalham em casa: *</label>
+                    <select name="quantos_trabalhamBeneficiario" class="form-control" id="quantos_trabalham">                        
+                        <option value="0" <?= (isset($_POST['quantos_trabalhamBeneficiario']) && $_POST['quantos_trabalhamBeneficiario'] == 0) ? 'selected' : ''?>>ninguém</option>
+                        <option value="1" <?= (isset($_POST['quantos_trabalhamBeneficiario']) && $_POST['quantos_trabalhamBeneficiario'] == 1) ? 'selected' : ''?>>1</option>
+                        <option value="2" <?= (isset($_POST['quantos_trabalhamBeneficiario']) && $_POST['quantos_trabalhamBeneficiario'] == 2) ? 'selected' : ''?>>2</option>
+                        <option value="3" <?= (isset($_POST['quantos_trabalhamBeneficiario']) && $_POST['quantos_trabalhamBeneficiario'] == 3) ? 'selected' : ''?>>3</option>
+                        <option value="4" <?= (isset($_POST['quantos_trabalhamBeneficiario']) && $_POST['quantos_trabalhamBeneficiario'] == 4) ? 'selected' : ''?>>4</option>
+                        <option value="5" <?= (isset($_POST['quantos_trabalhamBeneficiario']) && $_POST['quantos_trabalhamBeneficiario'] == 5) ? 'selected' : ''?>>5</option>
+                        <option value="6" <?= (isset($_POST['quantos_trabalhamBeneficiario']) && $_POST['quantos_trabalhamBeneficiario'] == 6) ? 'selected' : ''?>>+ de 5</option>
+                    </select>   
                 </span>
                 <span class="col-lg-6  col-xs-12">
-                    <label>Renda Familiar total:</label>
-                    <input type="number" required class="form-control" id="renda_familiar" name="renda_familiarBeneficiario" value="<?php if(isset($_POST['renda_familiarBeneficiario']) && !$cadastrado) echo $_POST['renda_familiarBeneficiario']; ?>">
+                    <label>Renda Familiar total: *</label>
+                    <input type="number" required max="<?= $salario_minimo ?>" class="form-control" id="renda_familiar" name="renda_familiarBeneficiario" placeholder="Somente números" value="<?php if(isset($_POST['renda_familiarBeneficiario']) && !$cadastrado) echo $_POST['renda_familiarBeneficiario']; ?>">
                 </span>
             </div>            
             <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">

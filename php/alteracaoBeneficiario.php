@@ -51,7 +51,7 @@ if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
             $laudo = $dadosBeneficiario['laudo'];
             $comorbidade = $dadosBeneficiario['doenca'];
             $quantos_dependentes = $dadosBeneficiario['quantos_dependentes'];
-            $quantos_trabalham = $dadosBeneficiario['qnt_trabalham'];
+            $quantos_trabalham = $dadosBeneficiario['qnt_trabalham'];            
             $renda_familiar = $dadosBeneficiario['renda_familiar'];
             $idPessoa = $dadosBeneficiario['idPessoa'];
             $_SESSION['idPessoa'] = $idPessoa;
@@ -101,8 +101,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
         && !empty($_POST['estadoBeneficiario']) 
         && !empty($_POST['situacao_moradiaBeneficiario']) 
         && !empty($_POST['valor_despesasBeneficiario']) 
-        && !empty($_POST['renda_familiarBeneficiario'])
-        && !empty($_POST['quantos_trabalhamBeneficiario'])
+        && !empty($_POST['renda_familiarBeneficiario'])               
     ) {
 
         // $telefone = preg_replace('/[^0-9]/', '', $_POST['telefoneBeneficiario']);
@@ -111,6 +110,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
 
         if (strlen($telefone) < 11 || strlen($cep) < 8) {
             echo "<script>alert('Telefone ou CEP possuem caracteres insuficientes');</script>";
+            $telefone = '';
             $erro = true;
         }
         $data_nascimento = $_POST['data_nascimentoBeneficiario'];        
@@ -128,9 +128,11 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
               
          if (!empty($Verifica_idade) && $Verifica_idade == 1){            
             echo "<script>window.alert('Escolha uma data de nascimento que realmente exista');</script>";
+            $data_nascimento = '';
             $erro = True;        
         } else if ($idade < 20){
             echo "<script>window.alert('A idade mínima para se cadastrar como Beneficiário(a) é de 20 anos.');</script>";
+            $data_nascimento = '';
             $erro = True;
         }
         
@@ -145,7 +147,11 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
         $comorbidade = $_POST['doenca'];
         $renda_familiar = $_POST['renda_familiarBeneficiario'];
         $quantos_dependentes = $_POST['quantos_dependentes'];
-        $quantos_trabalham = $_POST['quantos_trabalhamBeneficiario'];
+        if (empty($_POST['quantos_trabalhamBeneficiario'])){
+            $quantos_trabalham = 0;
+        } else {
+            $quantos_trabalham = $_POST['quantos_trabalhamBeneficiario'];
+        }
         $email = $_POST['emailBeneficiario'] ?? $email; // ou outro campo do formulário
         $pcd = $_POST['rbPCD'] ?? 'N';
         $laudo = $_POST['rbPossuiLaudo'] ?? 'N';
@@ -158,12 +164,13 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
         
 
         if ($total_dependentes > $quantos_dependentes) {
-            echo "<script>window.alert('Quantidade de dependentes já cadastrados é maior que a informada');</script>";   
+            echo "<script>window.alert('Quantidade de dependentes já cadastrados é maior que a informada');</script>"; 
+            $quantos_dependentes = '';
             $erro = true;         
         }
 
         // Validações de coerência
-        if ((($_POST['rbPossuiBenf'] == 'S' && (empty($beneficioGov)) || (empty($valor_beneficio))) || (!empty($beneficioGov) && $beneficioGov == 'Aposentadoria' && $idade < 60))) {
+        if ($_POST['rbPossuiBenf'] == 'S' && ((empty($beneficioGov)) || (empty($valor_beneficio)))) {
             echo "<script>window.alert('Há uma incoerência em relação ao Benefício do Beneficiário');</script>";
             $erro = true;
         } 
@@ -199,6 +206,7 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
                         $id_telefone = $dados_telefone['idPessoa'];
                         if (!empty($id_telefone) && $id_telefone != $idPessoa){
                             echo "<script>window.alert('O telefone informado já está cadastrado por outra pessoa');</script>";
+                            $telefone = '';
                             $erro = true;
                         }
                     }
@@ -288,41 +296,22 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
         }
     } else {
         echo "<script>alert('Há campos em branco');</script>";
+    //     echo "Data_nascimento: " . $_POST['data_nascimentoBeneficiario'] . "<br>" .
+    //  "Estado Civil: " . $_POST['estado_civilBeneficiario'] . "<br>" .
+    //  "telefoneBeneficiario: " . $_POST['telefoneBeneficiario'] . "<br>" .
+    //  "endereco_completoBeneficiario: " . $_POST['endereco_completoBeneficiario'] . "<br>" .
+    //  "cepBeneficiario: " . $_POST['cepBeneficiario'] . "<br>" .
+    //  "cidadeBeneficiario: " . $_POST['cidadeBeneficiario'] . "<br>" .
+    //  "estadoBeneficiario: " . $_POST['estadoBeneficiario'] . "<br>" .
+    //  "situacao_moradiaBeneficiario: " . $_POST['situacao_moradiaBeneficiario'] . "<br>" .
+    //  "valor_despesasBeneficiario: " . $_POST['valor_despesasBeneficiario'] . "<br>" .
+    //  "renda_familiarBeneficiario: " . $_POST['renda_familiarBeneficiario'] . "<br>" .
+    //  "quantos_trabalhamBeneficiario: " . $_POST['quantos_trabalhamBeneficiario'];
         $erro = true;
     }
 }    
 
-if ($erro){
-    // LIBERAR AS SESSÕES
-    unset($_SESSION['idBeneficiario']);
-    unset($_SESSION['idbeneficioGov']);
-    unset($_SESSION['cpf']);
-    unset($_SESSION['idPessoa']);
-    unset($_SESSION['idEndereco']);
-    // Limpa variáveis em memória
-    $id = '';
-    $telefone = "";
-    $beneficioGov = "";
-    $valor_beneficio = "";
-    $quantos_dependentes = "";
-    $data_nascimento = "";
-    $email = "";
-    $estado_civil = "";
-    $pcd = "";
-    $laudo = "";
-    $comorbidade = "";
-    $renda_familiar = "";
-    $quantos_trabalham = "";
-    $endereco = "";
-    $cidade = "";
-    $estado = "";
-    $situacao_moradia = "";
-    $valor_despesas = "";
-    $cep = "";
-    $nome_Beneficiario = "";
-}
-
-// DELETAR
+// DELETAR -- AINDA NÃO IMPLANTADO
 if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
     // VERIFICA SE O USUÁRIO QUER DELETAR
     echo "<script>window.confirm('Tem certeza que deseja excluir este Beneficiário ?');</script>";
@@ -440,16 +429,16 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                 Dados Pessoais
             </h3>
             <div class="d-flex flex-column container">
-                <label class="form-label">Nome Completo:</label>
+                <label class="form-label">Nome Completo: *</label>
                 <input type="text" id="nome" class="form-control border" disabled value="<?= !empty($nome_Beneficiario) ? $nome_Beneficiario : ''; ?>">
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">            
                 <span class="col-xl-3">
-                    <label for="">Data Nascimento</label>
+                    <label for="">Data Nascimento: *</label>
                     <input type="date" class="form-control" name="data_nascimentoBeneficiario" value="<?= !empty($data_nascimento) ? $data_nascimento : ''; ?>">
                 </span>
                 <span class="col-xl-4">
-                    <label for="">Estado Civil</label>
+                    <label for="">Estado Civil: *</label>
                     <select class="form-select form-select-md" name="estado_civilBeneficiario">
                         <option value=""></option>
                         <option value="S" <?= !empty($estado_civil) && $estado_civil == 'S' ? 'selected' : ''; ?>>Solteiro</option>
@@ -460,7 +449,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5 col-xs-12">
-                    <label>Telefone:</label>
+                    <label>Telefone: *</label>
                     <input type="text" maxlength="15" minlength="15" id="telefone" class="form-control" name="telefoneBeneficiario" value="<?= isset($_POST['pesquisar']) && !empty($telefone) ? $telefone : ''; ?>">                    
                 </span>
                 <span class="col-lg-6 col-xs-12">
@@ -474,21 +463,21 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
             </h3>
             <div class="d-flex justify-content-between container formularios_Beneficiario">
                 <span class="col-lg-7 col-xs-12">
-                    <label class="form-label">Endereço Completo:</label>
+                    <label class="form-label">Endereço Completo: *</label>
                     <input type="text" class="form-control border" name="endereco_completoBeneficiario" value="<?= !empty($endereco) ? $endereco : ''; ?>">            
                 </span>
                 <span class="col-lg-4 col-xs-12">
-                    <label>CEP:</label>
+                    <label>CEP: *</label>
                     <input type="text" id="cep" maxlength="9" minlength="9" class="form-control form-control-xl" name="cepBeneficiario" value="<?= !empty($cep) ? $cep : ''; ?>">
                 </span>
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-3">
-                    <label for="">Cidade</label>
+                    <label for="">Cidade: *</label>
                     <input type="text" class="form-control" name="cidadeBeneficiario" id="cidade" value="<?= !empty($cidade) ? $cidade : ''; ?>">
                 </span>
                 <span class="col-lg-3">
-                    <label for="">Estado</label>
+                    <label for="">Estado: *</label>
                     <select class="form-select form-select-md" name="estadoBeneficiario">
                         <option value=""></option>
                         <option value="AC" <?= (!empty($estado) && $estado == 'AC') ? 'selected' : '' ?>>AC - Acre</option>
@@ -520,7 +509,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                     </select>
                 </span>
                 <span class="col-lg-4">
-                    <label for="">Situação da moradia</label>
+                    <label for="">Situação da moradia: *</label>
                     <select class="form-select form-select-md" name="situacao_moradiaBeneficiario">
                         <option value=""></option>
                         <option value="C" <?= (!empty($situacao_moradia) && $situacao_moradia == 'C') ? 'selected' : ''; ?>>Comprada</option>
@@ -531,8 +520,8 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-12">
-                    <label>Valor do Aluguel + Despesas (Água e luz):</label>
-                    <input type="number" class="form-control" id="valor" name="valor_despesasBeneficiario" value="<?= !empty($valor_despesas) ? $valor_despesas : ''; ?>">
+                    <label>Valor do Aluguel + Despesas (Água e luz): *</label>
+                    <input type="number" max="<?= $salario_minimo ?>" placeholder="Somente números" class="form-control" id="valor" name="valor_despesasBeneficiario" value="<?= !empty($valor_despesas) ? $valor_despesas : ''; ?>">
                 </span>            
             </div>
             <!-- SITUAÇÃO -->
@@ -542,7 +531,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
             <div class="d-flex justify-content-between formularios_Beneficiario  mt-3 container">
                 <div class="d-flex flex-row col-lg-8 col-sm-12 container justify-content-between" id="form_beneficiario_beneficio">
                     <span class="col-4 container p-0">
-                        <label for="">Possui Benefício?</label>                        
+                        <label for="">Possui Benefício? *</label>                        
                         <div class="d-flex container justify-content-start p-0">
                             <div class="form-check col-6">
                                 <input type="radio" class="form-check-input" name="rbPossuiBenf" value="S" <?= isset($_POST['pesquisar']) && !empty($BeneficioGov) ? 'checked' : ''; ?>>
@@ -557,8 +546,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                     <span class="col-8">
                         <label for="">Qual o nome do Benefício?</label>
                         <select name="beneficioBeneficiario" class="form-select form-select-md">
-                            <option value=""></option>
-                            
+                            <option value=""></option>                            
                             <option value="Aposentadoria" <?= (!empty($BeneficioGov) && $BeneficioGov == "Aposentadoria") ? 'selected' : '' ?>>Aposentadoria</option>
                             <option value="Benefício de Prestação Continuada (BPC)" <?= (!empty($BeneficioGov) && $BeneficioGov == "Benefício de Prestação Continuada (BPC)") ? 'selected' : '' ?>>Benefício de Prestação Continuada (BPC)</option>
                             <option value="Novo Bolsa Família" <?= (!empty($BeneficioGov) && $BeneficioGov == "Novo Bolsa Família") ? 'selected' : '' ?>>Novo Bolsa Família</option>
@@ -568,14 +556,14 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                     </span> 
                 </div>           
                 <span class="col-lg-4 ">
-                    <label for="">Valor</label>
-                    <input type="number" id="valorB" class="form-control" name="valor_benecicioBeneficiario" value="<?= !empty($valor_beneficio) ? $valor_beneficio : ''; ?>">
+                    <label for="">Valor: </label>
+                    <input type="number" id="valorB" max="<?= $salario_minimo ?>" placeholder="Somente números" class="form-control" name="valor_benecicioBeneficiario" value="<?= !empty($valor_beneficio) ? $valor_beneficio : ''; ?>">
                 </span> 
             </div>
             <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">
                 <div class="d-flex col-lg-6 flex-row container justify-content-between p-0" id="form_beneficiario_beneficio">
                     <span class="col-6">
-                        <label for="">PCD?</label>
+                        <label for="">PCD? *</label>
                         <div class="d-flex container p-0">
                             <div class="form-check col-6">
                                 <input type="radio" class="form-check-input" name="rbPCD" value="S" <?= !empty($pcd) && $pcd == 'S' ? 'checked' : ''; ?>>
@@ -608,7 +596,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
             </div> 
                 <div class="d-flex flex-row justify-content-between container formularios_Beneficiario mt-3">        
                 <span class="col-4">
-                    <label for="">Possui Dependentes?</label>                    
+                    <label for="">Possui Dependentes? *</label>                    
                     <div class="d-flex container justify-content-start p-0">
                         <div class="form-check col-6">
                             <input type="radio" class="form-check-input" name="rbPossuiDependentes" value="S" <?= isset($_POST['pesquisar']) && (!empty($quantos_dependentes) && $quantos_dependentes > 0) ? 'checked' : ''; ?>>
@@ -622,18 +610,36 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                 </span> 
                 <span class="col-lg-7  col-sm-6">
                     <label for="">Quantos?</label>
-                    <input type="number" id="quantos_dependentes" class="form-control" name="quantos_dependentes" value="<?= !empty($quantos_dependentes) ? $quantos_dependentes : ''; ?>">
+                    <select name="quantos_dependentes" class="form-control" id="quantos_dependentes">
+                        <option value=""></option>               
+                        <option value="0" <?= ($quantos_dependentes == 0) ? 'selected' : ''?>>nenhum</option>
+                        <option value="1" <?= (!empty($quantos_dependentes) && $quantos_dependentes == 1) ? 'selected' : ''?>>1</option>
+                        <option value="2" <?= (!empty($quantos_dependentes) && $quantos_dependentes == 2) ? 'selected' : ''?>>2</option>
+                        <option value="3" <?= (!empty($quantos_dependentes) && $quantos_dependentes == 3) ? 'selected' : ''?>>3</option>
+                        <option value="4" <?= (!empty($quantos_dependentes) && $quantos_dependentes == 4) ? 'selected' : ''?>>4</option>
+                        <option value="5" <?= (!empty($quantos_dependentes) && $quantos_dependentes == 5) ? 'selected' : ''?>>5</option>
+                        <option value="6" <?= (!empty($quantos_dependentes) && $quantos_dependentes == 6) ? 'selected' : ''?>>+ de 5</option>
+                    </select>
                 </span> 
             </div>                                    
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-5  col-xs-12">
                     <!-- ?????????????????????????????????????????????????????????????????????????????????????????????? -->
-                    <label>Quantos trabalham em casa:</label>
-                    <input type="number" class="form-control" id="quantos_trabalham" name="quantos_trabalhamBeneficiario" value="<?= !empty($quantos_trabalham) ? $quantos_trabalham : '';?>">
+                    <label>Quantos trabalham em casa: *</label>
+                    <select name="quantos_trabalhamBeneficiario" class="form-control" id="quantos_trabalham">         
+                        <option value=""></option>               
+                        <option value="0" <?= ($quantos_trabalham == 0) ? 'selected' : ''?>>ninguém</option>
+                        <option value="1" <?= (!empty($quantos_trabalham) && $quantos_trabalham == 1) ? 'selected' : ''?>>1</option>
+                        <option value="2" <?= (!empty($quantos_trabalham) && $quantos_trabalham == 2) ? 'selected' : ''?>>2</option>
+                        <option value="3" <?= (!empty($quantos_trabalham) && $quantos_trabalham == 3) ? 'selected' : ''?>>3</option>
+                        <option value="4" <?= (!empty($quantos_trabalham) && $quantos_trabalham == 4) ? 'selected' : ''?>>4</option>
+                        <option value="5" <?= (!empty($quantos_trabalham) && $quantos_trabalham == 5) ? 'selected' : ''?>>5</option>
+                        <option value="6" <?= (!empty($quantos_trabalham) && $quantos_trabalham == 6) ? 'selected' : ''?>>+ de 5</option>
+                    </select>                   
                 </span>
                 <span class="col-lg-6  col-xs-12">
-                    <label>Renda Familiar total:</label>
-                    <input type="number" class="form-control" id="renda_familiar" name="renda_familiarBeneficiario" value="<?= !empty($renda_familiar) ? $renda_familiar : ''; ?>">
+                    <label>Renda Familiar total: *</label>
+                    <input type="number" class="form-control" placeholder="Somente números" max="<?= $salario_minimo ?>" id="renda_familiar" name="renda_familiarBeneficiario" value="<?= !empty($renda_familiar) ? $renda_familiar : ''; ?>">
                 </span>
             </div>            
             <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">
