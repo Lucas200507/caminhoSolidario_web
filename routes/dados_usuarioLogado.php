@@ -25,7 +25,8 @@
                 }    
                 
                 // Aplicar ícone do usuário
-                $icone = obter_background_icone($primeiro_nome);                                                
+                $icone = obter_background_icone($primeiro_nome); 
+                $salario_minimo = 1518;                                               
             }
          } else {
              // Não identificou um cpf cadastrado (MUITO DIFÍCIL)

@@ -121,8 +121,8 @@ if (!$erro) {
        echo "<script>window.alert('Escolha uma data de nascimento que realmente exista');</script>";
        $erro = True;
    }
-    } else if ($idade < 20){
-        echo "<script>window.alert('A idade mínima para se cadastrar como Beneficiário(a) é de 20 anos.');</script>";
+    } else if ($idade < 18){
+        echo "<script>window.alert('A idade mínima para se cadastrar como Beneficiário(a) é de 18 anos.');</script>";
         $erro = True;
     }
 

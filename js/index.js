@@ -94,12 +94,12 @@ function navegar_documentos(){
 }
 
 function navegar_documentosDependente(){
-   window.location.href = "documentosDependente.php";
-   //window.location.href = "em_manutencao.html";
+   // window.location.href = "documentosDependente.php";
+   window.location.href = "em_manutencao.html";
 }
 
 function navegar_documentosBeneficiario(){
-   window.location.href = "documentosBeneficiario.php";
+   // window.location.href = "documentosBeneficiario.php";
    //window.location.href = "em_manutencao.html";
 }
 
