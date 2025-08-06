@@ -100,7 +100,7 @@ function navegar_documentosDependente(){
 
 function navegar_documentosBeneficiario(){
    // window.location.href = "documentosBeneficiario.php";
-   //window.location.href = "em_manutencao.html";
+   window.location.href = "em_manutencao.html";
 }
 
 function navegar_usuario(){        

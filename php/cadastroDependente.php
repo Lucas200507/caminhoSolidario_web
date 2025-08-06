@@ -72,7 +72,7 @@ if (isset($_POST['cadastrar'])
             }
         } else {
             echo "<script>alert('CPF do beneficiário não encontrado.');</script>";
-            $em_branco = true;
+            $erro = true;
         }
 
         $cpfDependente = str_replace(['-', '.', ' '], '', $_POST['cpfDependente']);
@@ -106,10 +106,9 @@ if (isset($_POST['cadastrar'])
         if ($parentesco == "Filho_M" && $idade >= 18) {  
             echo "<script>window.alert('A idade do filho(a) deve ser menor de 18 anos.');</script>";
             $incoerencia = true;        
-        } elseif ($parentesco == "Parente_Pcd" && $pcd == "N") {
-            $incoerencia = true;
-        } elseif ($parentesco != "Parente_Pcd" && $pcd == "S") {
-            $incoerencia = true;
+        } elseif (($parentesco == "Parente_Pcd" && $pcd == "N") || ($parentesco != "Parente_Pcd" && $pcd == "S")) {
+            echo "<script>window.alert('Há uma incoerência em relação á PCD.');</script>";
+            $incoerencia = true;        
         } else if ($parentesco == "Mae ou pai" && $idade < 36){
             echo "<script>window.alert('A idade do pai ou mãe deve ser no mínimo 36 anos.');</script>";
             $erro_idade = True;
@@ -250,9 +249,7 @@ if (isset($_POST['cadastrar'])
     <main class="mt-5 d-flex flex-column container">
         <form action="" class="container_formularios" method="post">   
             <?php if($MAX_dep): ?>        
-                <script>window.alert("A quantidade de dependentes relacionados ao beneficiário excedeu.");</script>
-            <?php elseif($incoerencia): ?>
-                <script>window.alert("Há uma incoêrencia em relação ao parentesco do(a) dependente");</script>
+                <script>window.alert("A quantidade de dependentes relacionados ao beneficiário excedeu.");</script>          
             <?php elseif($em_branco): ?>
                 <script>window.alert("Há campos em branco.");</script>                
             <?php elseif($jaCadastrado): ?>
