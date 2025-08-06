@@ -29,7 +29,7 @@
                 $parentesco = $dados_tbDependente['parentesco'];
                 $pcd = $dados_tbDependente['pcd'];
                 $laudo = $dados_tbDependente['laudo'];
-                $comorbidade = $dados_tbDependente['beneficiario'];  
+                $comorbidade = $dados_tbDependente['comorbidade'];                 
                 // TEM QUE FAZER O SELECT DO BENEFICIOGOV
                 $beneficioGov = $dados_tbDependente['beneficioGov'];                
             }
@@ -54,7 +54,7 @@
                     }
             }
         }
-    }
+    }    
     
     // ALTERAR DEPENDENTE
     if(isset($_POST['alterar']) && !$erro && !$alterado){
@@ -91,7 +91,7 @@
                     echo "<script>window.alert('Há uma incoerência em relação a idade da mãe ou pai.');</script>";
                     $erro = true;
                 } else if ($_POST['rbParentesco'] == 'Parente_Pcd'){
-                    if (empty($_POST['rbPcd']) || $_POST['rbPcd'] == "N"){
+                    if (empty($_POST['rbPCD']) || $_POST['rbPCD'] == "N"){
                         echo "<script>window.alert('Há uma incoerência em relação à PCD.');</script>";
                         $erro = true;
                     }
@@ -112,51 +112,76 @@
                 $erro = true;
             }
         }
-        if (!empty($_POST['rbPcd']) && $_POST['rbPcd'] == "S" && empty($_POST['nome_doenca'])){
+        if (!empty($_POST['rbPCD']) && $_POST['rbPCD'] == "S" && empty($_POST['nome_doenca'])){
             echo "<script>window.alert('Há uma incoerência em relação à PCD.');</script>";
             $erro = true;
         }
 
         if (!$erro){
             // LANCAR NO BANCO
+            $idDependente = $_SESSION['idDependente'];
             $data_nascimento = $_POST['data_nascimento'];
             $parentesco = $_POST['rbParentesco'];
             $pcd = $_POST['rbPCD'];
             $laudo = $_POST['rbPossuiLaudo'];
+            $rbPossuiBenf = $_POST['rbPossuiBenf'];
             $comorbidade = $_POST['nome_doenca'];
             $valorBeneficioGov = $_POST['valor_benecicioDependente']; // alterar Beneficio gov
+            $valorBeneficioGov = floatval($valorBeneficioGov);
             $beneficioGov = $_POST['beneficioDependente']; // alterar nomeBeneficiosGov
             // ID BENEFICIOGOV 
-            if (!empty($beneficioGov) && !empty($valorBeneficioGov)){
-                switch ($beneficioGov) {
-                    case "Novo Bolsa Família": $id_nomesBeneficioGov = 1; break;
-                    case "Benefício de Prestação Continuada (BPC)": $id_nomesBeneficioGov = 2; break;
-                    case "Aposentadoria": $id_nomesBeneficioGov = 3; break;
-                    case "Vale-Gas": $id_nomesBeneficioGov = 4; break;
-                    case "Outros": $id_nomesBeneficioGov = 5; break;
-                    default: $id_nomesBeneficioGov = NULL; break; 
-                }                       
-                    if (empty($_SESSION['idBeneficioGov_dep'])){
-                        // NÃO TINHA UM BENEFÍCIO
-                        $sqlInsert_beneficioGov = "INSERT INTO BeneficioGov (idBeneficios_gov, valor_beneficio) VALUES ('$id_nomesBeneficioGov','$valorBeneficioGov')";
-                        $resultInsert_beneficioGov = mysqli_query($conexao, $sqlInsert_beneficioGov);
-                            // TEM QUE SELECIONAR O ÚLTIMO BENEFICIO CADASTRADO
-                            $sqlSelect_beneficioGov = "SELECT idBeneficioGov FROM BeneficioGov ORDER BY idBeneficioGov DESC LIMIT 1;";
-                            $resultSelect_benefioGov = mysqli_query($conexao, $sqlSelect_beneficioGov);
-                            if(mysqli_num_rows($resultSelect_benefioGov) > 0){
-                                $dados_beneficioGov = mysqli_fetch_assoc($resultSelect_benefioGov);
-                                $idBeneficioGov = $dados_beneficioGov['idBeneficioGov'];
-                            }
-
+            if ($rbPossuiBenf == "N"){                
+                // EXCLUIR O BENEFÍCIO
+                if (!empty($_SESSION['idBeneficioGov_dep'])){
+                    $idBenf = $_SESSION['idBeneficioGov_dep'];
+                    $stmt = $conexao->prepare("UPDATE filho_dependente SET idBeneficioGov = NULL WHERE idFilho_Dependente = ?");
+                    $stmt->bind_param("i", $idDependente);
+                    $result_idBenf = $stmt->execute();
+                    $stmt->close();
+                    if ($result_idBenf){
+                        $stmt = $conexao->prepare("DELETE FROM BeneficioGov WHERE idBeneficioGov = ?");
+                        $stmt->bind_param("i", $idBenf);
+                        $result = $stmt->execute();                        
+                        $stmt->close();
+                        $idBeneficioGov = null;
                     } else {
-                        // JÁ POSSUÍA UM BENEFÍCIO
-                        $idBeneficioGov = $_SESSION['idBeneficioGov_dep'];
-                        $sqlUpdate_BeneficioGov = "UPDATE BeneficioGov SET idBeneficios_gov = '$id_nomesBeneficioGov', valor_beneficio = '$valorBeneficioGov' WHERE idBeneficioGov = '$idBeneficioGov';";
-                        $resultUpdate_Beneficio = mysqli_query($conexao, $sqlUpdate_BeneficioGov);
-                    }
-            }                     
-            // UPDATE EM filho_dependente
-            $idDependente = $_SESSION['idDependente'];
+                        echo "erro em alterar benefício Dependente";
+                    }                    
+                }
+            } else {
+                if (!empty($beneficioGov) && !empty($valorBeneficioGov)){
+                    switch ($beneficioGov) {
+                        case "Novo Bolsa Família": $id_nomesBeneficioGov = 1; break;
+                        case "Benefício de Prestação Continuada (BPC)": $id_nomesBeneficioGov = 2; break;
+                        case "Aposentadoria": $id_nomesBeneficioGov = 3; break;
+                        case "Vale-Gas": $id_nomesBeneficioGov = 4; break;
+                        case "Outros": $id_nomesBeneficioGov = 5; break;
+                        default: $id_nomesBeneficioGov = NULL; break; 
+                    }                       
+                        if (empty($_SESSION['idBeneficioGov_dep'])){
+                            // NÃO TINHA UM BENEFÍCIO
+                            $stmt = $conexao->prepare("INSERT INTO BeneficioGov (idBeneficios_gov, valor_beneficio) VALUES (?,?)");
+                            $stmt->bind_param("id", $id_nomesBeneficioGov, $valorBeneficioGov);
+                            if ($stmt->execute()){
+                                // TEM QUE SELECIONAR O ÚLTIMO BENEFICIO CADASTRADO
+                                $idBeneficioGov = $conexao->insert_id;
+                            }
+                            $stmt->close();
+                        } else {
+                            // JÁ POSSUÍA UM BENEFÍCIO
+                            $idBeneficioGov = $_SESSION['idBeneficioGov_dep'];
+                            $stmt = $conexao->prepare("UPDATE BeneficioGov SET idBeneficios_gov = ?, valor_beneficio = ? WHERE idBeneficioGov = ?");
+                            $stmt->bind_param("idi", $id_nomesBeneficioGov, $valorBeneficioGov, $idBeneficioGov);
+                            $result = $stmt->execute();
+                            $stmt->close();
+                            if (!$result){
+                                $erro = true;
+                            }
+                        }
+                }  
+            }
+            
+            // UPDATE EM filho_dependente            
             if (!empty($idBeneficioGov)){
                 $sqlUpdate_filhoDep = "UPDATE filho_dependente SET data_nascimento_filho_dep = '$data_nascimento', parentesco = '$parentesco', PCD = '$pcd', laudo = '$laudo', doenca = '$comorbidade', idBeneficioGov = '$idBeneficioGov' WHERE idFilho_Dependente = '$idDependente';";                  
             } else {
@@ -167,14 +192,13 @@
             if ($resultUpdate_filhoDep){
                 echo "<script>window.alert('Dependente alterado com sucesso!');</script>";
                 unset($_SESSION['cpf_dependente']);
-                unset($_SESSION['idBeneficioGov_dep']);
-                unset($_SESSION['idDependente']);
+                unset($_SESSION['idBeneficioGov_dep']);                
                 unset($_SESSION['idNome_beneficio_dep']);
                 $data_nascimento = '';
                 $parentesco = '';
                 $pcd = '';
                 $laudo = '';
-                $comorbidad = '';
+                $comorbidade = '';
                 $valorBeneficioGov = '';
                 $beneficioGov = '';
                 $idBeneficioGov = '';
@@ -186,8 +210,6 @@
             }
         }
     }
-    
-    
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -383,7 +405,7 @@
                 </div>           
                 <span class="col-lg-6">
                     <label for="">Nome da Comorbidade</label>
-                    <input type="text" class="form-control" name="nome_doenca" id="comorbidade" <?= (!empty($comorbidade)) ? $comorbidade : '' ?>>
+                    <input type="text" class="form-control" name="nome_doenca" id="comorbidade" value="<?= !empty($comorbidade) ? $comorbidade : '' ?>">
                 </span> 
             </div> 
             <div class="d-flex container justify-content-around w-100 align-items-center mb-5" style="margin-top: 3em;">

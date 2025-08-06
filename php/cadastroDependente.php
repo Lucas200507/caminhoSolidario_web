@@ -127,6 +127,11 @@ if (isset($_POST['cadastrar'])
             } else {
                 $em_branco = true;
             }
+
+            if ($_POST['beneficioDependente'] == "Aposentadoria" && $idade < 18){
+                echo "<script>window.alert('Menores não podem receber benefício de Aposentadoria.');</script>";
+                $erro_idade = True;
+            }
         }
 
         if ($pcd == "S") {
@@ -269,7 +274,7 @@ if (isset($_POST['cadastrar'])
                 <?php else: ?>
                     <!-- Caso fluxo normal, exibe select liberado -->
                     <select class="form-select form-select-md w-50" name="cpfBeneficiario" required>
-                        <option value="">Selecione o CPF do(a) Beneficiário(a)</option>
+                        <option value="">Selecione o CPF do(a) Beneficiário(a) *</option>
                         <?php if ($result1->num_rows > 0): ?>
                             <?php while ($beneficiario = $result1->fetch_assoc()): ?>
                                 <option value="<?= $beneficiario['cpf'] ?>"
@@ -280,29 +285,28 @@ if (isset($_POST['cadastrar'])
                         <?php endif; ?>
                     </select>
                 <?php endif; ?>
-                <button id="buttonPesquisarCPF" class="btn btn-primary" type="submit" name="pesquisarCPF">Pesquisar</button>
+                <!-- <button id="buttonPesquisarCPF" class="btn btn-primary" type="submit" name="pesquisarCPF">Pesquisar</button> -->
             </div>
-
             <!-- DADOS PESSOAIS -->
             <h3 style="text-align: center;" class="mb-3" id="subtitulos_paginas">Dados Pessoais</h3>
             <div class="d-flex flex-column container">
-                <label class="form-label">Nome Completo:</label>
+                <label class="form-label">Nome Completo: *</label>
                 <input type="text" required class="form-control border" id="nome" name="nome_completo"
                     value="<?php if(isset($_POST['nome_completo']) && !$cadastrado_dependente) echo $_POST['nome_completo']; ?>">
             </div>
             <div class="d-flex justify-content-between mt-3 container formularios_Beneficiario">
                 <span class="col-lg-3">
-                    <label for="">CPF</label>
+                    <label for="">CPF: *</label>
                     <input type="text" maxlength="14" minlength="14" id="cpf" required class="form-control" name="cpfDependente"
                         value="<?php if(isset($_POST['cpfDependente']) && !$cadastrado_dependente) echo $_POST['cpfDependente']; ?>">
                 </span>
                 <span class="col-lg-3">
-                    <label for="">Data Nascimento</label>
+                    <label for="">Data Nascimento: *</label>
                     <input type="date" class="form-control" name="data_nascimento" required
                         value="<?php if(isset($_POST['data_nascimento']) && !$cadastrado_dependente) echo $_POST['data_nascimento']; ?>">
                 </span>
                 <span class="col-lg-4">
-                    <label for="">Parentesco</label>
+                    <label for="">Parentesco: *</label>
                     <select class="form-select form-select-md" name="rbParentesco" required>
                         <option value=""></option>
                         <option value="Filho_M" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Filho_M' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Filho(a) - Menor</option>
@@ -320,7 +324,7 @@ if (isset($_POST['cadastrar'])
             <div class="d-flex justify-content-between formularios_Beneficiario mt-3 container">
                 <div class="d-flex flex-row col-lg-8 col-sm-12 container justify-content-between" id="form_beneficiario_beneficio">
                     <span class="col-4 container p-0">
-                        <label for="">Possui Benefício?</label>
+                        <label for="">Possui Benefício? *</label>
                         <div class="d-flex container justify-content-start p-0">
                             <div class="form-check col-6">
                                 <input type="radio" class="form-check-input" name="rbPossuiBenf" value="S"
@@ -338,17 +342,17 @@ if (isset($_POST['cadastrar'])
                         <label for="">Qual o nome do Benefício?</label>
                         <select name="beneficioDependente" class="form-select form-select-md">
                             <option value=""></option>
-                            <option value="Aposentadoria" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Aposentadoria' && !$cadastrado) ? 'selected ': ''; ?>>Aposentadoria</option>
-                            <option value="Benefício de Prestação Continuada (BPC)" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Benefício de Prestação Continuada (BPC)' && !$cadastrado) ? 'selected ': ''; ?>>Benefício de Prestação Continuada (BPC)</option>
-                            <option value="Novo Bolsa Família" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Novo Bolsa Família' && !$cadastrado) ? 'selected ': ''; ?>>Bolsa Família</option>
-                            <option value="Vale-gas" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Vale-gas' && !$cadastrado) ? 'selected ': ''; ?>>Vale Gás</option>
-                            <option value="Outros" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Outros' && !$cadastrado) ? 'selected ': ''; ?>>Outros</option>                            
+                            <option value="Aposentadoria" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Aposentadoria' && !$cadastrado_dependente) ? 'selected ': ''; ?>>Aposentadoria</option>
+                            <option value="Benefício de Prestação Continuada (BPC)" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Benefício de Prestação Continuada (BPC)' && !$cadastrado_dependente) ? 'selected ': ''; ?>>Benefício de Prestação Continuada (BPC)</option>
+                            <option value="Novo Bolsa Família" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Novo Bolsa Família' && !$cadastrado_dependente) ? 'selected ': ''; ?>>Bolsa Família</option>
+                            <option value="Vale-gas" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Vale-gas' && !$cadastrado_dependente) ? 'selected ': ''; ?>>Vale Gás</option>
+                            <option value="Outros" <?php echo(isset($_POST['beneficioDependente']) && $_POST['beneficioDependente'] == 'Outros' && !$cadastrado_dependente) ? 'selected ': ''; ?>>Outros</option>                            
                         </select>                
                     </span> 
                 </div>           
                 <span class="col-lg-4">
-                    <label for="">Valor</label>
-                    <input type="number" class="form-control" name="valor_benecicioDependente" id="valor"
+                    <label for="">Valor:</label>
+                    <input type="number" class="form-control" max="<?= $salario_minimo ?>" placeholder="Somente números" name="valor_benecicioDependente" id="valor"
                         value="<?php if(isset($_POST['valor_benecicioDependente']) && !$cadastrado_dependente) echo $_POST['valor_benecicioDependente']; ?>">
                 </span> 
             </div>
@@ -356,7 +360,7 @@ if (isset($_POST['cadastrar'])
             <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">
                 <div class="d-flex col-lg-6 flex-row container justify-content-between p-0">
                     <span class="col-6">
-                        <label for="">PCD?</label>
+                        <label for="">PCD? *</label>
                         <div class="d-flex container p-0">
                             <div class="form-check col-6">
                                 <input type="radio" class="form-check-input" name="rbPCD" value="S"
