@@ -80,13 +80,7 @@ if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
 
             $sql5 = "SELECT * FROM tbBeneficioGov WHERE ID = '$idBeneficioGov';";            
             $result5 = mysqli_query($conexao, $sql5);
-            if ($dados_beneficioGov = mysqli_fetch_assoc($result5)) {
-                $BeneficioGov = $dados_beneficioGov['Beneficio_gov'];      
-                if (empty($BeneficioGov)){
-                    echo "Tá vazio";
-                } else {
-                    echo ("$BeneficioGov");
-                }
+            if ($dados_beneficioGov = mysqli_fetch_assoc($result5)) {               
                 $valor_beneficio = $dados_beneficioGov['valor_beneficio'];
             }
         }

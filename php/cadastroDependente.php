@@ -57,9 +57,9 @@ if (isset($_POST['cadastrar'])
             $resultBenef = $conexao->query($sqlSelect_beneficiario);
 
             if ($resultBenef->num_rows > 0) {
-                while ($benefiario_data = $resultBenef->fetch_assoc()) {
-                    $idBeneficiario = $benefiario_data['ID'];
-                    $qnts_dependentes = $benefiario_data['quantos_dependentes'];
+                while ($beneficiario_data = $resultBenef->fetch_assoc()) {
+                    $idBeneficiario = $beneficiario_data['ID'];
+                    $qnts_dependentes = $beneficiario_data['quantos_dependentes'];
 
                     $sqlSelect_dependentes = "SELECT * FROM filho_dependente WHERE idBeneficiario = '$idBeneficiario'";
                     $resultDep = $conexao->query($sqlSelect_dependentes);
@@ -93,6 +93,7 @@ if (isset($_POST['cadastrar'])
         $data_atual = new DateTime();
         $intervalo = $data_nascimentoDT->diff($data_atual);
         $idade = $intervalo->y; // A IDADE SERÁ O INTERVALO EM ANOS, DO DIA DE HOJE PARA A DATA_NASCIMENTO
+        $Verifica_idade = 0;
         if($intervalo->invert){
             // Se o invert == 1 -> FUTURO
             // SE O invert == 0 -> PASSADO
@@ -107,32 +108,20 @@ if (isset($_POST['cadastrar'])
             echo "<script>window.alert('A idade do filho(a) deve ser menor de 18 anos.');</script>";
             $incoerencia = true;        
         } elseif (($parentesco == "Parente_Pcd" && $pcd == "N") || ($parentesco != "Parente_Pcd" && $pcd == "S")) {
-            echo "<script>window.alert('Há uma incoerência em relação á PCD.');</script>";
+            echo "<script>window.alert('Há uma incoerência em relação à PCD.');</script>";
             $incoerencia = true;        
-        } else if ($parentesco == "Mae ou pai" && $idade < 36){
+        } else if ($parentesco == "Mae/pai" && $idade < 36){
             echo "<script>window.alert('A idade do pai ou mãe deve ser no mínimo 36 anos.');</script>";
             $erro_idade = True;
         } else if ($parentesco == "Neto(a)" && $idade < 18){
             echo "<script>window.alert('A idade do(a) neto(a) deve ser menor de 18 anos.');</script>";
             $erro_idade = True;
         } else if ($parentesco == "Irmao(a)" && $idade < 18){
-            echo "<script>window.alert('A idade do(a) neto(a) deve ser menor de 18 anos.');</script>";
+            echo "<script>window.alert('A idade do(a) irmão(ã) deve ser menor de 18 anos.');</script>";
             $erro_idade = True;
         }
 
-        if ($possuiBenf == "S") {
-            if (!empty($_POST['beneficioDependente']) && !empty($_POST['valor_benecicioDependente'])) {
-                $beneficio = $_POST['beneficioDependente'];
-                $valor_beneficio = $_POST['valor_benecicioDependente'];
-            } else {
-                $em_branco = true;
-            }
-
-            if ($_POST['beneficioDependente'] == "Aposentadoria" && $idade < 18){
-                echo "<script>window.alert('Menores não podem receber benefício de Aposentadoria.');</script>";
-                $erro_idade = True;
-            }
-        }
+        
 
         if ($pcd == "S") {
             if (!empty($_POST['rbPossuiLaudo']) && !empty($_POST['nome_doenca'])) {
@@ -150,17 +139,66 @@ if (isset($_POST['cadastrar'])
             $em_branco = true;
         }
 
-        if (!$em_branco && !$MAX_dep && !$jaCadastrado && !$incoerencia && !$erro_idade) {
-            $sqlInsert = "INSERT INTO filho_dependente 
-            (nome_filho_dependente, cpf, data_nascimento_filho_dep, parentesco, PCD, laudo, doenca, idBeneficiario)
-            VALUES ('$nome', '$cpfDependente', '$data_nascimento', '$parentesco', '$pcd', '$rbPossuiLaudo', '$nome_doenca', '$idBeneficiario')";
+        if ($possuiBenf == "S") {
+            if (!empty($_POST['beneficioDependente']) && !empty($_POST['valor_benecicioDependente'])) {
+                $beneficioGov = $_POST['beneficioDependente'];
+                $valorBeneficioGov = $_POST['valor_benecicioDependente'];
+                $valorBeneficioGov = floatval($valorBeneficioGov);  
+                switch ($beneficioGov) {
+                        case "Novo Bolsa Família": $id_nomesBeneficioGov = 1; break;
+                        case "Benefício de Prestação Continuada (BPC)": $id_nomesBeneficioGov = 2; break;
+                        case "Aposentadoria": $id_nomesBeneficioGov = 3; break;
+                        case "Vale-Gas": $id_nomesBeneficioGov = 4; break;
+                        case "Outros": $id_nomesBeneficioGov = 5; break;
+                        default: $id_nomesBeneficioGov = NULL; break; 
+                    }     
+                if(!$em_branco && !$MAX_dep && !$jaCadastrado && !$incoerencia && !$erro_idade) {
+                     $stmt = $conexao->prepare("INSERT INTO BeneficioGov (idBeneficios_gov, valor_beneficio) VALUES (?,?)");
+                     $stmt->bind_param("id", $id_nomesBeneficioGov, $valorBeneficioGov);
+                     if ($stmt->execute()){
+                                // TEM QUE SELECIONAR O ÚLTIMO BENEFICIO CADASTRADO
+                                $idBeneficioGov = $conexao->insert_id;
+                            }
+                    $stmt->close();
+                }
 
-            if ($conexao->query($sqlInsert)) {
-                $cadastrado_dependente = true;
-                unset($_SESSION['IDBeneficiario'], $_SESSION['cpfBeneficiario']);
-                $idBeneficiarioPendente = null;
+                if (!empty($idBeneficioGov)){
+                    $stmt = $conexao->prepare("INSERT INTO filho_dependente 
+                    (nome_filho_dependente, cpf, data_nascimento_filho_dep, parentesco, PCD, laudo, doenca, idBeneficiario, idBeneficioGov) VALUES (?,?,?,?,?,?,?,?,?)");
+                    $stmt->bind_param("sssssssii", $nome, $cpfDependente, $data_nascimento, $parentesco, $pcd, $rbPossuiLaudo, $nome_doenca, $idBeneficiario, $idBeneficioGov);
+                    if ($stmt->execute()){
+                        $stmt->close();
+                        echo "<script>window.alert('Dependente cadastrado com beneficio gov');</script>";
+                        unset($_SESSION['IDBeneficiario'], $_SESSION['cpfBeneficiario']);
+                        $idBeneficiarioPendente = null;
+                        $cadastrado_dependente = true;
+                    }
+                    if (!$cadastrado_dependente){
+                        $stmt->close();
+                    }
+                } 
+
             } else {
-                echo "<script>alert('Erro ao inserir: {$conexao->error}');</script>";
+                $em_branco = true;
+            }
+
+            if ($_POST['beneficioDependente'] == "Aposentadoria" && $idade < 18){
+                echo "<script>window.alert('Menores não podem receber benefício de Aposentadoria.');</script>";
+                $erro_idade = True;
+            }
+        } else {
+            if (!$em_branco && !$MAX_dep && !$jaCadastrado && !$incoerencia && !$erro_idade) {
+                $sqlInsert = "INSERT INTO filho_dependente 
+                (nome_filho_dependente, cpf, data_nascimento_filho_dep, parentesco, PCD, laudo, doenca, idBeneficiario)
+                VALUES ('$nome', '$cpfDependente', '$data_nascimento', '$parentesco', '$pcd', '$rbPossuiLaudo', '$nome_doenca', '$idBeneficiario')";
+    
+                if ($conexao->query($sqlInsert)) {
+                    $cadastrado_dependente = true;
+                    unset($_SESSION['IDBeneficiario'], $_SESSION['cpfBeneficiario']);
+                    $idBeneficiarioPendente = null;
+                } else {
+                    echo "<script>alert('Erro ao inserir: {$conexao->error}');</script>";
+                }
             }
         }
     }
@@ -311,7 +349,7 @@ if (isset($_POST['cadastrar'])
                         <option value=""></option>
                         <option value="Filho_M" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Filho_M' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Filho(a) - Menor</option>
                         <option value="Parente_Pcd" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Parente_Pcd' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Parente - PCD</option>
-                        <option value="Mae ou pai" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Mae ou pai' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Mãe ou pai</option>
+                        <option value="Mae/pai" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Mae/pai' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Mãe ou pai</option>
                         <option value="Neto(a)" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Neto(a)' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Neto(a)</option>
                         <option value="Irmao(a)" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Irmao(a)' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Irmão(ã)</option>
                         <option value="Outro" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Outro' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Outro</option>

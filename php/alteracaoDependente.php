@@ -87,15 +87,18 @@
                     echo "<script>window.alert('Há uma incoerência em relação a idade do(a) menor.');</script>";
                     $erro = true;
                 } 
-                else if ($_POST['rbParentesco'] == 'Mae ou pai' && $idade < 37){
+                else if ($_POST['rbParentesco'] == 'Mae/pai' && $idade < 37){
                     echo "<script>window.alert('Há uma incoerência em relação a idade da mãe ou pai.');</script>";
                     $erro = true;
-                } else if ($_POST['rbParentesco'] == 'Parente_Pcd'){
+                } else if (($_POST['rbParentesco'] == 'Parente_Pcd')){
                     if (empty($_POST['rbPCD']) || $_POST['rbPCD'] == "N"){
                         echo "<script>window.alert('Há uma incoerência em relação à PCD.');</script>";
                         $erro = true;
                     }
-                } 
+                } else if (($_POST['rbParentesco'] != 'Parente_Pcd') && $_POST['rbPCD'] == "S"){
+                    echo "<script>window.alert('Para cadastrar a comorbidade, deve cadastrar o parentesco como Parente - PCD.');</script>";
+                    $erro = true;
+                }
             }             
         }
 
@@ -331,7 +334,7 @@
                         <option value="" <?= !empty($parentesco) && $parentesco == "" ? 'selected' : '' ?>></option>
                         <option value="Filho_M" <?= !empty($parentesco) && $parentesco == "Filho_M" ? 'selected' : '' ?>>Filho(a) - Menor</option>
                         <option value="Parente_Pcd" <?= !empty($parentesco) && $parentesco == "Parente_Pcd" ? 'selected' : '' ?>>Parente - PCD</option>
-                        <option value="Mae ou pai" <?= !empty($parentesco) && $parentesco == "Mae ou pai" ? 'selected' : '' ?>>Mãe ou pai</option>
+                        <option value="Mae/pai" <?= !empty($parentesco) && $parentesco == "Mae/pai" ? 'selected' : '' ?>>Mãe ou pai</option>
                         <option value="Neto(a)" <?= !empty($parentesco) && $parentesco == "Neto(a)" ? 'selected' : '' ?>>Neto(a)</option>
                         <option value="Irmao(a)" <?= !empty($parentesco) && $parentesco == "Irmao(a)" ? 'selected' : '' ?>>Irmão(ã)</option>
                         <option value="Outro" <?= !empty($parentesco) && $parentesco == "Outro" ? 'selected' : '' ?>>Outro</option>
