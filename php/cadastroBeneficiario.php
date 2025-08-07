@@ -42,220 +42,226 @@
         && !empty($_POST['renda_familiarBeneficiario'])       
     ) {
 
-// Formatando CPF
-$cpfBeneficiario = str_replace(['-', '.', ' '], '', $_POST['cpfBeneficiario']);
+    // Formatando CPF
+    $cpfBeneficiario = str_replace(['-', '.', ' '], '', $_POST['cpfBeneficiario']);
 
-// Verificar se o CPF já existe
-$sql = "SELECT idPessoa FROM pessoa WHERE cpf = '$cpfBeneficiario'";
-$result = mysqli_query($conexao, $sql);
-if (!$result) {
-    die("Erro na consulta de pessoa: " . mysqli_error($conexao));
-}
-if (mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_assoc($result);
-    $idPessoa1 = $row['idPessoa'];
-
-    $sql = "SELECT idBeneficiario FROM Beneficiario WHERE idPessoa = '$idPessoa1'";
-    $result_benef = mysqli_query($conexao, $sql);
-    if (!$result_benef) {
-        die("Erro na consulta de beneficiário: " . mysqli_error($conexao));
+    // Verificar se o CPF já existe
+    $sql = "SELECT idPessoa FROM pessoa WHERE cpf = '$cpfBeneficiario'";
+    $result = mysqli_query($conexao, $sql);
+    if (!$result) {
+        die("Erro na consulta de pessoa: " . mysqli_error($conexao));
     }
-    if (mysqli_num_rows($result_benef) > 0) {
-        echo "<script>window.alert('CPF já cadastrado');</script>";
-        $erro = true;        
-    }
-}
+    if (mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $idPessoa1 = $row['idPessoa'];
 
-//verificar se já possui o cep
-$cep = str_replace(['-', '.', ' '], '', $_POST['cepBeneficiario']);
-$sql = "SELECT cep FROM endereco WHERE cep = '$cep';";
-$result = mysqli_query($conexao, $sql);
-
-if (!$result) {
-    die("Erro na consulta de endereco: " . mysqli_error($conexao));    
-}
-
-if (mysqli_num_rows($result) > 0) {
-    // Já possui alguém com o mesmo cep
-    echo "<script>window.alert('CEP já cadastrado');</script>";
-    $erro = True;    
-} else {
-    $erro = False;
-}
-
-// verificar a quantidade de caracteres
-if (strlen($cpfBeneficiario) < 11 || strlen($cep) < 8){
-    echo "<script>window.alert('Quantidade de caracteres de CPF ou CEP insuficientes');</script>";
-    $erro = True;
-}
-
-if (!$erro) {
-    $nome_completo = $_POST['nome_completoBeneficiario'];
-    $data_nascimento = $_POST['data_nascimentoBeneficiario'];
-    $estado_civil = $_POST['estado_civilBeneficiario'];
-    $telefone = str_replace(['(', ')', ' '], '', $_POST['telefoneBeneficiario']);    
-    // Verifica se já possui um telefone cadastrado
-    $sqlTelefone = "SELECT * FROM pessoa WHERE telefone = '$telefone';";
-            $resultTelefone = mysqli_query($conexao, $sqlTelefone);
-                if (mysqli_num_rows($resultTelefone) > 0){                                       
-                        echo "<script>window.alert('O telefone informado já está cadastrado por outra pessoa');</script>";
-                        $erro = True;                        
-                    }
-                
-    if (strlen($telefone) < 11){
-        echo "<script>window.alert('Quantidade de caracteres do telefone insuficientes');</script>";
-        $erro = True;
-    }
-   ///         DATA NASCIMENTO         ///        
-   $data_nascimentoDT = new DateTime($data_nascimento); // CONVERTE PARA DATA
-   $data_atual = new DateTime();
-   $intervalo = $data_nascimentoDT->diff($data_atual);
-   $idade = $intervalo->y; // A IDADE SERÁ O INTERVALO EM ANOS, DO DIA DE HOJE PARA A DATA_NASCIMENTO
-   if($intervalo->invert){
-       // Se o invert == 1 -> FUTURO
-       // SE O invert == 0 -> PASSADO
-       $Verifica_idade = $intervalo->invert;
-   }
-         
-    if (!empty($Verifica_idade) && $Verifica_idade == 1){            
-       echo "<script>window.alert('Escolha uma data de nascimento que realmente exista');</script>";
-       $erro = True;
-   }
-    } else if ($idade < 18){
-        echo "<script>window.alert('A idade mínima para se cadastrar como Beneficiário(a) é de 18 anos.');</script>";
-        $erro = True;
+        $sql = "SELECT idBeneficiario FROM Beneficiario WHERE idPessoa = '$idPessoa1'";
+        $result_benef = mysqli_query($conexao, $sql);
+        if (!$result_benef) {
+            die("Erro na consulta de beneficiário: " . mysqli_error($conexao));
+        }
+        if (mysqli_num_rows($result_benef) > 0) {
+            echo "<script>window.alert('CPF já cadastrado');</script>";
+            $erro = true;        
+        }
     }
 
-    $email = $_POST['emailBeneficiario'];
-    $endereco = $_POST['endereco_completoBeneficiario'];    
-    $cidade = $_POST['cidadeBeneficiario'];
-    $estado = $_POST['estadoBeneficiario'];
-    $situacao_moradia = $_POST['situacao_moradiaBeneficiario'];
-    $valor_despesas = $_POST['valor_despesasBeneficiario'];
-    $renda_familiar = $_POST['renda_familiarBeneficiario'];
-    $rbPossuiBenf = $_POST['rbPossuiBenf'];
-    $rbPCD = $_POST['rbPCD'];
-    $rbPossuiDependentes = $_POST['rbPossuiDependentes'];
-    if (empty($_POST['quantos_trabalhamBeneficiario'])){
-        $quantos_trabalham = 0;
+    //verificar se já possui o cep
+    $cep = str_replace(['-', '.', ' '], '', $_POST['cepBeneficiario']);
+    $sql = "SELECT cep FROM endereco WHERE cep = '$cep';";
+    $result = mysqli_query($conexao, $sql);
+
+    if (!$result) {
+        die("Erro na consulta de endereco: " . mysqli_error($conexao));    
+    }
+
+    if (mysqli_num_rows($result) > 0) {
+        // Já possui alguém com o mesmo cep
+        echo "<script>window.alert('CEP já cadastrado');</script>";
+        $erro = True;    
     } else {
-        $quantos_trabalham = $_POST['quantos_trabalhamBeneficiario'];
-    }
-    $rbPossuiLaudo = $_POST['rbPossuiLaudo'] ?? 'N';
-
-    // Benefício
-    $beneficio = '';
-    $valor_beneficio = '';
-    if ($rbPossuiBenf == "S") {
-        if (!empty($_POST['beneficioBeneficiario']) && !empty($_POST['valor_benecicioBeneficiario'])) {
-            $beneficio = $_POST['beneficioBeneficiario'];
-            $valor_beneficio = $_POST['valor_benecicioBeneficiario'];
-        } else {
-            echo "<script>window.alert('Campo Beneficío está em branco');</script>";
-            $erro = True;            
-        }
+        $erro = False;
     }
 
-    // Dependentes
-    $quantos_dependentes = 0;
-    if ($rbPossuiDependentes == "S") {
-        if (!empty($_POST['quantos_dependentes'])) {
-            $quantos_dependentes = $_POST['quantos_dependentes'];
-        } else {
-            echo "<script>window.alert('Incoerência em relação à Dependentes');</script>";
-            $erro = True;
-        }
-    }
-
-    // PCD
-    $nome_doenca = "-";
-    if ($rbPCD == "S") {
-        if (!empty($rbPossuiLaudo) && !empty($_POST['nome_doencaBeneficiario'])) {
-            $nome_doenca = $_POST['nome_doencaBeneficiario'];
-        } else {
-            echo "<script>window.alert('Incoerência em relação à comorbidade');</script>";
-            $erro = True;
-        }
-    } else {
-        $rbPossuiLaudo = "N";
+    // verificar a quantidade de caracteres
+    if (strlen($cpfBeneficiario) < 11 || strlen($cep) < 8){
+        echo "<script>window.alert('Quantidade de caracteres de CPF ou CEP insuficientes');</script>";
+        $erro = True;
     }
 
     if (!$erro) {
-        // Inserir pessoa
-        $sql = "INSERT INTO pessoa (nome_completo, cpf, telefone) VALUES ('$nome_completo', '$cpfBeneficiario', '$telefone')";
-        if (!mysqli_query($conexao, $sql)) {
-            die("Erro ao inserir pessoa: " . mysqli_error($conexao));
+        $nome_completo = $_POST['nome_completoBeneficiario'];
+        $data_nascimento = $_POST['data_nascimentoBeneficiario'];
+        $estado_civil = $_POST['estado_civilBeneficiario'];
+        $telefone = str_replace(['(', ')', ' '], '', $_POST['telefoneBeneficiario']);    
+        // Verifica se já possui um telefone cadastrado
+        $sqlTelefone = "SELECT * FROM pessoa WHERE telefone = '$telefone';";
+                $resultTelefone = mysqli_query($conexao, $sqlTelefone);
+                    if (mysqli_num_rows($resultTelefone) > 0){                                       
+                            echo "<script>window.alert('O telefone informado já está cadastrado por outra pessoa');</script>";
+                            $erro = True;                        
+                        }
+                    
+        if (strlen($telefone) < 11){
+            echo "<script>window.alert('Quantidade de caracteres do telefone insuficientes');</script>";
+            $erro = True;
         }
-        $idPessoa = mysqli_insert_id($conexao);
-
-        // Inserir endereço
-        $sql = "INSERT INTO endereco (endereco, cidade, estado, cep, situacao_moradia, valor_despesas, idPessoa) VALUES ('$endereco', '$cidade', '$estado', '$cep', '$situacao_moradia', '$valor_despesas', '$idPessoa')";
-        if (!mysqli_query($conexao, $sql)) {
-            die("Erro ao inserir endereço: " . mysqli_error($conexao));
+    ///         DATA NASCIMENTO         ///        
+    $data_nascimentoDT = new DateTime($data_nascimento); // CONVERTE PARA DATA
+    $data_atual = new DateTime();
+    $intervalo = $data_nascimentoDT->diff($data_atual);
+    $idade = $intervalo->y; // A IDADE SERÁ O INTERVALO EM ANOS, DO DIA DE HOJE PARA A DATA_NASCIMENTO
+    if($intervalo->invert){
+        // Se o invert == 1 -> FUTURO
+        // SE O invert == 0 -> PASSADO
+        $Verifica_idade = $intervalo->invert;
+    }
+            
+        if (!empty($Verifica_idade) && $Verifica_idade == 1){            
+        echo "<script>window.alert('Escolha uma data de nascimento que realmente exista');</script>";
+        $erro = True;
+    } else if ($idade < 18){
+            echo "<script>window.alert('A idade mínima para se cadastrar como Beneficiário(a) é de 18 anos.');</script>";
+            $erro = True;
         }
-        $idEndereco = mysqli_insert_id($conexao);
 
-        // Inserir benefício, se existir
-        $idBeneficio = null;    
-        if (!empty($beneficio) && !empty($valor_beneficio)) {
-            $sql = "SELECT idBeneficios_gov FROM nomeBeneficiosGov WHERE nome_beneficiogov = '$beneficio';";
-            $result = mysqli_query($conexao, $sql);
-            if (!$result) {
-                die("Erro ao buscar benefício: " . mysqli_error($conexao));
+        $email = $_POST['emailBeneficiario'];
+        $endereco = $_POST['endereco_completoBeneficiario'];    
+        $cidade = $_POST['cidadeBeneficiario'];
+        $estado = $_POST['estadoBeneficiario'];
+        $situacao_moradia = $_POST['situacao_moradiaBeneficiario'];
+        $valor_despesas = $_POST['valor_despesasBeneficiario'];
+        $renda_familiar = $_POST['renda_familiarBeneficiario'];
+        $rbPossuiBenf = $_POST['rbPossuiBenf'];
+        $rbPCD = $_POST['rbPCD'];
+        $rbPossuiDependentes = $_POST['rbPossuiDependentes'];
+        if (empty($_POST['quantos_trabalhamBeneficiario'])){
+            $quantos_trabalham = 0;
+        } else {
+            $quantos_trabalham = $_POST['quantos_trabalhamBeneficiario'];
+        }
+        $rbPossuiLaudo = $_POST['rbPossuiLaudo'] ?? 'N';
+
+        // Benefício
+        $beneficio = '';
+        $valor_beneficio = '';
+        if ($rbPossuiBenf == "S") {
+            if (!empty($_POST['beneficioBeneficiario']) && !empty($_POST['valor_beneficioBeneficiario'])) {
+                $beneficio = $_POST['beneficioBeneficiario'];
+                $valor_beneficio = $_POST['valor_beneficioBeneficiario'];
+            } else {
+                echo "<script>window.alert('Campo Beneficío está em branco');</script>";
+                $erro = True;            
             }
-            if (mysqli_num_rows($result) > 0) {
-                $row = mysqli_fetch_assoc($result);
-                $idBeneficiosGov = $row['idBeneficios_gov'];
+        }
 
-                $sql = "INSERT INTO BeneficioGov (idBeneficios_gov, valor_beneficio) VALUES ('$idBeneficiosGov', '$valor_beneficio')";
-                if (!mysqli_query($conexao, $sql)) {
-                    die("Erro ao inserir benefício: " . mysqli_error($conexao));
+        // Dependentes
+        $quantos_dependentes = 0;
+        if ($rbPossuiDependentes == "S") {
+            if (!empty($_POST['quantos_dependentes'])) {
+                $quantos_dependentes = $_POST['quantos_dependentes'];
+            } else {
+                echo "<script>window.alert('Incoerência em relação à Dependentes');</script>";
+                $erro = True;
+            }
+        }
+
+        // PCD
+        $nome_doenca = "-";
+        if ($rbPCD == "S") {
+            if (!empty($rbPossuiLaudo) && !empty($_POST['nome_doencaBeneficiario'])) {
+                $nome_doenca = $_POST['nome_doencaBeneficiario'];
+            } else {
+                echo "<script>window.alert('Incoerência em relação à comorbidade');</script>";
+                $erro = True;
+            }
+        } else {
+            $rbPossuiLaudo = "N";
+        }
+
+        if (!$erro) {
+            // Inserir pessoa
+            $sql = "INSERT INTO pessoa (nome_completo, cpf, telefone) VALUES ('$nome_completo', '$cpfBeneficiario', '$telefone')";
+            if (!mysqli_query($conexao, $sql)) {
+                die("Erro ao inserir pessoa: " . mysqli_error($conexao));
+            }
+            $idPessoa = mysqli_insert_id($conexao);
+
+            // Inserir endereço
+            $sql = "INSERT INTO endereco (endereco, cidade, estado, cep, situacao_moradia, valor_despesas, idPessoa) VALUES ('$endereco', '$cidade', '$estado', '$cep', '$situacao_moradia', '$valor_despesas', '$idPessoa')";
+            if (!mysqli_query($conexao, $sql)) {
+                die("Erro ao inserir endereço: " . mysqli_error($conexao));
+            }
+            $idEndereco = mysqli_insert_id($conexao);
+
+            // Inserir benefício, se existir
+            $idBeneficio = null;    
+            if (!empty($beneficio) && !empty($valor_beneficio)) {
+                $sql = "SELECT idBeneficios_gov FROM nomeBeneficiosGov WHERE nome_beneficiogov = '$beneficio';";
+                $result = mysqli_query($conexao, $sql);
+                if (!$result) {
+                    die("Erro ao buscar benefício: " . mysqli_error($conexao));
                 }
-                $idBeneficio = mysqli_insert_id($conexao);
+                if (mysqli_num_rows($result) > 0) {
+                    $row = mysqli_fetch_assoc($result);
+                    $idBeneficiosGov = $row['idBeneficios_gov'];
+
+                    $sql = "INSERT INTO BeneficioGov (idBeneficios_gov, valor_beneficio) VALUES ('$idBeneficiosGov', '$valor_beneficio')";
+                    if (!mysqli_query($conexao, $sql)) {
+                        die("Erro ao inserir benefício: " . mysqli_error($conexao));
+                    }
+                    $idBeneficio = mysqli_insert_id($conexao);
+                }
             }
-        }
 
-        // Inserir beneficiário
-        $sql = "INSERT INTO Beneficiario (
-        data_nascimento, estado_civil, email, PCD, laudo, doenca, quantos_dependentes, renda_familiar,
-        idPessoa, idEndereco, idBeneficioGov, qnt_trabalham
-        ) VALUES (
-            '$data_nascimento', '$estado_civil', '$email','$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes',
-            '$renda_familiar', '$idPessoa', '$idEndereco', " . ($idBeneficio === null ? "NULL" : "'$idBeneficio'") . ", '$quantos_trabalham'
-        )";
-        if (!mysqli_query($conexao, $sql)) {
-            die("Erro ao inserir beneficiário: " . mysqli_error($conexao));
-        }
-        $idBeneficiario = mysqli_insert_id($conexao);
-
-        echo "<script>window.alert('Beneficiário cadastrado com sucesso!');</script>";            
-
-        // PRECISA CADASTRAR A FREQUÊNCIA COMO F
-        $sql = "INSERT INTO frequencia (ANO, MES, REGISTRO, idBeneficiario) VALUES ('2023', 'JAN', 'F', '$idBeneficiario'), ('2023', 'FEV', 'F', '$idBeneficiario'), ('2023', 'MAR', 'F', '$idBeneficiario'), ('2023', 'ABR', 'F', '$idBeneficiario'), ('2023', 'MAI', 'F', '$idBeneficiario'), ('2023', 'JUN', 'F', '$idBeneficiario'), ('2023', 'JUL', 'F', '$idBeneficiario'), ('2023', 'AGO', 'F', '$idBeneficiario'), ('2023', 'SET', 'F', '$idBeneficiario'), ('2023', 'OUT', 'F', '$idBeneficiario'), ('2023', 'NOV', 'F', '$idBeneficiario'), ('2023', 'DEZ', 'F', '$idBeneficiario'), 
-        ('2024', 'JAN', 'F', '$idBeneficiario'), ('2024', 'FEV', 'F', '$idBeneficiario'), ('2024', 'MAR', 'F', '$idBeneficiario'), ('2024', 'ABR', 'F', '$idBeneficiario'), ('2024', 'MAI', 'F', '$idBeneficiario'), ('2024', 'JUN', 'F', '$idBeneficiario'), ('2024', 'JUL', 'F', '$idBeneficiario'), ('2024', 'AGO', 'F', '$idBeneficiario'), ('2024', 'SET', 'F', '$idBeneficiario'), ('2024', 'OUT', 'F', '$idBeneficiario'), ('2024', 'NOV', 'F', '$idBeneficiario'), ('2024', 'DEZ', 'F', '$idBeneficiario'), 
-        ('2025', 'JAN', 'F', '$idBeneficiario'), ('2025', 'FEV', 'F', '$idBeneficiario'), ('2025', 'MAR', 'F', '$idBeneficiario'), ('2025', 'ABR', 'F', '$idBeneficiario'), ('2025', 'MAI', 'F', '$idBeneficiario'), ('2025', 'JUN', 'F', '$idBeneficiario'), ('2025', 'JUL', 'F', '$idBeneficiario'), ('2025', 'AGO', 'F', '$idBeneficiario'), ('2025', 'SET', 'F', '$idBeneficiario'), ('2025', 'OUT', 'F', '$idBeneficiario'), ('2025', 'NOV', 'F', '$idBeneficiario'), ('2025', 'DEZ', 'F', '$idBeneficiario')";
-
-        $result = mysqli_query($conexao, $sql);
-
-
-        $cpfBeneficiario = NULL; // Para não cadastrar novamente
-
-        // Redirecionar se possuir dependentes
-        if ($quantos_dependentes > 0) {
-            echo "<script>window.alert('Beneficiário cadastrado com sucesso!');</script>";
-            $cadastrado = true;
-            $mudar_pagina = true;            
-        }
-
-        if ($mudar_pagina){
-            header("Location: ../php/cadastroDependente.php?IDbeneficiario=$idBeneficiario&dependentes_pendentes=$quantos_dependentes");
-            exit;
+            // Inserir beneficiário
+            $sql = "INSERT INTO Beneficiario (
+            data_nascimento, estado_civil, email, PCD, laudo, doenca, quantos_dependentes, renda_familiar,
+            idPessoa, idEndereco, idBeneficioGov, qnt_trabalham
+            ) VALUES (
+                '$data_nascimento', '$estado_civil', '$email','$rbPCD', '$rbPossuiLaudo', '$nome_doenca', '$quantos_dependentes',
+                '$renda_familiar', '$idPessoa', '$idEndereco', " . ($idBeneficio === null ? "NULL" : "'$idBeneficio'") . ", '$quantos_trabalham'
+            )";
+            if (!mysqli_query($conexao, $sql)) {
+                die("Erro ao inserir beneficiário: " . mysqli_error($conexao));
+            } else {
+                $idBeneficiario = mysqli_insert_id($conexao);
+                $cadastrado = true;
+                         
+                // PRECISA CADASTRAR A FREQUÊNCIA COMO F
+                $sql = "INSERT INTO frequencia (ANO, MES, REGISTRO, idBeneficiario) VALUES ('2023', 'JAN', 'F', '$idBeneficiario'), ('2023', 'FEV', 'F', '$idBeneficiario'), ('2023', 'MAR', 'F', '$idBeneficiario'), ('2023', 'ABR', 'F', '$idBeneficiario'), ('2023', 'MAI', 'F', '$idBeneficiario'), ('2023', 'JUN', 'F', '$idBeneficiario'), ('2023', 'JUL', 'F', '$idBeneficiario'), ('2023', 'AGO', 'F', '$idBeneficiario'), ('2023', 'SET', 'F', '$idBeneficiario'), ('2023', 'OUT', 'F', '$idBeneficiario'), ('2023', 'NOV', 'F', '$idBeneficiario'), ('2023', 'DEZ', 'F', '$idBeneficiario'), 
+                ('2024', 'JAN', 'F', '$idBeneficiario'), ('2024', 'FEV', 'F', '$idBeneficiario'), ('2024', 'MAR', 'F', '$idBeneficiario'), ('2024', 'ABR', 'F', '$idBeneficiario'), ('2024', 'MAI', 'F', '$idBeneficiario'), ('2024', 'JUN', 'F', '$idBeneficiario'), ('2024', 'JUL', 'F', '$idBeneficiario'), ('2024', 'AGO', 'F', '$idBeneficiario'), ('2024', 'SET', 'F', '$idBeneficiario'), ('2024', 'OUT', 'F', '$idBeneficiario'), ('2024', 'NOV', 'F', '$idBeneficiario'), ('2024', 'DEZ', 'F', '$idBeneficiario'), 
+                ('2025', 'JAN', 'F', '$idBeneficiario'), ('2025', 'FEV', 'F', '$idBeneficiario'), ('2025', 'MAR', 'F', '$idBeneficiario'), ('2025', 'ABR', 'F', '$idBeneficiario'), ('2025', 'MAI', 'F', '$idBeneficiario'), ('2025', 'JUN', 'F', '$idBeneficiario'), ('2025', 'JUL', 'F', '$idBeneficiario'), ('2025', 'AGO', 'F', '$idBeneficiario'), ('2025', 'SET', 'F', '$idBeneficiario'), ('2025', 'OUT', 'F', '$idBeneficiario'), ('2025', 'NOV', 'F', '$idBeneficiario'), ('2025', 'DEZ', 'F', '$idBeneficiario')";
+    
+                $result = mysqli_query($conexao, $sql);        
+                $cpfBeneficiario = NULL; // Para não cadastrar novamente
+    
+                // Redirecionar se possuir dependentes                
+                if ($quantos_dependentes > 0) {
+                    echo "<script>window.alert('Beneficiário cadastrado com sucesso!');</script>";
+                    $cadastrado = true;
+                    $mudar_pagina = true;            
+                }
+    
+                if ($mudar_pagina){
+                    header("Location: ../php/cadastroDependente.php?IDbeneficiario=$idBeneficiario&dependentes_pendentes=$quantos_dependentes");
+                    exit;
+                }
+            }
         }
     }
 }
 else if (isset($_POST['cadastrar']) && $erro){
     echo '<script>alert("Existem campos em branco.");</script>';
 }
+
+// if (isset($_POST['ver'])){
+//     $rbPossuiBenf = $_POST['rbPossuiBenf'];
+//     $beneficio = $_POST['beneficioBeneficiario'];
+//     $valor_beneficio = $_POST['valor_beneficioBeneficiario'];
+//     echo"$rbPossuiBenf<br>$valor_beneficio<br>$beneficio";    
+// }
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -426,6 +432,7 @@ else if (isset($_POST['cadastrar']) && $erro){
                         <option value="RO" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'RO' && !$cadastrado) ? 'selected ': ''; ?>>RO - Rondônia</option>
                         <option value="RR" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'RR' && !$cadastrado) ? 'selected ': ''; ?>>RR - Roraima</option>
                         <option value="SC" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'SC' && !$cadastrado) ? 'selected ': ''; ?>>SC - Santa Catarina</option>
+                        <option value="SP" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'SP' && !$cadastrado) ? 'selected ': ''; ?>>SP - São Paulo</option>
                         <option value="SE" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'SE' && !$cadastrado) ? 'selected ': ''; ?>>SE - Sergipe</option>
                         <option value="TO" <?php echo(isset($_POST['estadoBeneficiario']) && $_POST['estadoBeneficiario'] == 'TO' && !$cadastrado) ? 'selected ': ''; ?>>TO - Tocantis</option>                    
                     </select>
@@ -480,7 +487,7 @@ else if (isset($_POST['cadastrar']) && $erro){
                 </div>           
                 <span class="col-lg-4 ">
                     <label for="">Valor</label>
-                    <input type="number" id="valorB" max="<?= $salario_minimo ?>" class="form-control" name="valor_benecicioBeneficiario" placeholder="Somente números" value="<?php if(isset($_POST['valor_benecicioBeneficiario']) && !$cadastrado) echo $_POST['valor_benecicioBeneficiario']; ?>">
+                    <input type="number" id="valorB" max="<?= $salario_minimo ?>" class="form-control" name="valor_beneficioBeneficiario" placeholder="Somente números" value="<?php if(isset($_POST['valor_beneficioBeneficiario']) && !$cadastrado) echo $_POST['valor_beneficioBeneficiario']; ?>">
                 </span> 
             </div>
             <div class="d-flex container justify-content-between formularios_Beneficiario mt-3">

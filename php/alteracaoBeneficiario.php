@@ -82,13 +82,11 @@ if(isset($_POST['pesquisar']) && !empty($_POST['cpfBeneficiario'])){
             $result5 = mysqli_query($conexao, $sql5);
             if ($dados_beneficioGov = mysqli_fetch_assoc($result5)) {               
                 $valor_beneficio = $dados_beneficioGov['valor_beneficio'];
+                $BeneficioGov = $dados_beneficioGov['Beneficio_gov'];
             }
         }
     }
 }
-
-//if (isset($_POST['ver'])){}
-
 // ALTERAÇÃO
 if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && !$erro) {
     if (!empty($_POST['data_nascimentoBeneficiario']) 
@@ -503,6 +501,7 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
                         <option value="RO" <?= (!empty($estado) && $estado == 'RO') ? 'selected' : '' ?>>RO - Rondônia</option>
                         <option value="RR" <?= (!empty($estado) && $estado == 'RR') ? 'selected' : '' ?>>RR - Roraima</option>
                         <option value="SC" <?= (!empty($estado) && $estado == 'SC') ? 'selected' : '' ?>>SC - Santa Catarina</option>
+                        <option value="SP" <?= (!empty($estado) && $estado == 'SP') ? 'selected' : '' ?>>SP - São Paulo</option>
                         <option value="SE" <?= (!empty($estado) && $estado == 'SE') ? 'selected' : '' ?>>SE - Sergipe</option>
                         <option value="TO" <?= (!empty($estado) && $estado == 'TO') ? 'selected' : '' ?>>TO - Tocantis</option>                    
                     </select>
