@@ -2,7 +2,7 @@
     include_once('../conexao_banco.php'); // ACESSANDO A CONEXÃO
     include_once('../routes/verificacao_logado.php'); // VERIFICAÇÃO SE O USUÁRIO ESTÁ LOGADO
     // Acessando o dados_usuario_logado para receber seus dados 
-    include_once("../routes/dados_usuarioLogado.php");   
+    include_once("../routes/dados_usuarioLogado.php");       
 
     function get_endereco($cep){
 
@@ -117,13 +117,13 @@
         $Verifica_idade = $intervalo->invert;
     }
             
-        if (!empty($Verifica_idade) && $Verifica_idade == 1){            
+    if (!empty($Verifica_idade) && $Verifica_idade == 1){            
         echo "<script>window.alert('Escolha uma data de nascimento que realmente exista');</script>";
         $erro = True;
     } else if ($idade < 18){
-            echo "<script>window.alert('A idade mínima para se cadastrar como Beneficiário(a) é de 18 anos.');</script>";
-            $erro = True;
-        }
+        echo "<script>window.alert('A idade mínima para se cadastrar como Beneficiário(a) é de 18 anos.');</script>";
+        $erro = True;
+    }
 
         $email = $_POST['emailBeneficiario'];
         $endereco = $_POST['endereco_completoBeneficiario'];    
@@ -255,12 +255,12 @@ else if (isset($_POST['cadastrar']) && $erro){
     echo '<script>alert("Existem campos em branco.");</script>';
 }
 
-// if (isset($_POST['ver'])){
-//     $rbPossuiBenf = $_POST['rbPossuiBenf'];
-//     $beneficio = $_POST['beneficioBeneficiario'];
-//     $valor_beneficio = $_POST['valor_beneficioBeneficiario'];
-//     echo"$rbPossuiBenf<br>$valor_beneficio<br>$beneficio";    
-// }
+if (isset($_POST['ver'])){
+    $rbPossuiBenf = $_POST['rbPossuiBenf'];
+    $beneficio = $_POST['beneficioBeneficiario'];
+    $valor_beneficio = $_POST['valor_beneficioBeneficiario'];
+    echo"$rbPossuiBenf<br>$valor_beneficio<br>$beneficio";    
+}
 
 ?>
 <!DOCTYPE html>

@@ -12,6 +12,7 @@
     $erro = False;
     $alterado = False;
     $erro_idade = False;
+    $idade = 0;
 
      // LISTAR OS DADOS DE DEPENDENTE PARA OUTROS CAMPOS
     if (isset($_POST['pesquisar']) && !empty($_POST['cpfDependente']) ){
@@ -72,7 +73,7 @@
             if($intervalo->invert){
                 // Se o invert == 1 -> FUTURO
                 // SE O invert == 0 -> PASSADO
-                $Verifica_idade = $intervalo->invert;
+                $Verifica_idade = $intervalo->invert;                
             }
               
             // Verificação da idade
@@ -90,12 +91,12 @@
                 else if ($_POST['rbParentesco'] == 'Mae/pai' && $idade < 37){
                     echo "<script>window.alert('Há uma incoerência em relação a idade da mãe ou pai.');</script>";
                     $erro = true;
-                } else if (($_POST['rbParentesco'] == 'Parente_Pcd')){
+                } else if (($_POST['rbParentesco'] == 'Paren_pcd')){
                     if (empty($_POST['rbPCD']) || $_POST['rbPCD'] == "N"){
                         echo "<script>window.alert('Há uma incoerência em relação à PCD.');</script>";
                         $erro = true;
                     }
-                } else if (($_POST['rbParentesco'] != 'Parente_Pcd') && $_POST['rbPCD'] == "S"){
+                } else if (($_POST['rbParentesco'] != 'Paren_pcd') && $_POST['rbPCD'] == "S"){
                     echo "<script>window.alert('Para cadastrar a comorbidade, deve cadastrar o parentesco como Parente - PCD.');</script>";
                     $erro = true;
                 }
@@ -194,7 +195,7 @@
             $resultUpdate_filhoDep = mysqli_query($conexao, $sqlUpdate_filhoDep);
             if ($resultUpdate_filhoDep){
                 echo "<script>window.alert('Dependente alterado com sucesso!');</script>";
-                unset($_SESSION['cpf_dependente']);
+                // unset($_SESSION['cpf_dependente']);
                 unset($_SESSION['idBeneficioGov_dep']);                
                 unset($_SESSION['idNome_beneficio_dep']);
                 $data_nascimento = '';
@@ -206,7 +207,7 @@
                 $beneficioGov = '';
                 $idBeneficioGov = '';
                 $id_nomesBeneficioGov = '';
-                $alterado = True;
+                $alterado = True;                
             } else {
                 echo "<script>window.alert('Erro em alterar Dependente!');</script>";
                 $erro = True;
@@ -333,7 +334,7 @@
                     <select class="form-select form-select-md" name="rbParentesco">
                         <option value="" <?= !empty($parentesco) && $parentesco == "" ? 'selected' : '' ?>></option>
                         <option value="Filho_M" <?= !empty($parentesco) && $parentesco == "Filho_M" ? 'selected' : '' ?>>Filho(a) - Menor</option>
-                        <option value="Parente_Pcd" <?= !empty($parentesco) && $parentesco == "Parente_Pcd" ? 'selected' : '' ?>>Parente - PCD</option>
+                        <option value="Paren_pcd" <?= !empty($parentesco) && $parentesco == "Paren_pcd" ? 'selected' : '' ?>>Parente - PCD</option>
                         <option value="Mae/pai" <?= !empty($parentesco) && $parentesco == "Mae/pai" ? 'selected' : '' ?>>Mãe ou pai</option>
                         <option value="Neto(a)" <?= !empty($parentesco) && $parentesco == "Neto(a)" ? 'selected' : '' ?>>Neto(a)</option>
                         <option value="Irmao(a)" <?= !empty($parentesco) && $parentesco == "Irmao(a)" ? 'selected' : '' ?>>Irmão(ã)</option>
@@ -431,6 +432,13 @@
             </div>
         </form>
     </main>
+
+    <script>
+        let alterado = <?php echo json_encode($alterado); ?>;
+        if (alterado){
+            window.location.href = "alteracaoDependente.php";
+        }
+    </script>
     <!-- MÁSCARAS -->
     <script src="../js/mascaras.js"></script>
     <!-- BOOTSTRAP -->

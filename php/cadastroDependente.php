@@ -92,8 +92,7 @@ if (isset($_POST['cadastrar'])
         $data_nascimentoDT = new DateTime($data_nascimento); // CONVERTE PARA DATA
         $data_atual = new DateTime();
         $intervalo = $data_nascimentoDT->diff($data_atual);
-        $idade = $intervalo->y; // A IDADE SERÁ O INTERVALO EM ANOS, DO DIA DE HOJE PARA A DATA_NASCIMENTO
-        $Verifica_idade = 0;
+        $idade = $intervalo->y; // A IDADE SERÁ O INTERVALO EM ANOS, DO DIA DE HOJE PARA A DATA_NASCIMENTO        
         if($intervalo->invert){
             // Se o invert == 1 -> FUTURO
             // SE O invert == 0 -> PASSADO
@@ -107,7 +106,7 @@ if (isset($_POST['cadastrar'])
         if ($parentesco == "Filho_M" && $idade >= 18) {  
             echo "<script>window.alert('A idade do filho(a) deve ser menor de 18 anos.');</script>";
             $incoerencia = true;        
-        } elseif (($parentesco == "Parente_Pcd" && $pcd == "N") || ($parentesco != "Parente_Pcd" && $pcd == "S")) {
+        } elseif (($parentesco == "Paren_pcd" && $pcd == "N") || ($parentesco != "Paren_pcd" && $pcd == "S")) {
             echo "<script>window.alert('Há uma incoerência em relação à PCD.');</script>";
             $incoerencia = true;        
         } else if ($parentesco == "Mae/pai" && $idade < 36){
@@ -348,7 +347,7 @@ if (isset($_POST['cadastrar'])
                     <select class="form-select form-select-md" name="rbParentesco" required>
                         <option value=""></option>
                         <option value="Filho_M" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Filho_M' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Filho(a) - Menor</option>
-                        <option value="Parente_Pcd" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Parente_Pcd' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Parente - PCD</option>
+                        <option value="Paren_pcd" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Paren_pcd' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Parente - PCD</option>
                         <option value="Mae/pai" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Mae/pai' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Mãe ou pai</option>
                         <option value="Neto(a)" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Neto(a)' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Neto(a)</option>
                         <option value="Irmao(a)" <?php echo (isset($_POST['rbParentesco']) && $_POST['rbParentesco'] == 'Irmao(a)' && !$cadastrado_dependente) ? 'selected' : ''; ?>>Irmão(ã)</option>
