@@ -20,6 +20,7 @@ if(!isset($_SESSION['beneficiario_alterado'])){
 // Flags de erro
 $erro = False;
 $idade = null;
+$alterado = false;
 // Consulta CPF
 $sql = "SELECT cpf FROM tbBeneficiario;";
 $result = mysqli_query($conexao, $sql);
@@ -286,7 +287,8 @@ if (isset($_POST['alterar']) && $_SESSION['beneficiario_alterado'] === False && 
                 $valor_despesas = "";
                 $cep = "";
                 $nome_Beneficiario = "";
-                $_SESSION['beneficiario_alterado'] = true;                 
+                $_SESSION['beneficiario_alterado'] = true;      
+                $alterado = true;           
             }   else {
                 echo "<script>alert('Erro ao alterar o beneficiário. Verifique os dados e tente novamente.');</script>";
             }
@@ -666,6 +668,13 @@ if (isset($_POST['deletar']) && !empty($_POST['cpfBeneficiario'])){
             </div>
         </form>       
     </main>
+
+    <script>
+        const alterado = <?= json_encode($alterado ?? false) ?>;
+        if (alterado){
+            window.location.href = "alteracao.php";
+        }
+    </script>
 
     <!--        MÁSCARAS         -->
     <script src="../js/mascaras.js"></script>

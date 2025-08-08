@@ -434,9 +434,9 @@
     </main>
 
     <script>
-        let alterado = <?php echo json_encode($alterado); ?>;
+        const alterado = <?= json_encode($alterado ?? false) ?>;
         if (alterado){
-            window.location.href = "alteracaoDependente.php";
+            window.location.href = "alteracao.php";
         }
     </script>
     <!-- MÁSCARAS -->
